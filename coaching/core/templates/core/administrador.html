@@ -1,0 +1,76 @@
+{% extends 'core/base.html' %}
+
+{% block titulo%}
+<title>Home|Administrador</title>
+{% endblock %}
+
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'core/css/estilo_admin.css' %}">
+{% endblock %}
+
+{% block barra %}
+<ul class="nav navbar-nav">
+    
+    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Agregar <span
+                class="caret"></span></a>
+        <ul class="dropdown-menu">
+            <li><a href="{% url 'registro_coach' %}">Coach</a></li>
+            <li><a href="{% url 'registro_coachee' %}">Coachee</a></li>
+            <li><a href="#">Proceso</a></li>
+        </ul>
+    </li>
+    
+</ul>
+{% endblock %}
+
+
+    {% block contenido %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3">
+                <h2>Listado de coaches</h2>
+                {% for c in coaches %}
+                <div class="row">
+                    <div class="column">
+                        <div class="card">
+                            <h3>{{c.1}}</h3>
+                            <p>run {{c.0}}</p>
+                            <p>telefono {{c.2}}</p>
+                            <p>correo {{c.3}}</p>
+                            <p></p>
+                            <div class="link">
+                                <a href="">Ver procesos</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="col-sm-3">
+                <h2>Listado de coachees</h2>
+                {% for c in coachees %}
+                <div class="row">
+                    <div class="column">
+                        <div class="card">
+                            <h3>{{c.1}}</h3>
+                            <p>run {{c.0}}</p>
+                            <p>cargo {{c.2}}</p>
+                            <p>correo {{c.3}}</p>
+                            <p>empresa {{c.4}}</p>
+                            <p></p>
+                            <div class="link">
+                                <a href="">Ver procesos</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    
+    {% endblock %}

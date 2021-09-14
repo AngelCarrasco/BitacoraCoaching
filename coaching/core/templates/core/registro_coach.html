@@ -1,0 +1,36 @@
+{% extends 'core/base.html' %}
+
+{% block titulo %}
+<title>Registro_coach</title>
+{% endblock %}
+
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'core/css/estilo_r_coach.css' %}">
+<style>
+  body {
+    background-image: url('core/img/fondo.png');
+  }
+</style>
+
+{% endblock %}
+
+{% block contenido %}
+<section class="form-register">
+  <h4>Registro Coach</h4>
+  <form action="" method="POST">
+    {% csrf_token %}
+    <input class="controls" type="text" name="nombre" id="nombres" placeholder="Ingrese su Nombre">
+    <input class="controls" type="text" name="a_paterno" id="a_paterno" placeholder="Apellido paterno">
+    <input class="controls" type="text" name="a_materno" id="a_materno" placeholder="Apellido materno">
+    <input class="controls" type="text" name="run" id="run" placeholder="Run">
+    <input class="controls" type="email" name="correo" id="correos" placeholder="Ingrese su correo">
+    <input class="controls" type="telefono" name="telefono" id="telefono" placeholder="Telefono">
+
+    <input class="botons" type="submit" value="Agregar">
+  </form>
+  {{mensaje}}
+</section>
+
+{% endblock %}
