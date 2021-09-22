@@ -1,7 +1,7 @@
 {% extends 'core/base.html' %}
 
 {% block titulo%}
-<title>Home|Administrador</title>
+<title>Home | Administrador</title>
 {% endblock %}
 
 {% load static %}
@@ -19,6 +19,7 @@
             <li><a href="{% url 'registro_coach' %}">Coach</a></li>
             <li><a href="{% url 'registro_coachee' %}">Coachee</a></li>
             <li><a href="#">Proceso</a></li>
+            <li><a href="{% url 'registro_empresa' %}">Empresa</a></li>
         </ul>
     </li>
     
@@ -39,7 +40,8 @@
                             <p>run {{c.0}}</p>
                             <p>telefono {{c.2}}</p>
                             <p>correo {{c.3}}</p>
-                            <p></p>
+                            
+                            <br>
                             <div class="link">
                                 <a href="">Ver procesos</a>
                             </div>
@@ -60,10 +62,45 @@
                             <p>cargo {{c.2}}</p>
                             <p>correo {{c.3}}</p>
                             <p>empresa {{c.4}}</p>
-                            <p></p>
+                            <br>
                             <div class="link">
                                 <a href="">Ver procesos</a>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="col-sm-3">
+                <h2>Listado de empresas</h2>
+                {% for c in empresas %}
+                <div class="row">
+                    <div class="column">
+                        <div class="card">
+                            <h3>{{c.1}}</h3>
+                            <p>{{c.0}}</p>
+                            <p>{{c.3}}</p>
+                            <p>{{c.4}}</p>
+                            <br>
+                            
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="col-sm-3">
+                <h2>Listado de procesos</h2>
+                {% for c in coachees %}
+                <div class="row">
+                    <div class="column">
+                        <div class="card">
+                            <h3></h3>
+                            <p>run </p>
+                            <p>cargo </p>
+                            <p>correo</p>
+                            <p>empresa</p>
+                            <br>
+                         
                         </div>
                     </div>
                 </div>

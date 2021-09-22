@@ -16,23 +16,26 @@
   <h4>Registro Coachee</h4>
   <form action="" method="POST">
     {% csrf_token %} 
-    <input class="controls" type="text" name="nombre" id="nombre" placeholder="Ingrese su Nombre">
-    <input class="controls" type="text" name="a_paterno" id="a_paterno" placeholder="Apellido paterno">
-    <input class="controls" type="text" name="a_materno" id="a_materno" placeholder="Apellido materno">
-    <input class="controls" type="text" name="run" id="run" placeholder="Run">
-    <input class="controls" type="email" name="correo" id="correo" placeholder="Ingrese su correo">
-    <input class="controls" type="text" name="cargo" id="cargo" placeholder="Cargo">
+    <input class="controls" type="text" name="nombre" id="nombre" placeholder="Ingrese su Nombre" required>
+    <input class="controls" type="text" name="a_paterno" id="a_paterno" placeholder="Apellido paterno" required>
+    <input class="controls" type="text" name="a_materno" id="a_materno" placeholder="Apellido materno" required>
+    <input class="controls" type="text" name="run" id="run" placeholder="Run" oninput="checkRut(this)" maxlength="10" required>
+    <input class="controls" type="email" name="correo" id="correo" placeholder="Ingrese su correo" required>
+    <input class="controls" type="text" name="cargo" id="cargo" placeholder="Cargo" required>
 
     <select name="empresa" id="empresa">
       <option value="">Selecionna</option>
       
       {% for c in empresas %}
-      <option value="{{c.0}}">{{c.3}}</option>
+      <option value="{{c.0}}">{{c.1}}</option>
       {% endfor %}
 
     </select>
-    <input class="botons" type="submit" value="Agregar">
+    <input class="botons" type="submit" value="Agregar" >
   </form>
   {{mensaje}}
 </section>
+{% endblock %}
+{% block js%}
+<script src="static/core/js/validacion.js"></script>
 {% endblock %}
