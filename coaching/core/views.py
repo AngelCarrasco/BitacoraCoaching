@@ -138,3 +138,6 @@ def listar(procedimiento):
     for fila in out_cur:
         lista.append(fila)
     return lista
+
+def listar_pro():
+    pass
