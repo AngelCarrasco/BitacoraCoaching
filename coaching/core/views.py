@@ -12,12 +12,18 @@ def administrador(request):
     p_coachee = 'SP_LISTA_COACHEE'
     p_proceso = 'SP_LISTA_PROCESO'
     p_empresa = 'SP_LISTA_EMPRESA'
+    p_proceso = 'SP_LISTA_PROCESO'
     data ={
         'coaches' : listar(p_coach),
         'coachees': listar(p_coachee),
         'empresas': listar(p_empresa),
+        'procesos': listar(p_proceso)
     }
     return render(request, 'core/administrador.html',data)
+
+def coach(request):
+
+    return render(request, 'core/coach.html')
 
 def registro_empresa(request):
     data={}
@@ -40,7 +46,26 @@ def registro_empresa(request):
     return render(request, 'core/registro_empresa.html', data)
 
 def registro_proceso(request):
-    pass
+    p_coach = 'SP_LISTA_COACH'
+    data = {
+        'coachs' : listar(p_coach)
+    }
+
+    if request.POST:
+        nombre = request.POST.get('nombre')
+        modalidad = request.POST.get('modalidad')
+        run_coach = request.POST.get('coach')
+        status = '1'
+
+        salida = agregar_proceso(nombre,modalidad,status,run_coach)
+
+        if salida == 1:
+            data['mensaje'] = 'agregado correctamente'
+        else:
+            data['mensaje'] = 'no se ha agregado'
+
+    return render(request, 'core/registro_proceso.html',data)
+
 
 def registro_coach(request):
     data ={}
@@ -139,5 +164,4 @@ def listar(procedimiento):
         lista.append(fila)
     return lista
 
-def listar_pro():
-    pass
+

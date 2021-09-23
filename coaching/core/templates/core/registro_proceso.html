@@ -15,11 +15,15 @@
   <h4>Registro Proceso</h4>
   <form action="" method="POST">
     {% csrf_token %} 
-    <input class="controls" type="text" name="nombre" id="nombre" placeholder="Nombre empresa" required>
-    <input class="controls" type="text" name="direccion" id="direccion" placeholder="Direccion" required>
-    <input class="controls" type="number" name="telefono" id="telefono" placeholder="Telefono" max="999999999" required >
-    <input class="controls" type="text" name="rut" id="rut" placeholder="Rut empresa" oninput="" maxlength="10" required>
-    <input class="controls" type="email" name="correo" id="correo" placeholder="Correo empresa" required>
+    <input class="controls" type="text" name="nombre" id="nombre" placeholder="Nombre proceso" required>
+    <input class="controls" type="text" name="modalidad" id="modalidad" placeholder="Modalidad" required>
+    <select name="coach" id="coach">
+      <option value="">Selecionna</option>
+      
+      {% for c in coachs %}
+      <option value="{{c.0}}">{{c.1}}</option>
+      {% endfor %}
+    </select>
 
     <input class="botons" type="submit" value="Agregar" >
   </form>

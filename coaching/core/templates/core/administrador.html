@@ -18,7 +18,7 @@
         <ul class="dropdown-menu">
             <li><a href="{% url 'registro_coach' %}">Coach</a></li>
             <li><a href="{% url 'registro_coachee' %}">Coachee</a></li>
-            <li><a href="#">Proceso</a></li>
+            <li><a href="{% url 'registro_proceso' %}">Proceso</a></li>
             <li><a href="{% url 'registro_empresa' %}">Empresa</a></li>
         </ul>
     </li>
@@ -90,17 +90,14 @@
             </div>
             <div class="col-sm-3">
                 <h2>Listado de procesos</h2>
-                {% for c in coachees %}
+                {% for c in procesos %}
                 <div class="row">
                     <div class="column">
                         <div class="card">
-                            <h3></h3>
-                            <p>run </p>
-                            <p>cargo </p>
-                            <p>correo</p>
-                            <p>empresa</p>
+                            <h3>{{c.0}}</h3>
+                            <p>{{c.1}} </p>
+                            <p>{{c.2}}</p>
                             <br>
-                         
                         </div>
                     </div>
                 </div>
