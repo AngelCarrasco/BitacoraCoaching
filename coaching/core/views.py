@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.db import connection
 import cx_Oracle
-
+import datetime
 # Create your views here.
 
 def login(request):
@@ -138,3 +138,41 @@ def listar(procedimiento):
     for fila in out_cur:
         lista.append(fila)
     return lista
+
+
+
+
+def agregar_archivo(archivo,fecha_s,coachee,coach,fecha_v):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+
+    cursor.callproc('SP_AGREGAR_ARCHIVO',[archivo,fecha_s,coachee,coach,fecha_v,salida])
+
+    return salida.getvalue()
+#MEJORRRARRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRADASSADSA
+def Subir_archivo(request):
+    data={}
+
+    if request.POST:
+        #OBTENER EL ID DEL <input> EN HTML
+         archivo = request.FILES.get('archivo')
+         #coachee = request.POST.get('run_coachee')
+        
+         
+
+         salida = agregar_archivo(archivo,datetime.date,'20229778-1','19895900-6')
+
+         if salida ==1:
+             data['mensaje']='Agregado con exito'
+         else:
+             data['mensaje'] = 'no se ha podido agregar'
+
+    return render(request, 'core/Archivo.html', data)
+
+
+
+
+
+    
+    

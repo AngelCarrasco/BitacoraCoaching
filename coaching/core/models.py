@@ -53,7 +53,7 @@ class Contrato(models.Model):
 
 
 class Documentacion(models.Model):
-    archivo = models.TextField()
+    archivo = models.FileField(upload_to='folder',blank=True,null=True)
     fecha_subida = models.DateField()
     run_coachee = models.ForeignKey(Coachee, models.DO_NOTHING, db_column='run_coachee')
     run_coach = models.OneToOneField(Coach, models.DO_NOTHING, db_column='run_coach', primary_key=True)
