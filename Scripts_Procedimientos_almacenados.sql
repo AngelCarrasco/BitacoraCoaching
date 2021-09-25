@@ -131,3 +131,19 @@ EXCEPTION
   WHEN OTHERS THEN 
   RAISE_APPLICATION_ERROR(SEQ_ERROR.NEXTVAL,' Error desconocido');
 END;
+
+---------------------------------------------Archivo------------------------------------------------------------------
+CREATE OR REPLACE NONEDITIONABLE PROCEDURE "SP_AGREGAR_ARCHIVO" (V_ARCHIVO IN documentacion.archivo%TYPE,V_FECHA_S IN documentacion.fecha_subida%TYPE,
+V_COACHEE IN documentacion.run_coachee%TYPE, v_coach in documentacion.run_coach%type, v_fecha_v in documentacion.fecha_vista%type, v_salida out number) IS
+
+BEGIN
+INSERT INTO documentacion VALUES (V_ARCHIVO,V_FECHA_S,V_COACHEE,v_coach,v_fecha_v);
+COMMIT;
+v_salida:=1;
+EXCEPTION
+  WHEN DUP_VAL_ON_INDEX THEN
+  RAISE_APPLICATION_ERROR(SEQ_ERROR.NEXTVAL,' Error de dato duplicado');
+  WHEN OTHERS THEN 
+  v_salida:=0;
+  RAISE_APPLICATION_ERROR(SEQ_ERROR.NEXTVAL,' Error desconocido');
+END;
