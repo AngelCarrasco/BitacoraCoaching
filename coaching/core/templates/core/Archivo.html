@@ -8,12 +8,13 @@
 </head>
 <body>
     <form action="" method="POST" enctype = "multipart/form-data">
-        {% csrf_token %}asda
+        {% csrf_token %}
        
         <input class="controls" type="text" name="run_coachee" id="run_coachee" placeholder="Ingrese Destinatario" required>
         <input class="controls" type="file" name="archivo" id="archivo" required>
 
         <input class="botons" type="submit" value="Subir Archivo">
       </form>
+      {{mensaje}}
 </body>
 </html>

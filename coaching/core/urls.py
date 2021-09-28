@@ -8,4 +8,5 @@ urlpatterns = [
     path('/registro_coachee', views.registro_coachee, name="registro_coachee"),
     path('/registro_empresa', views.registro_empresa, name="registro_empresa"),
     path('/login', views.login, name="login"),
+    path('/archivo', views.Subir_archivo, name="archivo"),
 ]

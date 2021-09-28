@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.db import connection
 import cx_Oracle
-import datetime
+from datetime import date
+from django.core.files.storage import FileSystemStorage
 # Create your views here.
 
 def login(request):
@@ -150,25 +151,26 @@ def agregar_archivo(archivo,fecha_s,coachee,coach,fecha_v):
     cursor.callproc('SP_AGREGAR_ARCHIVO',[archivo,fecha_s,coachee,coach,fecha_v,salida])
 
     return salida.getvalue()
-#MEJORRRARRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRADASSADSA
+#MEJORRRARRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
 def Subir_archivo(request):
     data={}
 
     if request.POST:
-        #OBTENER EL ID DEL <input> EN HTML
-         archivo = request.FILES.get('archivo')
-         #coachee = request.POST.get('run_coachee')
         
+         archivo = request.FILES['archivo']
+         fs = FileSystemStorage() 
+         name = fs.save(archivo.name, archivo)
+         url = fs.url(name)
          
-
-         salida = agregar_archivo(archivo,datetime.date,'20229778-1','19895900-6')
+        #rellenar campos del procedimiento con input
+         salida = agregar_archivo(url,'01-01-01','20229778-1','19895900-6','01-01-01')
 
          if salida ==1:
              data['mensaje']='Agregado con exito'
          else:
              data['mensaje'] = 'no se ha podido agregar'
 
-    return render(request, 'core/Archivo.html', data)
+    return render(request, 'core/archivo.html', data)
 
 
 
