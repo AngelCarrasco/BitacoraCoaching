@@ -154,7 +154,7 @@ def agregar_archivo(archivo,fecha_s,coachee,coach,fecha_v):
 #MEJORRRARRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
 def Subir_archivo(request):
     data={}
-
+    v_nada = None
     if request.POST:
         
          archivo = request.FILES['archivo']
@@ -163,7 +163,7 @@ def Subir_archivo(request):
          url = fs.url(name)
          
         #rellenar campos del procedimiento con input
-         salida = agregar_archivo(url,'01-01-01','20229778-1','19895900-6','01-01-01')
+         salida = agregar_archivo(url,'01-01-01','19836679-K','121',v_nada)
 
          if salida ==1:
              data['mensaje']='Agregado con exito'
