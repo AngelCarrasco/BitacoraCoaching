@@ -196,3 +196,6 @@ class Sesion(models.Model):
         managed = False
         db_table = 'sesion'
         unique_together = (('id_sesion', 'id_proceso', 'run_coach', 'run_coachee'),)
+
+class fecha(models.Model):
+    fecha_creacion = models.DateTimeField(auto_now_add=True)

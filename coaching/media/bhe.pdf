@@ -1,0 +1,107 @@
+ERROR: No HTML files!
+HTMLDOC Version 1.8.23 Copyright 1997-2002 Easy Software Products, All Rights Reserved.
+This software is governed by the GNU General Public License, Version 2, and
+is based in part on the work of the Independent JPEG Group.
+
+Usage:
+  htmldoc [options] filename1.html [ ... filenameN.html ]
+
+Options:
+
+  --batch filename.book
+  --bodycolor color
+  --bodyfont {courier,times,helvetica}
+  --bodyimage filename.{gif,jpg,png}
+  --book
+  --bottom margin{in,cm,mm}
+  --browserwidth pixels
+  --charset {cp-874...1258,iso-8859-1...8859-15,koi8-r}
+  --color
+  --compression[=level]
+  --datadir directory
+  --duplex
+  --effectduration {0.1..10.0}
+  --embedfonts
+  --encryption
+  --firstpage {p1,toc,c1}
+  --fontsize {6.0..24.0}
+  --fontspacing {1.0..3.0}
+  --footer fff
+  {--format, -t} {ps1,ps2,ps3,pdf11,pdf12,pdf13,pdf14,html}
+  --gray
+  --header fff
+  --headfootfont {courier{-bold,-oblique,-boldoblique},
+                  times{-roman,-bold,-italic,-bolditalic},
+                  helvetica{-bold,-oblique,-boldoblique}}
+  --headfootsize {6.0..24.0}
+  --headingfont {courier,times,helvetica}
+  --help
+  --jpeg[=quality]
+  --landscape
+  --left margin{in,cm,mm}
+  --linkcolor color
+  --links
+  --linkstyle {plain,underline}
+  --logoimage filename.{gif,jpg,png}
+  --owner-password password
+  --no-compression
+  --no-duplex
+  --no-embedfonts
+  --no-encryption
+  --no-links
+  --no-localfiles
+  --no-numbered
+  --no-pscommands
+  --no-strict
+  --no-title
+  --no-toc
+  --numbered
+  --nup {1,2,4,6,9,16}
+  {--outdir, -d} dirname
+  {--outfile, -f} filename.{ps,pdf,html}
+  --pageduration {1.0..60.0}
+  --pageeffect {none,bi,bo,d,gd,gdr,gr,hb,hsi,hso,vb,vsi,vso,wd,wl,wr,wu}
+  --pagelayout {single,one,twoleft,tworight}
+  --pagemode {document,outline,fullscreen}
+  --path "dir1;dir2;dir3;...;dirN"
+  --permissions {all,annotate,copy,modify,print,no-annotate,no-copy,no-modify,no-print,none}
+  --portrait
+  --proxy http://host:port
+  --pscommands
+  --quiet
+  --right margin{in,cm,mm}
+  --size {letter,a4,WxH{in,cm,mm},etc}
+  --strict
+  --textcolor color
+  --textfont {courier,times,helvetica}
+  --title
+  --titlefile filename.{htm,html,shtml}
+  --titleimage filename.{gif,jpg,png}
+  --tocfooter fff
+  --tocheader fff
+  --toclevels levels
+  --toctitle string
+  --top margin{in,cm,mm}
+  --user-password password
+  {--verbose, -v}
+  --version
+  --webpage
+
+  fff = heading format string; each 'f' can be one of:
+
+        . = blank
+        / = n/N arabic page numbers (1/3, 2/3, 3/3)
+        : = c/C arabic chapter page numbers (1/2, 2/2, 1/4, 2/4, ...)
+        1 = arabic numbers (1, 2, 3, ...)
+        a = lowercase letters
+        A = uppercase letters
+        c = current chapter heading
+        C = current chapter page number (arabic)
+        d = current date
+        D = current date and time
+        h = current heading
+        i = lowercase roman numerals
+        I = uppercase roman numerals
+        l = logo image
+        t = title text
+        T = current time

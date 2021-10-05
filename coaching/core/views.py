@@ -3,6 +3,7 @@ from django.db import connection
 import cx_Oracle
 from datetime import date
 from django.core.files.storage import FileSystemStorage
+import datetime
 # Create your views here.
 
 def login(request):
@@ -152,9 +153,14 @@ def agregar_archivo(archivo,fecha_s,coachee,coach,fecha_v):
 
     return salida.getvalue()
 #MEJORRRARRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+
+
+
 def Subir_archivo(request):
     data={}
     v_nada = None
+    v_fecha = datetime.date.today()
+    
     if request.POST:
         
          archivo = request.FILES['archivo']
@@ -163,7 +169,7 @@ def Subir_archivo(request):
          url = fs.url(name)
          
         #rellenar campos del procedimiento con input
-         salida = agregar_archivo(url,'01-01-01','19836679-K','121',v_nada)
+         salida = agregar_archivo(url,v_fecha,'19836679-K','121',v_nada)
 
          if salida ==1:
              data['mensaje']='Agregado con exito'
