@@ -157,7 +157,10 @@ def agregar_archivo(archivo,fecha_s,coachee,coach,fecha_v):
 
 
 def Subir_archivo(request):
-    data={}
+    p_coachee = 'SP_LISTA_COACHEE'
+    data= {
+        'coachees': listar(p_coachee),
+    }
     v_nada = None
     v_fecha = datetime.date.today()
     
@@ -167,9 +170,10 @@ def Subir_archivo(request):
          fs = FileSystemStorage() 
          name = fs.save(archivo.name, archivo)
          url = fs.url(name)
-         
+         coachee = request.POST.get('coachee')
+         rut_coachee = coachee
         #rellenar campos del procedimiento con input
-         salida = agregar_archivo(url,v_fecha,'19836679-K','121',v_nada)
+         salida = agregar_archivo(url,v_fecha,rut_coachee,'121',v_nada)
 
          if salida ==1:
              data['mensaje']='Agregado con exito'

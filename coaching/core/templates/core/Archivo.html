@@ -9,10 +9,17 @@
 <body>
     <form action="" method="POST" enctype = "multipart/form-data">
         {% csrf_token %}
-        <input class="controls" type="text" name="run_coachee" id="run_coachee" placeholder="Ingrese Destinatario" required>
         <input class="controls" type="file" name="archivo" id="archivo" required onchange="return validarExt()" 
         accept=".xlsx,.pptx,.pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
         
+        <select name="coachee" id="coachee">
+            <option value="">Destinatario</option>
+            
+            {% for c in coachees %}
+            <option value="{{c.0}}">{{c.1}}</option>
+            {% endfor %}
+      
+          </select>
         
 
         <input class="botons" type="submit" value="Subir Archivo">
