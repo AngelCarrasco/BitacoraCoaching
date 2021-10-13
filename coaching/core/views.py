@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.db import connection
+from django.core.files.storage import FileSystemStorage
 import cx_Oracle
 
 # Create your views here.
@@ -24,6 +25,44 @@ def administrador(request):
 def coach(request):
 
     return render(request, 'core/coach.html')
+
+def contrato(request):
+    p_proceso = 'SP_LISTA_PROCESO'
+    p_coachee = 'SP_LISTA_COACHEE'
+
+    data ={
+        'coachees': listar(p_coachee),
+        'procesos': listar(p_proceso)
+    }
+
+    if request.POST:
+        
+        archivo = request.FILES['clausula']
+        fs = FileSystemStorage()
+        name = fs.save(archivo.name, archivo)
+        url = fs.url(name)
+        fecha = request.POST.get("fecha")
+        id_proceso = request.POST.get("proceso")
+        run_coach = request.POST.get("coach")
+        run_coachee = request.POST.get("coachee")
+
+        salida = agregar_contrato(fecha,url,id_proceso,run_coach,run_coachee)
+        if salida ==1:
+             data['mensaje']='Agregado con exito'
+        else:
+             data['mensaje'] = 'no se ha podido agregar'
+
+    return render(request, 'core/contrato.html', data)
+
+def lista_coach_proceso(request):
+    p_list = 'SP_LIST_PROCESO_COACH'
+    id_proceso = request.GET.get('proceso')
+
+    data ={
+        'coachs' : listar_anidado(p_list,id_proceso)
+    }
+
+    return render(request, 'core/combox_coach.html', data)
 
 def registro_empresa(request):
     data={}
@@ -152,12 +191,33 @@ def agregar_proceso(nombre,modalidad,status,run_coach):
 
     return salida.getvalue()
 
+def agregar_contrato(fecha,clausula,proceso,run_coach,run_coachee):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+
+    cursor.callproc('SP_AGREGAR_CONTRATO',[fecha,clausula,proceso,run_coach,run_coachee,salida])
+
+    return salida.getvalue()
+
 def listar(procedimiento):
     django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
     out_cur = django_cursor.connection.cursor()
 
     cursor.callproc(procedimiento,[out_cur])
+
+    lista = []
+    for fila in out_cur:
+        lista.append(fila)
+    return lista
+
+def listar_anidado(procedimiento,filtro):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    out_cur = django_cursor.connection.cursor()
+
+    cursor.callproc(procedimiento,[out_cur, filtro])
 
     lista = []
     for fila in out_cur:
