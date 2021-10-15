@@ -1,0 +1,61 @@
+{% extends 'core/base.html' %}
+
+{% block titulo %}
+<title>Contrato</title>
+{% endblock %}
+
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'core/css/estilo_r_coach.css' %}">
+{% endblock %}
+
+{% block contenido %}
+<section class="form-register">
+  <h4>Registro Coach</h4>
+  <form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input class="controls" type="date" name="fecha" id="fecha" placeholder="Seleccione la fecha" required>
+    <input class="controls" type="file" name="clausula" id="clausula" placeholder="Clausula">
+    <select name="proceso" id="proceso" onchange="cambiarCoach()">
+        <option value="">Selecionne el proceso</option>
+        
+        {% for c in procesos %}
+        <option value="{{c.0}}">{{c.1}}</option>
+        {% endfor %}
+  
+    </select>
+    <select name="coach" id="coach">
+
+    </select>
+    <select name="coachee" id="coachee">
+        <option value="">Selecionne el coachee</option>
+
+        {% for c in coachees %}
+        <option value="{{c.0}}">{{c.1}}</option>
+        {% endfor %}
+  
+    </select>
+
+    <input class="botons" type="submit" value="Agregar">
+  </form>
+  {{mensaje}}
+</section>
+
+{% endblock %}
+
+{% block js %}
+<script>
+    function cambiarCoach(){
+        let id_proceso = document.getElementById("proceso").value;
+        let url = '/combox/?proceso='+id_proceso;
+        fetch(url)
+        .then(function(result){
+            return result.text();
+        })
+        .then(function(result){
+            document.getElementById("coach").innerHTML = result;
+        });
+    }
+</script>
+{% endblock %}
