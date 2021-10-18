@@ -22,10 +22,6 @@ def administrador(request):
     }
     return render(request, 'core/administrador.html',data)
 
-def coach(request):
-
-    return render(request, 'core/coach.html')
-
 def contrato(request):
     p_proceso = 'SP_LISTA_PROCESO'
     p_coachee = 'SP_LISTA_COACHEE'
@@ -54,16 +50,7 @@ def contrato(request):
 
     return render(request, 'core/contrato.html', data)
 
-def lista_coach_proceso(request):
-    p_list = 'SP_LIST_PROCESO_COACH'
-    id_proceso = request.GET.get('proceso')
-
-    data ={
-        'coachs' : listar_anidado(p_list,id_proceso)
-    }
-
-    return render(request, 'core/combox_coach.html', data)
-
+#CRUD empresa
 def registro_empresa(request):
     data={}
 
@@ -84,6 +71,7 @@ def registro_empresa(request):
 
     return render(request, 'core/registro_empresa.html', data)
 
+#CRUD proceso
 def registro_proceso(request):
     p_coach = 'SP_LISTA_COACH'
     data = {
@@ -105,9 +93,12 @@ def registro_proceso(request):
 
     return render(request, 'core/registro_proceso.html',data)
 
-
+#CRUD coach
 def registro_coach(request):
-    data ={}
+    p_coach = 'SP_LISTA_COACH'
+    data ={
+        'coachs' : listar(p_coach)
+    }
 
     if request.POST:
         run = request.POST.get('run')
@@ -121,12 +112,16 @@ def registro_coach(request):
         salida = agregar_coach(run,nombre,ap_paterno,ap_materno,telefono,correo,contrasena,contrato)
         if salida == 1:
             data['mensaje'] = 'agregado correctamente'
+            data['coachs'] = listar(p_coach)
         else:
             data['mensaje'] = 'no se ha podido agregar'
 
     return render(request, 'core/registro_coach.html', data)
 
+def mofificar_coach():
+    pass
 
+#CRUD coachee
 def registro_coachee(request):
     p_empresa = 'SP_LISTA_EMPRESA'
     data= {
@@ -155,6 +150,13 @@ def registro_coachee(request):
     return render(request, 'core/registro_coachee.html', data)
 
 
+#Vista coach
+def coach(request):
+
+    return render(request, 'core/coach.html')
+
+
+#PROCEDIMIENTOS BD
 def agregar_coach(run,nombre,ap_paterno,ap_materno,telefono,correo,contrasena,contrato):
     django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()

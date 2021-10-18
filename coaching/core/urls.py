@@ -10,7 +10,5 @@ urlpatterns = [
     path('registro_empresa/', views.registro_empresa, name="registro_empresa"),
     path('registro_proceso/', views.registro_proceso, name="registro_proceso"),
     path('coach/', views.coach, name="coach"),
-    path('contrato/', views.contrato , name="contrato"),
-    path('combox/', views.lista_coach_proceso, name="combox"),
     path('login/', views.login, name="login"),
 ]
