@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import *
+
+from core.views import contrato
+from .models import Coach,Coachee,Empresa,Encuesta,Proceso,Documentacion
 
 # Register your models here.
 
