@@ -1,0 +1,21 @@
+.navbar {
+    background: #0b3241;
+}
+
+.card-body {
+    background-color: #0b3241;
+    color: white;
+}
+
+.card-header {
+    background-color: #ffc107;
+    color: #0b3241;
+}
+
+.main-footer {
+    background: #0b3241;
+}
+
+.main-sidebar{
+    background-color: #0b3241;
+}

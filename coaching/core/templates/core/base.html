@@ -1,0 +1,154 @@
+
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="es">  
+  <head>    
+
+    {% block titulo%}
+    <title>Home</title>
+    {% endblock %}  
+    <meta charset="UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- tipo de fuente -->
+    <link rel="stylesheet" href="{% static 'fontawesome-free/css/all.min.css' %}">
+    <!-- bootstrap theme -->
+    <link rel="stylesheet" href="{% static 'css/adminlte.min.css' %}">
+    <!-- Estilo -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- iconos -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <!-- css GRID -->
+    <link rel="stylesheet" href=" {%static 'jsgrid/jsgrid.min.css' %}">
+    <link rel="stylesheet" href="{%static 'jsgrid/jsgrid-theme.min.css' %}">
+    {% block css%}
+    
+    {% endblock %}
+    
+  </head>  
+  <body body class="hold-transition skin-blue sidebar-collapse sidebar-mini">    
+  <div class="wrapper">
+    
+  
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <!-- Brand Logo -->
+      <a href="#" class="brand-link">
+        <!--LOGO-->
+        <img src="https://thinkgo.cl/wp-content/themes/tema-thinkgo/img/logo-thinkgo.png" alt="Logo" class="brand-image "
+             style="opacity: .8" >
+        <span class="brand-text font-weight-light">Sistema</span>
+        <br>
+        <span class="brand-text font-weight-light">&nbsp;  Coaching</span>
+      </a>
+  
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <!-- Sidebar user panel (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+          <div class="image">
+            <img src="" class="img-circle elevation-2" alt="User Image">
+          </div>
+          <div class="info">
+            <a href="#" class="d-block">Alexander Pierce</a>
+          </div>
+        </div>
+  
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+          <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <!-- Add icons to the links using the .nav-icon class
+                 with font-awesome or any other icon font library -->
+            
+             
+            
+                 <li class="nav-item">
+                  <a href="{% url 'administrador'%}" class="nav-link">
+                    <i class="nav-icon far fa-calendar-alt"></i>
+                    <p>
+                      Dashboard
+                      <span class="badge badge-info right">2</span>
+                    </p>
+                  </a>
+                </li>
+
+                <li class="nav-item">
+                  <a href="{% url 'registro_empresa'%}" class="nav-link">
+                    <i class="nav-icon far fa-calendar-alt"></i>
+                    <p>
+                      Empresa
+                      <span class="badge badge-info right">2</span>
+                    </p>
+                  </a>
+                </li>
+
+                <li class="nav-item">
+                  <a href="{% url 'registro_coach'%}" class="nav-link">
+                    <i class="nav-icon far fa-calendar-alt"></i>
+                    <p>
+                      coach
+                      <span class="badge badge-info right">2</span>
+                    </p>
+                  </a>
+                </li>
+
+                <li class="nav-item">
+                  <a href="{% url 'registro_coachee'%}" class="nav-link">
+                    <i class="nav-icon far fa-calendar-alt"></i>
+                    <p>
+                      coachee
+                      <span class="badge badge-info right">2</span>
+                    </p>
+                  </a>
+                </li>
+
+                <li class="nav-item">
+                  <a href="{% url 'registro_proceso'%}" class="nav-link">
+                    <i class="nav-icon far fa-calendar-alt"></i>
+                    <p>
+                      Proceso
+                      <span class="badge badge-info right">2</span>
+                    </p>
+                  </a>
+                </li>
+           
+          </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+      </div>
+      <!-- /.sidebar -->
+    </aside>
+  
+    
+
+    
+    
+      <div class="content-wrapper">
+    {% block contenido %}
+
+    {% endblock %}
+  </div>
+    </div>
+  
+     
+    <!-- jquery JQ -->
+    <script src="{% static 'jquery/jquery.min.js' %}"></script>
+    <!-- bootstrap JS -->
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <!-- JSGRID -->
+    <script src="{%static 'jsgrid/demos/db.js' %}"></script>
+    <script src="{%static 'jsgrid/jsgrid.min.js' %}"></script>
+    <script src="{%static 'jsadmi/adminlte.js' %}"></script>
+   
+    
+    {% block js%}
+    
+    {% endblock %}
+
+    
+  </body>
+
+</html>

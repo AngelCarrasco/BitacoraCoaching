@@ -40,7 +40,10 @@ def registro_empresa(request):
     return render(request, 'core/registro_empresa.html', data)
 
 def registro_proceso(request):
-    pass
+    data={}
+
+    return render(request, 'core/registro_proceso.html')
+
 
 def registro_coach(request):
     data ={}
