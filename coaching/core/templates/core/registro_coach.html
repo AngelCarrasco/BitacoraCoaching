@@ -49,9 +49,9 @@
       <input class="controls" type="text" name="a_paterno" id="a_paterno" placeholder="Apellido paterno" required>
       <input class="controls" type="text" name="a_materno" id="a_materno" placeholder="Apellido materno" required>
       <input class="controls" type="email" name="correo" id="correo" placeholder="Ingrese su correo" required>
-      <input class="controls" type="text" name="telefono" id="telefono" placeholder="telefono" required>
+      <input class="controls" type="text" name="telefono" id="telefono" placeholder="Telefono" required>
   
-      <input class="botons" type="submit" value="Agregar" onclick="limpiarFormulario()" >
+      <input class="botons" type="submit" value="Agregar" {% comment %} onclick="limpiarFormulario()" {% endcomment %} >
       <input class="botons" type="submit" value="Modificar" >
     </form>
     {{mensaje}}
@@ -61,6 +61,7 @@
 
 {% block js%}
 
+{% comment %} limpiar el formulario despues de agregar (no funca por alguna razon) {% endcomment %}
 <script src=" static/core/js/validacion.js"></script>
 <script>
   function limpiarFormulario(){
@@ -68,18 +69,33 @@
   };
 </script>
 
+{% comment %} traspasar los datos de la tabla al formulario {% endcomment %}
 <script>
   $(".btnModificar").click(function(){
-    var id = $(this).closest('tr').find('td').each(function(){
-      var textval = $(this).text();
-      
-      $("#run").val(textval).readOnly;
-      $("#nombre").val(textval);
-      $("#a_paterno").val(textval);
-      $("#a_pmaterno").val(textval);
-      $("#correo").val(textval);
-      $("#telefono").val(textval);
-    });
-  });
+
+    $("table tbody tr").each(function(){
+
+      var UserData = {};
+      var UserData2 = {};
+      var UserData3 = {};
+      var UserData4 = {};
+      var UserData5 = {};
+      var UserData6 = {};
+
+      var id = $(this).find('td');
+        UserData = id.filter(":eq(0)").text();
+        UserData2 = id.filter(":eq(1)").text();
+        UserData3 = id.filter(":eq(2)").text();
+        UserData4 = id.filter(":eq(3)").text();
+        UserData5 = id.filter(":eq(4)").text();
+        UserData6 = id.filter(":eq(5)").text();
+        $("#run").val(UserData);
+        $("#nombre").val(UserData2);
+        $("#a_paterno").val(UserData3);
+        $("#a_materno").val(UserData4);
+        $("#correo").val(UserData5);
+        $("#telefono").val(UserData6);
+        });
+        });
 </script>
 {% endblock %}
