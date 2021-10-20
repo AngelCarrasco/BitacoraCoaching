@@ -6,6 +6,7 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
+from django.db.models.fields import related
 
 
 class Coach(models.Model):
@@ -15,7 +16,7 @@ class Coach(models.Model):
     apellido_m = models.CharField(max_length=50)
     telefono = models.IntegerField()
     correo = models.CharField(max_length=50)
-    contrasena = models.CharField(max_length=16)
+    contrasena = models.CharField(max_length=200)
     contrato = models.FloatField()
 
     class Meta:
@@ -30,39 +31,28 @@ class Coachee(models.Model):
     cargo = models.CharField(max_length=20)
     apellido_p = models.CharField(max_length=50)
     correo = models.CharField(max_length=50)
-    rut_empresa = models.ForeignKey('Empresa', models.DO_NOTHING, db_column='rut_empresa')
-    contrasena = models.CharField(max_length=16)
+    contrasena = models.CharField(max_length=200)
     contrato = models.FloatField()
+    rut_empresa = models.ForeignKey('Empresa', models.DO_NOTHING, db_column='rut_empresa')
+    id_sesion = models.ForeignKey('Sesion', models.DO_NOTHING, db_column='id_sesion')
 
     class Meta:
         managed = False
         db_table = 'coachee'
 
 
-class Contrato(models.Model):
-    id_contrato = models.AutoField(primary_key=True)
-    fecha_cantro = models.DateField()
-    clausula = models.TextField()
-    id_proceso = models.ForeignKey('Proceso', models.DO_NOTHING, db_column='id_proceso', related_name="con_id_proceso")
-    run_coach = models.ForeignKey('Proceso', models.DO_NOTHING, db_column='run_coach', related_name="con_run_coach")
-    run_coachee = models.ForeignKey(Coachee, models.DO_NOTHING, db_column='run_coachee', related_name="con_run_coachee")
-
-    class Meta:
-        managed = False
-        db_table = 'contrato'
-
-
 class Documentacion(models.Model):
-    archivo = models.FileField(upload_to='folder',blank=True,null=True)
+    id_doc = models.FloatField(primary_key=True)
+    archivo = models.TextField()
     fecha_subida = models.DateField()
-    run_coachee = models.ForeignKey(Coachee, models.DO_NOTHING, db_column='run_coachee')
-    run_coach = models.OneToOneField(Coach, models.DO_NOTHING, db_column='run_coach', primary_key=True)
     fecha_vista = models.DateField(blank=True, null=True)
+    run_coachee = models.ForeignKey(Coachee, models.DO_NOTHING, db_column='run_coachee', related_name='doc_run_coachee')
+    run_coach = models.ForeignKey(Coach, models.DO_NOTHING, db_column='run_coach', related_name='doc_run_coach')
 
     class Meta:
         managed = False
         db_table = 'documentacion'
-        unique_together = (('run_coach', 'run_coachee'),)
+        unique_together = (('id_doc', 'run_coach', 'run_coachee'),)
 
 
 class Empresa(models.Model):
@@ -72,6 +62,9 @@ class Empresa(models.Model):
     nombre = models.CharField(max_length=30)
     correo = models.CharField(max_length=50)
     contrato = models.FloatField()
+    nombre_jefe = models.CharField(max_length=50)
+    correo_jefe = models.CharField(max_length=60)
+    telefono_jefe = models.IntegerField()
 
     class Meta:
         managed = False
@@ -79,7 +72,7 @@ class Empresa(models.Model):
 
 
 class Encuesta(models.Model):
-    id_pregunta = models.AutoField(primary_key=True)
+    id_pregunta = models.FloatField(primary_key=True)
     pregunta = models.CharField(max_length=20)
     nota = models.FloatField(blank=True, null=True)
 
@@ -89,13 +82,13 @@ class Encuesta(models.Model):
 
 
 class Evaluacion(models.Model):
-    id_encuesta = models.AutoField(primary_key=True)
+    id_encuesta = models.FloatField(primary_key=True)
     fecha = models.DateField()
     comentario = models.CharField(max_length=100, blank=True, null=True)
     promedio = models.FloatField(blank=True, null=True)
-    id_proceso = models.OneToOneField('Proceso', models.DO_NOTHING, db_column='id_proceso')
-    run_coach = models.ForeignKey('Proceso', models.DO_NOTHING, db_column='run_coach', related_name="eva_run_coach")
-    id_pregunta = models.ForeignKey(Encuesta, models.DO_NOTHING, db_column='id_pregunta', related_name="eva")
+    id_proceso = models.OneToOneField('Proceso', models.DO_NOTHING, db_column='id_proceso', related_name='eva_id_proce')
+    run_coach = models.ForeignKey('Proceso', models.DO_NOTHING, db_column='run_coach', related_name='eva_run_coach')
+    id_pregunta = models.ForeignKey(Encuesta, models.DO_NOTHING, db_column='id_pregunta', related_name='eva_id_pregunta')
 
     class Meta:
         managed = False
@@ -104,11 +97,11 @@ class Evaluacion(models.Model):
 
 
 class Indicador(models.Model):
-    id_incador = models.AutoField(primary_key=True)
+    id_incador = models.FloatField(primary_key=True)
     nombre = models.CharField(max_length=50)
     valor_meta = models.FloatField()
     descripcion = models.CharField(max_length=150)
-    id_objetivo = models.ForeignKey('Objetivo', models.DO_NOTHING, db_column='id_objetivo')
+    id_objetivo = models.ForeignKey('Objetivo', models.DO_NOTHING, db_column='id_objetivo', related_name='ind_id_obj')
 
     class Meta:
         managed = False
@@ -116,11 +109,10 @@ class Indicador(models.Model):
 
 
 class Objetivo(models.Model):
-    id_objetivo = models.AutoField(primary_key=True)
+    id_objetivo = models.FloatField(primary_key=True)
     nombre = models.CharField(max_length=150)
-    id_proceso = models.ForeignKey('Proceso', models.DO_NOTHING, db_column='id_proceso',related_name="ob_id_proceso")
-    run_coach = models.ForeignKey('Proceso', models.DO_NOTHING, db_column='run_coach',related_name="ob_run_cocach")
-    id_reunion = models.ForeignKey('ReunionIni', models.DO_NOTHING, db_column='id_reunion',related_name="ob_id_reunion")
+    id_proceso = models.ForeignKey('Proceso', models.DO_NOTHING, db_column='id_proceso', related_name='obj_id_pro')
+    run_coach = models.ForeignKey('Proceso', models.DO_NOTHING, db_column='run_coach', related_name='obj_run_coach')
 
     class Meta:
         managed = False
@@ -128,14 +120,12 @@ class Objetivo(models.Model):
 
 
 class PlanAccion(models.Model):
-    id_plan = models.AutoField(primary_key=True)
+    id_plan = models.FloatField(primary_key=True)
     fecha = models.DateField()
     tema = models.CharField(max_length=50)
     accion = models.CharField(max_length=150)
-    id_sesion = models.ForeignKey('Sesion', models.DO_NOTHING, db_column='id_sesion',related_name="pa_id_sesion")
-    id_proceso = models.ForeignKey('Sesion', models.DO_NOTHING, db_column='id_proceso',related_name="pa_id_proceso")
-    run_coach = models.ForeignKey('Sesion', models.DO_NOTHING, db_column='run_coach',related_name="pa_run_coach")
-    run_coachee = models.ForeignKey('Sesion', models.DO_NOTHING, db_column='run_coachee',related_name="pa_run_coachee")
+    id_proceso = models.ForeignKey('Proceso', models.DO_NOTHING, db_column='id_proceso', related_name='pla_id_proc')
+    run_coach = models.ForeignKey('Proceso', models.DO_NOTHING, db_column='run_coach',related_name='pla_run_coach')
 
     class Meta:
         managed = False
@@ -143,11 +133,14 @@ class PlanAccion(models.Model):
 
 
 class Proceso(models.Model):
-    id_proceso = models.AutoField(primary_key=True)
+    id_proceso = models.FloatField(primary_key=True)
     nombre = models.CharField(max_length=50)
     modalidad = models.CharField(max_length=15)
     status = models.CharField(max_length=50)
-    run_coach = models.ForeignKey(Coach, models.DO_NOTHING, db_column='run_coach', related_name="pro_run_coach")
+    fecha_contrato = models.DateField()
+    clausula = models.TextField()
+    run_coach = models.ForeignKey(Coach, models.DO_NOTHING, db_column='run_coach', related_name='pro_run_coach')
+    rut_empresa = models.ForeignKey(Empresa, models.DO_NOTHING, db_column='rut_empresa', related_name='pro_rut_empresa')
 
     class Meta:
         managed = False
@@ -155,47 +148,31 @@ class Proceso(models.Model):
         unique_together = (('id_proceso', 'run_coach'),)
 
 
-class ReunionAvance(models.Model):
-    id_avance = models.AutoField(primary_key=True)
+class Reunion(models.Model):
+    id_reunion = models.FloatField(primary_key=True)
     fecha = models.DateField()
-    observacion = models.CharField(max_length=250)
-    id_sesion = models.ForeignKey('Sesion', models.DO_NOTHING, db_column='id_sesion',related_name="ra_id_sesion")
-    id_proceso = models.ForeignKey('Sesion', models.DO_NOTHING, db_column='id_proceso',related_name="ra_id_proceso")
-    run_coach = models.ForeignKey('Sesion', models.DO_NOTHING, db_column='run_coach',related_name="ra_run_coach")
-    run_coachee = models.ForeignKey('Sesion', models.DO_NOTHING, db_column='run_coachee',related_name="ra_run_coachee")
-
-    class Meta:
-        managed = False
-        db_table = 'reunion_avance'
-
-
-class ReunionIni(models.Model):
-    id_reunion = models.AutoField(primary_key=True)
-    fecha = models.DateField()
-    antecedente_coachee = models.TextField()
-    objetivo_proceso = models.TextField()
-    indicador_exito = models.TextField()
     participante = models.TextField()
+    tipo_reunion = models.CharField(max_length=15)
+    observacion = models.CharField(max_length=200, blank=True, null=True)
+    antecedente_coachee = models.TextField(blank=True, null=True)
+    id_proceso = models.ForeignKey(Proceso, models.DO_NOTHING, db_column='id_proceso', related_name='reu_id_pro')
+    run_coach = models.ForeignKey(Proceso, models.DO_NOTHING, db_column='run_coach', related_name='reu_run_coach')
 
     class Meta:
         managed = False
-        db_table = 'reunion_ini'
+        db_table = 'reunion'
 
 
 class Sesion(models.Model):
     id_sesion = models.IntegerField(primary_key=True)
     fecha_acordada = models.DateField()
     fecha_realizada = models.DateField(blank=True, null=True)
+    descripcion = models.CharField(max_length=200)
     estado = models.FloatField()
     asignacion_acuerdos = models.TextField()
-    id_proceso = models.ForeignKey(Proceso, models.DO_NOTHING, db_column='id_proceso',related_name="se_id_proceso")
-    run_coach = models.ForeignKey(Proceso, models.DO_NOTHING, db_column='run_coach',related_name="se_run_coach")
-    run_coachee = models.ForeignKey(Coachee, models.DO_NOTHING, db_column='run_coachee',related_name="se_run_coachee")
+    id_proceso = models.ForeignKey(Proceso, models.DO_NOTHING, db_column='id_proceso', related_name='sesion_id_pro')
+    run_coach = models.ForeignKey(Proceso, models.DO_NOTHING, db_column='run_coach', related_name='sesion_run_coach')
 
     class Meta:
         managed = False
         db_table = 'sesion'
-        unique_together = (('id_sesion', 'id_proceso', 'run_coach', 'run_coachee'),)
-
-class fecha(models.Model):
-    fecha_creacion = models.DateTimeField(auto_now_add=True)

@@ -1,28 +1,130 @@
 {% extends 'core/base.html' %}
-
-{% block titulo%}
-<title>Registro proceso</title>
-{% endblock %}
-
 {% load static %}
+ {% block titulo%}
+  <title>Proceso</title>
+  {% endblock %}
+{%block contenido%}
 
-{% block css %}
-<link rel="stylesheet" href="{% static 'core/css/estilo_r_coach.css' %}">
+<br>
+<br>
+<!-- separar la wea en dos!-->
+<div class="container">
+    <div class="row">
+        <div class="col">
+
+          <div id="jsGrid" class="jsGrid"></div>
+</div>
+
+
+        <div class="col">
+            <div class="container">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Asigna un proceso nuevo</h3>
+                    </div>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="card-body">
+             <div class="form-group">
+            <label for="exampleInputEmail1">Nombre Proceso</label>
+            <input class="form-control" type="text" name="nom_proceso" id="nom_proceso" placeholder="Nombre Proceso" required="">
+            </div>
+             <div class="form-group">
+            <label for="exampleInputEmail1">Modalidad</label>
+            <input class="form-control" type="text" name="modalidad" id="modalidad" placeholder="Modalidad" required="">
+            </div>
+            <div class="form-group">
+            <label for="exampleInputEmail1">Status</label>
+            <input class="form-control" type="text" name="status" id="status" placeholder="Status" required="">
+            </div>
+            <div class="form-group">
+            <label for="exampleInputEmail1">Fecha Contrato</label>
+            <input class="form-control" type="date" id="start" name="trip-start" required=""
+            value="2018-07-22"
+            min="2018-01-01" max="2018-12-31">
+            </div>
+             <div class="form-group">
+            <label for="exampleInputEmail1">Clausula</label>
+            <input  class="form-control-file" type="file" name="archivo" id="archivo" required"" onchange="return validarExt()" 
+            accept=".xlsx,.pptx,.pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+            </div>
+             <div class="form-group">
+            <label for="exampleInputFile">Run Coach</label> 
+            <select class="form-control" name="empresa" id="empresa"
+                  required="">
+                  <option value="">
+                    Seleciona
+                  </option>
+                  </select>
+            </div>
+             <div class="form-group">
+            <label for="exampleInputFile">Run Coachee</label> 
+            <select class="form-control" name="empresa" id="empresa"
+                  required="">
+                  <option value="">
+                    Seleciona
+                  </option>
+                  </select>
+            </div>
+                            <div class="card-footer">
+                                <input class="btn btn-primary" type="submit" value="Agregar">
+
+                                 
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 {% endblock %}
 
-{% block contenido %}
-<section class="form-register">
-  <h4>Registro Proceso</h4>
-  <form action="" method="POST">
-    {% csrf_token %} 
-    <input class="controls" type="text" name="nombre" id="nombre" placeholder="Nombre empresa" required>
-    <input class="controls" type="text" name="direccion" id="direccion" placeholder="Direccion" required>
-    <input class="controls" type="number" name="telefono" id="telefono" placeholder="Telefono" max="999999999" required >
-    <input class="controls" type="text" name="rut" id="rut" placeholder="Rut empresa" oninput="" maxlength="10" required>
-    <input class="controls" type="email" name="correo" id="correo" placeholder="Correo empresa" required>
+{% block js%}
+<script>
+  var clients = [
+    { "Name": "Otto Clay", "Age": 25, "Country": 1, "Address": "Ap #897-1459 Quam Avenue", "Married": false },
+    { "Name": "Connor Johnston", "Age": 45, "Country": 2, "Address": "Ap #370-4647 Dis Av.", "Married": true },
+    { "Name": "Lacey Hess", "Age": 29, "Country": 3, "Address": "Ap #365-8835 Integer St.", "Married": false },
+    { "Name": "Timothy Henson", "Age": 56, "Country": 1, "Address": "911-5143 Luctus Ave", "Married": true }
 
-    <input class="botons" type="submit" value="Agregar" >
-  </form>
-  {{mensaje}}
-</section>
+  ];
+
+  var countries = [
+    { Name: "", Id: 0 },
+    { Name: "United States", Id: 1 },
+    { Name: "Canada", Id: 2 },
+    { Name: "United Kingdom", Id: 3 }
+  ];
+
+  $("#jsGrid").jsGrid({
+    width: "100%",
+    height: "100%",
+
+    filtering: true,
+    editing: true,
+    sorting: true,
+    paging: true,
+    autoload: true,
+
+    data: clients,
+
+    fields: [
+      { name: "Name", type: "text", width: 150, validate: "required" },
+      { name: "Age", type: "number", width: 50 },
+      { name: "Address", type: "text", width: 200 },
+      { name: "Country", type: "select", items: countries, valueField: "Id", textField: "Name" },
+      { name: "Married", type: "checkbox", title: "Is Married", sorting: false },
+      { type: "control" }
+    ]
+  });
+</script>
 {% endblock %}
+
+
+
+
+           
+
