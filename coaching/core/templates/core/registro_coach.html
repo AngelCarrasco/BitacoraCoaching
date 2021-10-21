@@ -26,15 +26,15 @@
         </tr>
       </thead>
       <tbody>
-        {% for i in coachs%}
+        {% for coach in coachs%}
           <tr>
-            <td>{{i.0}}</td>
-            <td>{{i.1}}</td>
-            <td>{{i.2}}</td>
-            <td>{{i.3}}</td>
-            <td>{{i.5}}</td>
-            <td>{{i.4}}</td>
-            <th><input type="button" class="btnModificar" value="Modificar"></th>
+            <td>{{coach.0}}</td>
+            <td>{{coach.1}}</td>
+            <td>{{coach.2}}</td>
+            <td>{{coach.3}}</td>
+            <td>{{coach.5}}</td>
+            <td>{{coach.4}}</td>
+            <td><input type="button" class="btnModificar" value="Modificar"></td>
           </tr>
         {% endfor %}
       </tbody>
@@ -51,7 +51,7 @@
       <input class="controls" type="email" name="correo" id="correo" placeholder="Ingrese su correo" required>
       <input class="controls" type="text" name="telefono" id="telefono" placeholder="Telefono" required>
   
-      <input class="botons" type="submit" value="Agregar" {% comment %} onclick="limpiarFormulario()" {% endcomment %} >
+      <input class="botons" type="submit" value="Guardar" {% comment %} onclick="limpiarFormulario()" {% endcomment %} >
     </form>
     {{mensaje}}
   </div>

@@ -99,7 +99,6 @@ def registro_coach(request):
     data ={
         'coachs' : listar(p_coach)
     }
-
     if request.POST:
         run = request.POST.get('run')
         nombre = request.POST.get('nombre')
@@ -115,11 +114,17 @@ def registro_coach(request):
             data['coachs'] = listar(p_coach)
         else:
             data['mensaje'] = 'no se ha podido agregar'
-
+    elif request.POST:
+        run = request.POST.get('run')
+        nombre = request.POST.get('nombre')
+        ap_paterno = request.POST.get('a_paterno')
+        ap_materno = request.POST.get('a_materno')
+        telefono = request.POST.get('telefono')
+        correo = request.POST.get('correo')
+        contrasena = run[:4]
+        contrato = '1'
+        salida = actualizar_coach(run,nombre,ap_paterno,ap_materno,telefono,correo,contrasena,contrato)
     return render(request, 'core/registro_coach.html', data)
-
-def mofificar_coach():
-    pass
 
 #CRUD coachee
 def registro_coachee(request):
@@ -163,6 +168,15 @@ def agregar_coach(run,nombre,ap_paterno,ap_materno,telefono,correo,contrasena,co
     salida = cursor.var(cx_Oracle.NUMBER)
 
     cursor.callproc('SP_AGREGAR_COACH',[run,nombre,ap_paterno,ap_materno,telefono,correo,contrasena,contrato,salida])
+
+    return salida.getvalue()
+
+def actualizar_coach(run,nombre,ap_paterno,ap_materno,telefono,correo,contrasena,contrato):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+
+    cursor.callproc('SP_ACTUALIZAR_COACH',[run,nombre,ap_paterno,ap_materno,telefono,correo,contrasena,contrato,salida])
 
     return salida.getvalue()
 
