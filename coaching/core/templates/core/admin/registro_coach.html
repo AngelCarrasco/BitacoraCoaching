@@ -1,7 +1,7 @@
-{% extends 'core/base.html' %}
+{% extends 'core/admin/base.html' %}
 {% load static %}
  {% block titulo%}
-  <title>Coachee</title>
+  <title>Coach</title>
   {% endblock %}
 {%block contenido%}
 <br>
@@ -9,65 +9,47 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      <div id="jsGrid" class="jsGrid">
-      </div>
+      <div id="jsGrid" class="jsGrid"> </div>
     </div>
     <div class="col">
       <div class="container">
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Registra un coachee</h3>
-          </div><!-- /.card-header -->
-          <!-- form start -->
-          <form method="post">
+            <h3 class="card-title">Registrar Coach</h3>
+          </div>
+          <form action="" method="post">
             {% csrf_token %}
             <div class="card-body">
               <div class="form-group">
-                <label for="exampleInputEmail1">Nombre</label> <input class="form-control" type="text" name="nombre"
-                  id="nombre" placeholder="Nombre empresa" required="">
+                <label for="exampleInputFile">Nombre</label> <input class="form-control" type="text" name="nombre" id="nombres" placeholder="Ingrese su Nombre" required="">
               </div>
               <div class="form-group">
-                <label for="exampleInputPassword1">Apellido paterno</label> <input class="form-control" type="text"
-                  name="a_paterno" id="a_paterno" placeholder="Apellido paterno" required="">
+                <label for="exampleInputFile">Apellido paterno</label> <input class="form-control" type="text" name="a_paterno" id="a_paterno" placeholder="Apellido paterno" required="">
               </div>
               <div class="form-group">
-                <label for="exampleInputPassword1">Apellido materno</label> <input class="form-control" type="text"
-                  name="a_materno" id="a_materno" placeholder="Apellido materno" required="">
+                <label for="exampleInputFile">Apellido materno</label> <input class="form-control" type="text" name="a_materno" id="a_materno" placeholder="Apellido materno" required="">
               </div>
               <div class="form-group">
-                <label for="exampleInputFile">Run coachee</label> <input class="form-control" type="text" name="run"
-                  id="run" placeholder="Run" oninput="checkRut(this)" maxlength="10" required="">
+                <label for="exampleInputFile">Run</label> <input class="form-control" type="text" name="run" id="run" placeholder="Run" oninput="checkRut(this)" maxlength="10" required="">
               </div>
               <div class="form-group">
-                <label for="exampleInputFile">Correo electronico</label> <input class="form-control" type="email"
-                  name="correo" id="correo" placeholder="Correo empresa" required="">
+                <label for="exampleInputFile">Correo electronico</label> <input class="form-control" type="email" name="correo" id="correos" placeholder="Ingrese su correo" required="">
               </div>
               <div class="form-group">
-                <label for="exampleInputFile">Cargo</label> <input class="form-control" type="text" name="cargo"
-                  id="cargo" placeholder="Cargo" required="">
+                <label for="exampleInputFile">Telefono</label> <input class="form-control" type="number" name="telefono" id="telefono" placeholder="Telefono" max="999999999" required="">
               </div>
-              <div class="form-group">
-                <label for="exampleInputFile">Empresa</label> <select class="form-control" name="empresa" id="empresa"
-                  required="">
-                  <option value="">
-                    Seleciona
-                  </option>
-                  <option value="{{c.0}}">
-                    {{c.1}}
-                  </option>
-                </select>
-              </div><!-- /.card-body -->
               <div class="card-footer">
-                <button type="submit" class="btn btn-primary">Registrar</button>
+                <input class="btn btn-primary" type="submit" value="Agregar">
               </div>
             </div>
           </form>
         </div>
       </div>
     </div>
-  </div><!-- /.card -->
+  </div>
 </div>
 {% endblock %}
+
 {% block js%}
 <script src="{%static 'jsgrid/demos/db.js' %}"></script>
 <script src="{%static 'jsgrid/jsgrid.min.js' %}"></script>

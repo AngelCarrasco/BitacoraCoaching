@@ -13,4 +13,6 @@ urlpatterns = [
     path('contrato/', views.contrato , name="contrato"),
     path('combox/', views.lista_coach_proceso, name="combox"),
     path('login/', views.login, name="login"),
+    path('dashboard', views.dashboard, name="dashboard"),
+    
 ]

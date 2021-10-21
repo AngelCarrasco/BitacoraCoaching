@@ -24,7 +24,7 @@ def administrador(request):
 
 def coach(request):
 
-    return render(request, 'core/coach.html')
+    return render(request, 'core/coach/coach.html')
 
 def contrato(request):
     p_proceso = 'SP_LISTA_PROCESO'
@@ -82,7 +82,7 @@ def registro_empresa(request):
          else:
              data['mensaje'] = 'no se ha podido agregar'
 
-    return render(request, 'core/registro_empresa.html', data)
+    return render(request, 'core/admin/registro_empresa.html', data)
 
 def registro_proceso(request):
     p_coach = 'SP_LISTA_COACH'
@@ -103,7 +103,7 @@ def registro_proceso(request):
         else:
             data['mensaje'] = 'no se ha agregado'
 
-    return render(request, 'core/registro_proceso.html',data)
+    return render(request, 'core/admin/registro_proceso.html',data)
 
 
 def registro_coach(request):
@@ -124,7 +124,7 @@ def registro_coach(request):
         else:
             data['mensaje'] = 'no se ha podido agregar'
 
-    return render(request, 'core/registro_coach.html', data)
+    return render(request, 'core/admin/registro_coach.html', data)
 
 
 def registro_coachee(request):
@@ -152,7 +152,11 @@ def registro_coachee(request):
         else:
             data['mensaje'] = 'no se ha agregado'
        
-    return render(request, 'core/registro_coachee.html', data)
+    return render(request, 'core/admin/registro_coachee.html', data)
+    
+
+def dashboard(request):
+    return render(request, 'core/administrador.html')
 
 
 def agregar_coach(run,nombre,ap_paterno,ap_materno,telefono,correo,contrasena,contrato):
