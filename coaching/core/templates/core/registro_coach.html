@@ -80,6 +80,8 @@
       var UserData4 = {};
       var UserData5 = {};
       var UserData6 = {};
+      var UserData7 = {};
+      var UserData8 = {};
 
       var id = $(this).find('td');
         UserData = id.filter(":eq(0)").text();
@@ -88,12 +90,16 @@
         UserData4 = id.filter(":eq(3)").text();
         UserData5 = id.filter(":eq(4)").text();
         UserData6 = parseInt(id.filter(":eq(5)").text());
+        UserData7 = id.filter(":eq(6)").text();
+        UserData8 = parseInt(id.filter(":eq(7)").text());
         $("#run").val(UserData);
         $("#nombre").val(UserData2);
         $("#a_paterno").val(UserData3);
         $("#a_materno").val(UserData4);
         $("#correo").val(UserData5);
         $("#telefono").val(UserData6);
+        $("#contrasena").val(UserData7);
+        $("#contrato").val(UserData8);
         });
         });
 </script>
