@@ -47,18 +47,6 @@ BEGIN
             V_CORREO,
             V_CONTRASENA,
             V_CONTRATO);
-        INSERT INTO AUTH_USER VALUES(
-            1,
-            V_CONTRASENA,
-            null,
-            0,
-            V_RUN_COACH,
-            V_NOMBRE,
-            V_APATERNO,
-            V_CORREO,
-            0,
-            1,
-            SYSDATE);
     END IF;
 COMMIT;
 END;
@@ -115,19 +103,6 @@ BEGIN
             V_CONTRATO,
             V_RUT_EMPRESA_C,
             V_ID_SESION_C);
-        
-        INSERT INTO AUTH_USER VALUES(
-            2,
-            V_CONTRASENA,
-            null,
-            0,
-            V_RUN_COACHEE,
-            V_NOMBRE,
-            V_APELLIDO_P,
-            V_CORREO,
-            0,
-            1,
-            SYSDATE);
     END IF;
 COMMIT;
 END;
