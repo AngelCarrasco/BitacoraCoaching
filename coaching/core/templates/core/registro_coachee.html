@@ -11,30 +11,60 @@
 <link rel="stylesheet" href="{% static 'core/css/estilo_r_coach.css' %}">
 {% endblock %}
 
+
 {% block contenido %}
-<section class="form-register">
-  <h4>Registro Coachee</h4>
+<div class="row">
+  <div class="col-md-6">
+    <h3>Coachs registrados</h3>
+    <table id="tablaCoach" class="table table-bordered table-dark">
+      <thead>
+        <tr>
+          <th scope="col">Run</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Apellido Paterno</th>
+          <th scope="col">Apellido Materno</th>
+          <th scope="col">Correo</th>
+          <th scope="col">Telefono</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for coach in coachs%}
+          <tr>
+            <td>{{coach.0}}</td>
+            <td>{{coach.1}}</td>
+            <td>{{coach.2}}</td>
+            <td>{{coach.3}}</td>
+            <td>{{coach.5}}</td>
+            <td>{{coach.4}}</td>
+            <td><input type="button" class="btnModificar" value="Modificar"></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="col-md-5 ml-auto">
+  <h5>Registro Coachee</h5>
   <form action="" method="POST">
     {% csrf_token %} 
-    <input class="controls" type="text" name="nombre" id="nombre" placeholder="Ingrese su Nombre" required>
-    <input class="controls" type="text" name="a_paterno" id="a_paterno" placeholder="Apellido paterno" required>
-    <input class="controls" type="text" name="a_materno" id="a_materno" placeholder="Apellido materno" required>
-    <input class="controls" type="text" name="run" id="run" placeholder="Run" oninput="checkRut(this)" maxlength="10" required>
-    <input class="controls" type="email" name="correo" id="correo" placeholder="Ingrese su correo" required>
-    <input class="controls" type="text" name="cargo" id="cargo" placeholder="Cargo" required>
+      <input class="controls" type="text" name="run" id="run" placeholder="Run" oninput="checkRut(this)" maxlength="10" required>
+      <input class="controls" type="text" name="nombre" id="nombre" placeholder="Ingrese su Nombre" required>
+      <input class="controls" type="text" name="a_paterno" id="a_paterno" placeholder="Apellido paterno" required>
+      <input class="controls" type="text" name="a_materno" id="a_materno" placeholder="Apellido materno" required>
+      <input class="controls" type="email" name="correo" id="correo" placeholder="Ingrese su correo" required>
+      <input class="controls" type="text" name="cargo" id="cargo" placeholder="Cargo" required>
 
-    <select name="empresa" id="empresa">
-      <option value="">Selecionna</option>
-      
-      {% for c in empresas %}
-      <option value="{{c.0}}">{{c.1}}</option>
-      {% endfor %}
+        <select name="empresa" id="empresa">
+        <option value="">Selecionna</option>
+        {% for c in empresas %}
+        <option value="{{c.0}}">{{c.1}}</option>
+        {% endfor %}
 
     </select>
     <input class="botons" type="submit" value="Agregar" >
   </form>
   {{mensaje}}
-</section>
+</div>
+</div>
 {% endblock %}
 {% block js%}
 <script src="static/core/js/validacion.js"></script>

@@ -1,4 +1,6 @@
-CREATE OR REPLACE PROCEDURE "SP_AGREGAR_COACH" (
+set SERVEROUTPUT ON;
+
+create or replace PROCEDURE "SP_AGREGAR_COACH" (
 V_RUN_COACH COACH.RUN_COACH%TYPE,
 V_NOMBRE COACH.NOMBRE%TYPE,
 V_APATERNO COACH.APELLIDO_P%TYPE,
@@ -6,18 +8,24 @@ V_AMATERNO COACH.APELLIDO_M%TYPE,
 V_TELEFONO COACH.TELEFONO%TYPE,
 V_CORREO COACH.CORREO%TYPE,
 V_CONTRASENA COACH.CONTRASENA%TYPE,
-V_CONTRATO COACH.CONTRATO%TYPE)
+V_CONTRATO COACH.CONTRATO%TYPE,
+v_salida out number)
 
 
 IS
 BEGIN
-DECLARE V_RUN COACH.RUN_COACH%TYPE;
+DECLARE 
+    CURSOR c_coach IS
+        SELECT RUN_COACH
+        FROM COACH;
+        
+    v_run COACH.RUN_COACH%TYPE;
+    confirmacion NUMBER;
 BEGIN
-    SELECT RUN_COACH
-    INTO V_RUN
-    FROM COACH;
-
-    IF V_RUN = V_RUN_COACH THEN
+confirmacion:=0;
+for c in c_coach loop
+v_run:=c.run_coach;
+    IF v_run = V_RUN_COACH THEN
         UPDATE COACH SET 
             NOMBRE = V_NOMBRE, 
             APELLIDO_P = V_APATERNO, 
@@ -27,7 +35,11 @@ BEGIN
             CONTRASENA = V_CONTRASENA, 
             CONTRATO = V_CONTRATO
         WHERE RUN_COACH = V_RUN_COACH;
-    ELSE
+        confirmacion:=1;
+    end if;
+    
+    end loop;
+    if confirmacion !=1 then
         INSERT INTO COACH(
             RUN_COACH,
             NOMBRE,
@@ -37,7 +49,7 @@ BEGIN
             CORREO,
             CONTRASENA,
             CONTRATO)
-            
+
         VALUES(
             V_RUN_COACH,
             V_NOMBRE,
@@ -47,18 +59,23 @@ BEGIN
             V_CORREO,
             V_CONTRASENA,
             V_CONTRATO);
-    END IF;
+        INSERT INTO AUTH_USER VALUES(ISEQ$$_77317.nextval,V_CONTRASENA,null,0,V_RUN_COACH,V_NOMBRE,V_APATERNO,V_CORREO,0,1,SYSDATE);
+    end if;
 COMMIT;
 END;
+v_salida := 1;
 EXCEPTION
   WHEN DUP_VAL_ON_INDEX THEN
   RAISE_APPLICATION_ERROR(SEQ_ERROR.NEXTVAL,' Error de dato duplicado');
   WHEN OTHERS THEN 
+  v_salida := 0;
   RAISE_APPLICATION_ERROR(SEQ_ERROR.NEXTVAL,' Error desconocido');
 END;
 
 /
 ----------------------------------------------------------------------------------------------------------------
+set SERVEROUTPUT ON;
+
 CREATE OR REPLACE PROCEDURE "SP_AGREGAR_COACHEE" (
 V_RUN_COACHEE IN COACHEE.RUN_COACHEE%TYPE,
 V_APELLIDO_M IN COACHEE.APELLIDO_M%TYPE, 
@@ -70,17 +87,24 @@ V_RUT_EMPRESA IN COACHEE.RUT_EMPRESA%TYPE,
 V_CONTRASENA IN COACHEE.CONTRASENA%TYPE,
 V_CONTRATO IN COACHEE.CONTRATO%TYPE,
 V_RUT_EMPRESA_C IN COACHEE.RUT_EMPRESA%TYPE,
-V_ID_SESION_C IN COACHEE.ID_SESION%TYPE) 
+V_ID_SESION_C IN COACHEE.ID_SESION%TYPE,
+v_salida OUT NUMBER) 
 
 IS
 BEGIN
-DECLARE V_RUN_C COACHEE.RUN_COACHEE%TYPE;
-BEGIN
+DECLARE 
+    CURSOR c_coachee IS
     SELECT RUN_COACHEE
-    INTO V_RUN_C
     FROM COACHEE;
-    
-    IF V_RUN_C = V_RUN_COACHEE THEN
+        
+    v_run COACHEE.RUN_COACHEE%TYPE;
+    confirmacion NUMBER;
+BEGIN
+
+confirmacion:=0;
+for c in c_coachee loop
+v_run:=c.run_coachee;
+    IF v_run = V_RUN_COACHEE THEN
         UPDATE COACHEE SET 
             APELLIDO_M = V_APELLIDO_M,
             NOMBRE = V_NOMBRE,
@@ -92,7 +116,11 @@ BEGIN
             RUT_EMPRESA = V_RUT_EMPRESA_C,
             ID_SESION = V_ID_SESION_C
         WHERE RUN_COACHEE = V_RUN_COACHEE;
-    ELSE
+    confirmacion:=1;
+    end if;
+    
+    end loop;
+    if confirmacion !=1 then
         INSERT INTO COACHEE VALUES (
             V_RUN_COACHEE, 
             V_APELLIDO_M, 
@@ -103,19 +131,24 @@ BEGIN
             V_CONTRATO,
             V_RUT_EMPRESA_C,
             V_ID_SESION_C);
+        INSERT INTO AUTH_USER VALUES(ISEQ$$_77317.nextval,V_CONTRASENA,null,0,V_RUN,V_NOMBRE,V_APELLIDO_P,V_CORREO,0,1,SYSDATE);
     END IF;
 COMMIT;
 END;
+v_salida := 1;
 EXCEPTION
   WHEN DUP_VAL_ON_INDEX THEN
   RAISE_APPLICATION_ERROR(SEQ_ERROR.NEXTVAL,' Error de dato duplicado');
   WHEN OTHERS THEN
+  v_salida := 0;
   RAISE_APPLICATION_ERROR(SEQ_ERROR.NEXTVAL,' Error desconocido');
 END;
 
 /
 
 ----------------------------------------------------------------------------------------------------------------
+set SERVEROUTPUT ON;
+
 CREATE OR REPLACE PROCEDURE SP_AGREGAR_PROCESO (
 V_ID_PROCESO IN PROCESO.ID_PROCESO%TYPE,
 V_NOMBRE_PROCESO IN PROCESO.NOMBRE%TYPE, 
@@ -124,17 +157,23 @@ V_STATUS IN PROCESO.STATUS%TYPE,
 V_FECHA IN proceso.fecha_contrato%TYPE,
 v_CLAUSULA IN proceso.clausula%TYPE,
 V_RUT_COACH IN PROCESO.RUN_COACH%TYPE,
-V_RUT_EMPRESA IN proceso.rut_empresa%TYPE) 
+V_RUT_EMPRESA IN proceso.rut_empresa%TYPE,
+v_salida OUT NUMBER) 
 
 IS
 BEGIN
-DECLARE V_ID_P PROCESO.ID_PROCESO%TYPE;
-BEGIN
+DECLARE 
+    CURSOR c_proceso IS
     SELECT ID_PROCESO
-    INTO V_ID_P
-    FROM PROCESO;
-    
-    IF V_ID_P = V_ID_PROCESO THEN
+    FROM proceso;
+        
+    v_id proceso.ID_PROCESO%TYPE;
+    confirmacion NUMBER;
+BEGIN
+confirmacion:=0;
+for c in c_proceso loop
+v_id:=c.id_proceso;
+    IF v_id = V_ID_PROCESO THEN
         UPDATE PROCESO SET 
             NOMBRE = V_NOMBRE_PROCESO, 
             MODALIDAD = V_MODALIDAD, 
@@ -144,7 +183,10 @@ BEGIN
             RUN_COACH = V_RUT_COACH, 
             RUT_EMPRESA = V_RUT_EMPRESA
         WHERE ID_PROCESO = V_ID_PROCESO;
-    ELSE
+    confirmacion:=1;
+    end if;
+    end loop;
+    if confirmacion !=1 then
         INSERT INTO PROCESO (
             ID_PROCESO, 
             NOMBRE, 
@@ -166,17 +208,21 @@ BEGIN
     END IF;
 COMMIT;
 END;
+v_salida := 1;
 EXCEPTION
   WHEN DUP_VAL_ON_INDEX THEN
   RAISE_APPLICATION_ERROR(SEQ_ERROR.NEXTVAL,' Error de dato duplicado');
   WHEN OTHERS THEN 
+  v_salida := 0;
   RAISE_APPLICATION_ERROR(SEQ_ERROR.NEXTVAL,' Error desconocido');
 
 END;
 
 /
 ----------------------------------------------------------------------------------------------------------------
-create or replace NONEDITIONABLE PROCEDURE "SP_AGREGAR_EMPRESA" (
+set SERVEROUTPUT ON;
+
+create or replace PROCEDURE "SP_AGREGAR_EMPRESA" (
 v_rut in EMPRESA.RUT_EMPRESA%TYPE,
 v_direccion in empresa.direccion%TYPE,
 v_telefono in empresa.telefono%type,
@@ -233,7 +279,7 @@ end;
 
 /
 ---------------------------------------------------------------------------------------------------------------
-create or replace NONEDITIONABLE PROCEDURE "SP_LISTA_COACH" (REG OUT SYS_REFCURSOR)
+create or replace PROCEDURE "SP_LISTA_COACH" (REG OUT SYS_REFCURSOR)
 AS
 BEGIN
 OPEN REG FOR 
@@ -243,7 +289,7 @@ END;
 
 /
 ---------------------------------------------------------------------------------------------------------------
-create or replace NONEDITIONABLE PROCEDURE "SP_LISTA_COACHEE" (REG OUT SYS_REFCURSOR)
+create or replace PROCEDURE "SP_LISTA_COACHEE" (REG OUT SYS_REFCURSOR)
 AS
 BEGIN
 OPEN REG FOR 
@@ -256,7 +302,7 @@ END;
 
 /
 ----------------------------------------------------------------------------------------------------------------
-create or replace NONEDITIONABLE PROCEDURE "SP_LISTA_EMPRESA" (REG OUT SYS_REFCURSOR)
+create or replace PROCEDURE "SP_LISTA_EMPRESA" (REG OUT SYS_REFCURSOR)
 AS
 BEGIN
 OPEN REG FOR 
