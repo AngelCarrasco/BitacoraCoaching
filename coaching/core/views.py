@@ -114,16 +114,6 @@ def registro_coach(request):
             data['coachs'] = listar(p_coach)
         else:
             data['mensaje'] = 'no se ha podido agregar'
-    elif request.POST:
-        run = request.POST.get('run')
-        nombre = request.POST.get('nombre')
-        ap_paterno = request.POST.get('a_paterno')
-        ap_materno = request.POST.get('a_materno')
-        telefono = request.POST.get('telefono')
-        correo = request.POST.get('correo')
-        contrasena = run[:4]
-        contrato = '1'
-        salida = actualizar_coach(run,nombre,ap_paterno,ap_materno,telefono,correo,contrasena,contrato)
     return render(request, 'core/registro_coach.html', data)
 
 #CRUD coachee
