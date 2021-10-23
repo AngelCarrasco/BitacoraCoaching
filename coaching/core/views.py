@@ -22,9 +22,7 @@ def administrador(request):
     }
     return render(request, 'core/administrador.html',data)
 
-def coach(request):
 
-    return render(request, 'core/coach/coach.html')
 
 def contrato(request):
     p_proceso = 'SP_LISTA_PROCESO'
@@ -54,6 +52,8 @@ def contrato(request):
 
     return render(request, 'core/contrato.html', data)
 
+
+
 def lista_coach_proceso(request):
     p_list = 'SP_LIST_PROCESO_COACH'
     id_proceso = request.GET.get('proceso')
@@ -63,6 +63,29 @@ def lista_coach_proceso(request):
     }
 
     return render(request, 'core/combox_coach.html', data)
+
+def lista_coach_Sesion(request):
+    #aqui sera el rut del coach en la sesion, obtner mediante una etiqueta
+    run_coach = '432121'
+   
+
+    data ={
+       'sesiones' : listar_sesion_coach(run_coach)
+    }
+
+    return render(request, 'core/coach/coach.html',data)
+    
+#listar los procesos 
+def lista_proceso_por_empresa(request):
+    rut_empresa = request.GET.get('empresa')
+
+    
+    data ={
+       'sub_procesos' : filtro_proceso(rut_empresa)
+
+    }
+
+    return render(request, 'core/coach/comboanidado.html',data)
 
 def registro_empresa(request):
     data={}
@@ -127,6 +150,8 @@ def registro_coach(request):
     return render(request, 'core/admin/registro_coach.html', data)
 
 
+
+
 def registro_coachee(request):
     p_empresa = 'SP_LISTA_EMPRESA'
     data= {
@@ -153,6 +178,31 @@ def registro_coachee(request):
             data['mensaje'] = 'no se ha agregado'
        
     return render(request, 'core/admin/registro_coachee.html', data)
+
+def registro_sesion(request):
+    data ={
+        'empresas': listar('SP_LISTA_EMPRESA')
+    }
+
+    if request.POST:
+        fecha_acordada = request.POST.get('fecha_acordada')
+        fecha_realizada = request.POST.get()
+        descripcion = request.POST.get('descripcion')
+        estado = request.POST.get('estado')
+        asignacion_acuerdos = request.POST.get('asigyacuerd')
+        id_proceso = request.POST.get('empresa')
+        run_coach = '1'
+        salida = agregar_sesion(fecha_acordada,fecha_realizada,descripcion,estado,asignacion_acuerdos,id_proceso,run_coach)
+
+        if salida == 1:
+            data['mensaje'] = 'agregado correctamente'
+        else:
+            data['mensaje'] = 'no se ha agregado'
+
+
+    return render(request, 'core/coach/registro_sesion.html',data)
+
+
     
 
 def dashboard(request):
@@ -204,6 +254,16 @@ def agregar_contrato(fecha,clausula,proceso,run_coach,run_coachee):
 
     return salida.getvalue()
 
+def agregar_sesion(fecha_acordada,fecha_realizada,descripcion,estado,asignacion_acuerdos,id_proceso,run_coach):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+
+    cursor.callproc('SP_AGREGAR_SESION',[fecha_acordada,fecha_realizada,descripcion,estado,asignacion_acuerdos,id_proceso,run_coach])
+
+    return salida.getvalue()
+
+
 def listar(procedimiento):
     django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
@@ -228,4 +288,26 @@ def listar_anidado(procedimiento,filtro):
         lista.append(fila)
     return lista
 
+def listar_sesion_coach(run_coach):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    out_cur = django_cursor.connection.cursor()
 
+    cursor.callproc("SP_LISTA_SESION",[out_cur, run_coach])
+
+    lista = []
+    for fila in out_cur:
+        lista.append(fila)
+    return lista
+
+def filtro_proceso(rut_empresa):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    out_cur = django_cursor.connection.cursor()
+
+    cursor.callproc("SP_LISTA_PROCESO_FILT",[out_cur, rut_empresa])
+
+    lista = []
+    for fila in out_cur:
+        lista.append(fila)
+    return lista

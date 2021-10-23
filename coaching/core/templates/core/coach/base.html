@@ -5,88 +5,82 @@
 
 <head>
 
-  {% block titulo%}
-  <title>Home</title>
-  {% endblock %}
-  <meta charset="UTF-8">
+    {% block titulo%}
+    <title>Home</title>
+    {% endblock %}
+    <meta charset="UTF-8">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- tipo de fuente -->
-  <link rel="stylesheet" href="{% static 'fontawesome-free/css/all.min.css' %}">
-  <!-- bootstrap theme -->
-  <link rel="stylesheet" href="{% static 'css/adminlte.min.css' %}">
-  <!-- Estilo -->
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
-  <!-- iconos
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- tipo de fuente -->
+    <link rel="stylesheet" href="{% static 'fontawesome-free/css/all.min.css' %}">
+    <!-- bootstrap theme -->
+    <link rel="stylesheet" href="{% static 'css/adminlte.min.css' %}">
+    <!-- Estilo -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- iconos
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.1/font/bootstrap-icons.css">
-  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-  <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
-  <!-- css GRID -->
-  <link rel="stylesheet" href=" {%static 'jsgrid/jsgrid.min.css' %}">
-  <link rel="stylesheet" href="{%static 'jsgrid/jsgrid-theme.min.css' %}">
-  {% block css%}
-
-  {% endblock %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <!-- css GRID -->
+    <link rel="stylesheet" href=" {%static 'jsgrid/jsgrid.min.css' %}">
+    <link rel="stylesheet" href="{%static 'jsgrid/jsgrid-theme.min.css' %}">
+    <script src="{%static 'fullcalendar/main.js' %}"></script>
+    <link href="{%static 'fullcalendar/main.css'%}" rel='stylesheet' /> {% block css%} {% endblock %}
 
 </head>
 
 <body body class="hold-transition skin-blue sidebar-collapse sidebar-mini">
-  
 
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Logo</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Logo</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Procesos</a>
-        </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Sesiones</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Reunion</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Evaluaciones</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Archivo</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Inicio</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Procesos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Subir Archivo</a>
+                </li>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Crear Sesiones</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 </body>
 
 
 
-  
 
 
 
-    
-      {% block contenido %}
-
-      {% endblock %}
-    
 
 
-  <!-- jquery JQ -->
-  <script src="{% static 'jquery/jquery.min.js' %}"></script>
-  <!-- bootstrap JS -->
-  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-  <!-- JSGRID -->
-  <script src="{%static 'jsgrid/demos/db.js' %}"></script>
-  <script src="{%static 'jsgrid/jsgrid.min.js' %}"></script>
-  <script src="{%static 'jsadmi/adminlte.js' %}"></script>
+{% block contenido %} {% endblock %}
 
 
-  {% block js%}
 
-  {% endblock %}
+<!-- jquery JQ -->
+<script src="{% static 'jquery/jquery.min.js' %}"></script>
+<!-- bootstrap JS -->
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<!-- JSGRID -->
+<script src="{%static 'jsgrid/demos/db.js' %}"></script>
+<script src="{%static 'jsgrid/jsgrid.min.js' %}"></script>
+<script src="{%static 'jsadmi/adminlte.js' %}"></script>
+
+
+
+{% block js%} {% endblock %}
 
 
 </body>
