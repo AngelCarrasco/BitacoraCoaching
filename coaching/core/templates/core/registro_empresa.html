@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block contenido %}
-<div class="col-md-5 ml-auto">
+<section class="form-register">
   <h4>Registro Empresa</h4>
   <form action="" method="POST">
     {% csrf_token %} 
@@ -24,5 +24,5 @@
     <input class="botons" type="submit" value="Agregar" >
   </form>
   {{mensaje}}
-</div>
+</section>
 {% endblock %}

@@ -72,8 +72,6 @@
 <script>
   $(".btnModificar").click(function(){
 
-    $("table tbody tr").each(function(){
-
       var UserData = {};
       var UserData2 = {};
       var UserData3 = {};
@@ -83,7 +81,7 @@
       var UserData7 = {};
       var UserData8 = {};
 
-      var id = $(this).find('td');
+      var id = $(this).closest('tr').find('td');
         UserData = id.filter(":eq(0)").text();
         UserData2 = id.filter(":eq(1)").text();
         UserData3 = id.filter(":eq(2)").text();
@@ -100,7 +98,6 @@
         $("#telefono").val(UserData6);
         $("#contrasena").val(UserData7);
         $("#contrato").val(UserData8);
-        });
         });
 </script>
 {% endblock %}
