@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.db import connection
 from django.core.files.storage import FileSystemStorage
 import cx_Oracle
+from datetime import datetime
+
 
 # Create your views here.
 
@@ -66,7 +68,7 @@ def lista_coach_proceso(request):
 
 def lista_coach_Sesion(request):
     #aqui sera el rut del coach en la sesion, obtner mediante una etiqueta
-    run_coach = '432121'
+    run_coach = '11113'
    
 
     data ={
@@ -86,6 +88,8 @@ def lista_proceso_por_empresa(request):
     }
 
     return render(request, 'core/coach/comboanidado.html',data)
+
+
 
 def registro_empresa(request):
     data={}
@@ -180,19 +184,23 @@ def registro_coachee(request):
     return render(request, 'core/admin/registro_coachee.html', data)
 
 def registro_sesion(request):
-    data ={
-        'empresas': listar('SP_LISTA_EMPRESA')
-    }
 
+    data ={
+         # el ruun tiene que ser de la persona que tenga la sesion iniciada en el sistema
+        'empresas': filtro_empresa_coach('11113')
+    }
+ 
     if request.POST:
         fecha_acordada = request.POST.get('fecha_acordada')
-        fecha_realizada = request.POST.get()
+        fecha = datetime.strptime(fecha_acordada, '%Y-%m-%dT%H:%M')
+        fecha_realizada = None
         descripcion = request.POST.get('descripcion')
-        estado = request.POST.get('estado')
         asignacion_acuerdos = request.POST.get('asigyacuerd')
-        id_proceso = request.POST.get('empresa')
-        run_coach = '1'
-        salida = agregar_sesion(fecha_acordada,fecha_realizada,descripcion,estado,asignacion_acuerdos,id_proceso,run_coach)
+        id_proceso = request.POST.get('proceso')
+        # el ruun tiene que ser de la persona que tenga la sesion iniciada en el sistema 
+        run_coach = '11113'
+        salida = agregar_sesion(fecha,fecha_realizada,descripcion,asignacion_acuerdos,id_proceso,run_coach)
+        
 
         if salida == 1:
             data['mensaje'] = 'agregado correctamente'
@@ -254,18 +262,17 @@ def agregar_contrato(fecha,clausula,proceso,run_coach,run_coachee):
 
     return salida.getvalue()
 
-def agregar_sesion(fecha_acordada,fecha_realizada,descripcion,estado,asignacion_acuerdos,id_proceso,run_coach):
+def agregar_sesion(fecha_acordada,fecha_realizada,descripcion,asignacion_acuerdos,id_proceso,run_coach):
     django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
     salida = cursor.var(cx_Oracle.NUMBER)
 
-    cursor.callproc('SP_AGREGAR_SESION',[fecha_acordada,fecha_realizada,descripcion,estado,asignacion_acuerdos,id_proceso,run_coach])
+    cursor.callproc('SP_AGREGAR_SESION',[fecha_acordada,fecha_realizada,descripcion,asignacion_acuerdos,id_proceso,run_coach,salida])
 
     return salida.getvalue()
 
 
 def listar(procedimiento):
-    django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
     out_cur = django_cursor.connection.cursor()
 
@@ -311,3 +318,15 @@ def filtro_proceso(rut_empresa):
     for fila in out_cur:
         lista.append(fila)
     return lista
+
+def filtro_empresa_coach(rut_coach):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    out_cur = django_cursor.connection.cursor()
+    cursor.callproc("SP_FILTRO_EMPRESA",[out_cur, rut_coach])
+
+    lista = []
+    for fila in out_cur:
+        lista.append(fila)
+    return lista
+
