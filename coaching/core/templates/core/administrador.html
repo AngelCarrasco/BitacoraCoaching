@@ -1,109 +1,161 @@
 {% extends 'core/base.html' %}
-
-{% block titulo%}
-<title>Home | Administrador</title>
-{% endblock %}
-
 {% load static %}
-
-{% block css %}
-<link rel="stylesheet" href="{% static 'core/css/estilo_admin.css' %}">
-{% endblock %}
-
-{% block barra %}
-<ul class="nav navbar-nav">
-
-    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Agregar <span
-                class="caret"></span></a>
-        <ul class="dropdown-menu">
-            <li><a href="{% url 'registro_coach' %}">Coach</a></li>
-            <li><a href="{% url 'registro_coachee' %}">Coachee</a></li>
-            <li><a href="{% url 'registro_proceso' %}">Proceso</a></li>
-            <li><a href="{% url 'registro_empresa' %}">Empresa</a></li>
-            <li><a href="{% url 'contrato' %}">Contrato</a></li>
-        </ul>
-    </li>
-
-</ul>
-{% endblock %}
-
-
-{% block contenido %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-3">
-            <h2>Listado de coaches</h2>
-            {% for c in coaches %}
-            <div class="row">
-                <div class="column">
-                    <div class="card">
-                        <h3>{{c.1}}</h3>
-                        <p>run {{c.0}}</p>
-                        <p>telefono {{c.2}}</p>
-                        <p>correo {{c.3}}</p>
-
-                        <br>
-                        <div class="link">
-                            <a href="">Ver procesos</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
+ {% block titulo%}
+  <title>administrador</title>
+  {% endblock %}
+{%block contenido%}<br>
+<br>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Bordered Table</h3>
+        </div><!-- /.card-header -->
+        <div class="card-body">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th style="width: 10px">#</th>
+                <th>Task</th>
+                <th>Progress</th>
+                <th style="width: 40px">Label</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1.</td>
+                <td>Update software</td>
+                <td>
+                  <div class="progress progress-xs">
+                    <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
+                  </div>
+                </td>
+                <td><span class="badge bg-danger">55%</span></td>
+              </tr>
+              <tr>
+                <td>2.</td>
+                <td>Clean database</td>
+                <td>
+                  <div class="progress progress-xs">
+                    <div class="progress-bar bg-warning" style="width: 70%"></div>
+                  </div>
+                </td>
+                <td><span class="badge bg-warning">70%</span></td>
+              </tr>
+              <tr>
+                <td>3.</td>
+                <td>Cron job running</td>
+                <td>
+                  <div class="progress progress-xs progress-striped active">
+                    <div class="progress-bar bg-primary" style="width: 30%"></div>
+                  </div>
+                </td>
+                <td><span class="badge bg-primary">30%</span></td>
+              </tr>
+              <tr>
+                <td>4.</td>
+                <td>Fix and squish bugs</td>
+                <td>
+                  <div class="progress progress-xs progress-striped active">
+                    <div class="progress-bar bg-success" style="width: 90%"></div>
+                  </div>
+                </td>
+                <td><span class="badge bg-success">90%</span></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-
-        <div class="col-sm-3">
-            <h2>Listado de coachees</h2>
-            {% for c in coachees %}
-            <div class="row">
-                <div class="column">
-                    <div class="card">
-                        <h3>{{c.1}}</h3>
-                        <p>run {{c.0}}</p>
-                        <p>cargo {{c.2}}</p>
-                        <p>correo {{c.3}}</p>
-                        <p>empresa {{c.4}}</p>
-                        <br>
-                        <div class="link">
-                            <a href="">Ver procesos</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
+        <div class="card-footer clearfix">
+          <ul class="pagination pagination-sm m-0 float-right">
+            <li class="page-item">
+              <a class="page-link" href="#">«</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">1</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">2</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">3</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">»</a>
+            </li>
+          </ul>
         </div>
-        <div class="col-sm-3">
-            <h2>Listado de empresas</h2>
-            {% for c in empresas %}
-            <div class="row">
-                <div class="column">
-                    <div class="card">
-                        <h3>{{c.1}}</h3>
-                        <p>{{c.0}}</p>
-                        <p>{{c.3}}</p>
-                        <p>{{c.4}}</p>
-                        <br>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        <div class="col-sm-3">
-            <h2>Listado de procesos</h2>
-            {% for c in procesos %}
-            <div class="row">
-                <div class="column">
-                    <div class="card">
-                        <h3>{{c.1}}</h3>
-                        <p>{{c.3}} </p>
-                        <p>{{c.2}}</p>
-                        <br>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
+      </div>
     </div>
-</div>
+    <div class="col">
 
-{% endblock %}
+
+      <div class="container">
+        <div class="card ">
+          <div class="card-header">
+            <h3 class="card-title">Pie Chart</h3>
+
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+              </button>
+              <button type="button" class="btn btn-tool" data-card-widget="remove">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <canvas id="pieChart"
+              style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+          </div>
+          <!-- /.card-body -->
+        </div>
+      </div>
+    </div>
+    {% endblock %}
+
+    {% block js %}
+    <script src="{%static 'chart.js/Chart.min.js'%}"></script>
+    <script>
+      $(function () {
+
+        var donutData = {
+          labels: [
+            'Chrome',
+            'IE',
+            'FireFox',
+            'Safari',
+            'Opera',
+            'Navigator',
+          ],
+          datasets: [
+            {
+              data: [700, 500, 400, 600, 300, 100],
+              backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
+              color: ['#f56954']
+            }
+          ]
+        }
+
+
+        //-------------
+        //- PIE CHART -
+        //-------------
+        // Get context with jQuery - using jQuery's .get() method.
+        var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+        var pieData = donutData;
+        var pieOptions = {
+          maintainAspectRatio: false,
+          responsive: true,
+        }
+        //Create pie or douhnut chart
+        // You can switch between pie and douhnut using the method below.
+        var pieChart = new Chart(pieChartCanvas, {
+          type: 'pie',
+          data: pieData,
+          options: pieOptions
+        })
+
+      })
+    </script>
+    {% endblock js %}
