@@ -12,22 +12,41 @@
 <!-- separar la wea en dos!-->
 <div class="container">
   <div class="row">
-    <div class="col">
-      
-        <div id="jsGrid" class="jsGrid"></div>
-      
-
+    <div class="col-12 col-md-8">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Rut</th>
+            <th>Empresa</th>
+            <th>Correo</th>
+            <th>Jefe</th>
+            <th>Telefono</th>
+            <th>Opciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in empresas%}
+          <tr>
+            <td>{{i.0}}</td>
+            <td>{{i.1}}</td>
+            <td>{{i.2}}</td>
+            <td>{{i.3}}</td>
+            <td>{{i.4}}</td>
+            <th><input type="button" value="Modificar"></th>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-
-
-  <div class="col">
-
+  
+  <div class="col-6 col-md-4">
     <div class="container">
       <div class="card">
         <div class="card-header">
           <h3 class="card-title">Registra una empresa</h3>
         </div>
-        <form>
+        <form action="" method="post">
+          {% csrf_token %}
           <div class="card-body">
             <div class="form-group">
               <label for="exampleInputEmail1">Nombre Empresa</label> <input class="form-control" type="text"
@@ -49,13 +68,30 @@
               <label for="exampleInputFile">Correo electronico</label> <input class="form-control" type="email"
                 name="correo" id="correo" placeholder="Correo empresa" required="">
             </div><!-- /.card-body -->
+            <div class="form-group">
+              <label for="exampleInputFile">Nombre jefe</label> <input class="form-control" type="text" name="jefe_nombre"
+                id="jefe_nombre" placeholder="Nombre jefe" oninput="" required="">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputFile">Correo jefe</label> <input class="form-control" type="text" name="jefe_correo"
+                id="jefe_correo" placeholder="Nombre jefe" oninput="" required="">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputFile">Telefono jefe</label> <input class="form-control" type="text" name="jefe_telefono"
+                id="jefe_telefono" placeholder="Nombre jefe" oninput="" required="">
+            </div>
+            {{mensaje}}
             <div class="card-footer">
+              
               <button type="submit" class="btn btn-primary">Registrar</button>
             </div>
           </div>
         </form>
       </div>
     </div>
+  
+  
+  </div>
   </div>
 </div>
 

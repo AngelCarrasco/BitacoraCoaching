@@ -8,11 +8,31 @@
 <br>
 <div class="container">
   <div class="row">
-    <div class="col">
-      <div id="jsGrid" class="jsGrid">
-      </div>
+    <div class="col-md-6">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Run</th>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Empresa</th>
+            <th>Opciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in coachees %}
+          <tr>
+            <td>{{i.0}}</td>
+            <td>{{i.1}}</td>
+            <td>{{i.2}}</td>
+            <td>{{i.3}}</td>
+            <th><input type="button" value="Modificar"></th>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-    <div class="col">
+    <div class="col-md-6">
       <div class="container">
         <div class="card">
           <div class="card-header">
@@ -24,7 +44,7 @@
             <div class="card-body">
               <div class="form-group">
                 <label for="exampleInputEmail1">Nombre</label> <input class="form-control" type="text" name="nombre"
-                  id="nombre" placeholder="Nombre empresa" required="">
+                  id="nombre" placeholder="Nombre" required="">
               </div>
               <div class="form-group">
                 <label for="exampleInputPassword1">Apellido paterno</label> <input class="form-control" type="text"
@@ -40,7 +60,7 @@
               </div>
               <div class="form-group">
                 <label for="exampleInputFile">Correo electronico</label> <input class="form-control" type="email"
-                  name="correo" id="correo" placeholder="Correo empresa" required="">
+                  name="correo" id="correo" placeholder="Correo" required="">
               </div>
               <div class="form-group">
                 <label for="exampleInputFile">Cargo</label> <input class="form-control" type="text" name="cargo"
@@ -49,16 +69,14 @@
               <div class="form-group">
                 <label for="exampleInputFile">Empresa</label> <select class="form-control" name="empresa" id="empresa"
                   required="">
-                  <option value="">
-                    Seleciona
-                  </option>
-                  <option value="{{c.0}}">
-                    {{c.1}}
-                  </option>
+                  <option value="">Seleciona</option>
+                  {% for i in empresas %}
+                  <option value="{{i.0}}">{{i.1}}</option>
+                  {% endfor %}
                 </select>
               </div><!-- /.card-body -->
               <div class="card-footer">
-                <button type="submit" class="btn btn-primary">Registrar</button>
+                <button type="submit" class="btn btn-primary">Guardar</button>
               </div>
             </div>
           </form>

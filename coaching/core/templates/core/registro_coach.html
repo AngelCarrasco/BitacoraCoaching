@@ -8,16 +8,41 @@
 <br>
 <div class="container">
   <div class="row">
-    <div class="col">
-      <div id="jsGrid" class="jsGrid"> </div>
+    <div class="col-12 col-md-8">
+      <table  class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Run</th>
+            <th>Nombre</th>
+            <th>Apellido P</th>
+            <th>Apellido M</th>
+            <th>Correo</th>
+            <th>Telefono</th>
+            <th>Opciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in coachs%}
+            <tr>
+              <td>{{i.0}}</td>
+              <td>{{i.1}} </td>
+              <td>{{i.2}}</td>
+              <td>{{i.3}}</td>
+              <td>{{i.5}}</td>
+              <td>{{i.4}}</td>
+              <td><input type="button" class="btnModificar" value="Modificar"></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-    <div class="col">
+    <div class="col-6 col-md-4 ">
       <div class="container">
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">Registrar Coach</h3>
           </div>
-          <form action="" method="post">
+          <form id="form-coach" action="" method="post">
             {% csrf_token %}
             <div class="card-body">
               <div class="form-group">
@@ -38,8 +63,9 @@
               <div class="form-group">
                 <label for="exampleInputFile">Telefono</label> <input class="form-control" type="number" name="telefono" id="telefono" placeholder="Telefono" max="999999999" required="">
               </div>
+              {{mensaje}}
               <div class="card-footer">
-                <input class="btn btn-primary" type="submit" value="Agregar">
+                <input class="btn btn-primary" type="submit" value="Guardar">
               </div>
             </div>
           </form>
@@ -54,19 +80,11 @@
 <script src="{%static 'jsgrid/demos/db.js' %}"></script>
 <script src="{%static 'jsgrid/jsgrid.min.js' %}"></script>
 <script>
-  var clients = [
-    { "Name": "Otto Clay", "Age": 25, "Country": 1, "Address": "Ap #897-1459 Quam Avenue", "Married": false },
-    { "Name": "Connor Johnston", "Age": 45, "Country": 2, "Address": "Ap #370-4647 Dis Av.", "Married": true },
-    { "Name": "Lacey Hess", "Age": 29, "Country": 3, "Address": "Ap #365-8835 Integer St.", "Married": false },
-    { "Name": "Timothy Henson", "Age": 56, "Country": 1, "Address": "911-5143 Luctus Ave", "Married": true }
+  
+  var Coach = [
+    { "Run": "123456789", "Nombre": "wacoldo soto", "Telefono": 123456, "Correo": "algo@alog.cl"},
+    { "Run": "123456789", "Nombre": "wacoldo soto", "Telefono": 123456, "Correo": "algo@alog.cl"}
 
-  ];
-
-  var countries = [
-    { Name: "", Id: 0 },
-    { Name: "United States", Id: 1 },
-    { Name: "Canada", Id: 2 },
-    { Name: "United Kingdom", Id: 3 }
   ];
 
   $("#jsGrid").jsGrid({
@@ -79,16 +97,46 @@
     paging: true,
     autoload: true,
 
-    data: clients,
+    data: Coach,
 
     fields: [
-      { name: "Name", type: "text", width: 150, validate: "required" },
-      { name: "Age", type: "number", width: 50 },
-      { name: "Address", type: "text", width: 200 },
-      { name: "Country", type: "select", items: countries, valueField: "Id", textField: "Name" },
-      { name: "Married", type: "checkbox", title: "Is Married", sorting: false },
+      { name: "Run", type: "text", width: 130, validate: "required" },
+      { name: "Nombre", type: "text", width: 150 },
+      { name: "Telefono", type: "number", width: 90 },
+      { name: "Correo", type: "text", textField: "Name", width: 150 },
       { type: "control" }
     ]
+  });
+</script>
+<script>
+  $(".btnModificar").click(function(){
+
+    var UserData = {};
+    var UserData2 = {};
+    var UserData3 = {};
+    var UserData4 = {};
+    var UserData5 = {};
+    var UserData6 = {};
+    var UserData7 = {};
+    var UserData8 = {};
+
+    var id = $(this).closest('tr').find('td');
+
+    UserData = id.filter(":eq(0)").text();
+    UserData2 = id.filter(":eq(1)").text();
+    UserData3 = id.filter(":eq(2)").text();
+    UserData4 = id.filter(":eq(3)").text();
+    UserData5 = id.filter(":eq(4)").text();
+    UserData6 = id.filter(":eq(5)").text();
+    //UserData7 = id.filter(":eq(0)").text();
+    //UserData8 = id.filter(":eq(0)").text();
+
+    $("#run").val(UserData);
+    $("#nombres").val(UserData2);
+    $("#a_paterno").val(UserData3);
+    $("#a_materno").val(UserData4);
+    $("#correos").val(UserData5);
+    $("#telefono").val(UserData6);
   });
 </script>
 {% endblock %}

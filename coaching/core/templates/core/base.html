@@ -25,6 +25,7 @@
   <!-- css GRID -->
   <link rel="stylesheet" href=" {%static 'jsgrid/jsgrid.min.css' %}">
   <link rel="stylesheet" href="{%static 'jsgrid/jsgrid-theme.min.css' %}">
+  
   {% block css%}
 
   {% endblock %}
@@ -53,7 +54,7 @@
         
           <li class="nav-item dropdown">
           <a class="nav-link" data-toggle="" href="#">
-            <i class="bi bi-person-circle"> Nombre Usuario</i>
+            <i class="bi bi-person-circle"> Administrador</i>
           </a>
         </li>
 
@@ -164,10 +165,13 @@
   <script src="{% static 'jquery/jquery.min.js' %}"></script>
   <!-- bootstrap JS -->
   <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+  
+  <script src="{%static 'js/validacion.js' %}"></script>
   <!-- JSGRID -->
   <script src="{%static 'jsgrid/demos/db.js' %}"></script>
   <script src="{%static 'jsgrid/jsgrid.min.js' %}"></script>
   <script src="{%static 'jsadmi/adminlte.js' %}"></script>
+  
 
 
   {% block js%}
