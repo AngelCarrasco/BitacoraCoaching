@@ -15,12 +15,12 @@
                 <form action="" method="POST">
                     {% csrf_token %}
                     <div class="card-body">
-
+                        
                         <!--condicionar fecha de creacion  -->
-                        <div class="form-group">
+                        <div class="form-group" >
                             <label for="exampleInputEmail1">Fecha y hora Acordada</label>
-                            <input class="form-control" type="datetime-local" id="start" name="fecha_acordada" required=""
-                                value="2018-07-22" min="2018-01-01" max="2018-12-31">
+                            <input class="form-control" type="datetime-local" id="fecha_acordada" name="fecha_acordada" required=""
+                            placeholder="dd-mm-aaaa" data-date-format="d-m-YTH:i" data-enable-time=true data-time_24hr=true>
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Descripcion</label>
@@ -62,11 +62,13 @@
                         </div>
                     </div>
                 </form>
-                <h3>{{mensaje}}</h3>
+             
             </div>
         </div>
     </div>
 </div>
+
+
 
 {%endblock%}
 
@@ -84,5 +86,40 @@
                 document.getElementById("proceso").innerHTML = result;
             });
     }
+    
 </script>
+{% if messages %}
+<script>
+    Swal.fire({
+        "title": "{{mensaje}}",
+        "icon": (value) => {
+    if (!value) {
+      return 'success'
+    }
+}      
+    })
+</script>
+{%endif%}
+
+<script>
+    config = {    
+        minDate: "today",
+        locale: { 
+        firstDayOfWeek: 1,
+        weekdays: {
+          shorthand: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+          longhand: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],         
+        }, 
+        months: {
+          shorthand: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Оct', 'Nov', 'Dic'],
+          longhand: ['Enero', 'Febreo', 'Мarzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        }
+        }}
+    flatpickr("#fecha_acordada",config);
+
+</script>
+
+
+
+
 {% endblock %}

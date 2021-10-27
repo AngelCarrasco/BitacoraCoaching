@@ -3,7 +3,7 @@ from django.db import connection
 from django.core.files.storage import FileSystemStorage
 import cx_Oracle
 from datetime import datetime
-
+from django.contrib import messages
 
 # Create your views here.
 
@@ -47,11 +47,9 @@ def contrato(request):
         run_coachee = request.POST.get("coachee")
 
         salida = agregar_contrato(fecha,url,id_proceso,run_coach,run_coachee)
-        if salida ==1:
-             data['mensaje']='Agregado con exito'
-        else:
-             data['mensaje'] = 'no se ha podido agregar'
-
+        if salida == 1:
+            messages.success(request,"Agregado correctamente")
+            
     return render(request, 'core/contrato.html', data)
 
 
@@ -72,7 +70,8 @@ def lista_coach_Sesion(request):
    
 
     data ={
-       'sesiones' : listar_sesion_coach(run_coach)
+       'sesiones' : listar_sesion_coach(run_coach),
+       'procesos' : filtro_proceso_coach(run_coach)
     }
 
     return render(request, 'core/coach/coach.html',data)
@@ -192,7 +191,9 @@ def registro_sesion(request):
  
     if request.POST:
         fecha_acordada = request.POST.get('fecha_acordada')
-        fecha = datetime.strptime(fecha_acordada, '%Y-%m-%dT%H:%M')
+        print(fecha_acordada)
+        fecha = datetime.strptime(fecha_acordada, '%d-%m-%YT%H:%M')
+        print(fecha)
         fecha_realizada = None
         descripcion = request.POST.get('descripcion')
         asignacion_acuerdos = request.POST.get('asigyacuerd')
@@ -200,12 +201,10 @@ def registro_sesion(request):
         # el ruun tiene que ser de la persona que tenga la sesion iniciada en el sistema 
         run_coach = '11113'
         salida = agregar_sesion(fecha,fecha_realizada,descripcion,asignacion_acuerdos,id_proceso,run_coach)
-        
 
         if salida == 1:
-            data['mensaje'] = 'agregado correctamente'
-        else:
-            data['mensaje'] = 'no se ha agregado'
+            messages.success(request,"Agregado correctamente")
+        
 
 
     return render(request, 'core/coach/registro_sesion.html',data)
@@ -216,6 +215,10 @@ def registro_sesion(request):
 def dashboard(request):
     return render(request, 'core/administrador.html')
 
+
+
+def subir_archivo_coach(request):
+    return render(request, 'core/coach/archivo_coach.html')
 
 def agregar_coach(run,nombre,ap_paterno,ap_materno,telefono,correo,contrasena,contrato):
     django_cursor = connection.cursor()
@@ -330,3 +333,13 @@ def filtro_empresa_coach(rut_coach):
         lista.append(fila)
     return lista
 
+def filtro_proceso_coach(rut_coach):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    out_cur = django_cursor.connection.cursor()
+    cursor.callproc("SP_FILTRO_PROCESOS",[out_cur, rut_coach])
+
+    lista = []
+    for fila in out_cur:
+        lista.append(fila)
+    return lista

@@ -16,4 +16,5 @@ urlpatterns = [
     path('login/', views.login, name="login"),
     path('dashboard/', views.dashboard, name="dashboard"),
     path('proceso_empresa/',views.lista_proceso_por_empresa, name="proceso_empresa"),
+    path('archivo_coach/',views.subir_archivo_coach, name="archivo_coach"),
 ]
