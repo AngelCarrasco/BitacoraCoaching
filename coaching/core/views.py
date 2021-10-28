@@ -1,19 +1,25 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.db import connection
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.hashers import make_password
 import cx_Oracle
 
+#redirect usuarios 
+#def login_sucess(request):
+
+#    if request.user.groups.filter(name = "admin").exists():
+#        return redirect (administrador)
+#    else:
+#        return redirect(coach)
+#
 # Create your views here.
 
-def login(request):
-    return render(request, 'core/login.html')
-
+#FUNCIONES COACH
 def coach(request):
 
     return render(request, 'core/coach.html')
 
-#CRUD ADMINISTRADOR 
+#FUNCIONES ADMINISTRADOR 
 def administrador(request):
     p_coach = 'SP_LISTA_COACH'
     p_coachee = 'SP_LISTA_COACHEE'
@@ -31,6 +37,7 @@ def administrador(request):
 def contrato(request):
     pass
 
+#COMBOBOX 
 def lista_coach_proceso(request):
     p_list = 'SP_LIST_PROCESO_COACH'
     id_proceso = request.GET.get('proceso')
@@ -102,6 +109,16 @@ def registro_proceso(request):
 
     return render(request, 'core/registro_proceso.html',data)
 
+def detalle_proceso(request):
+    p_detalle = 'SP_DETALLE_PROCESO'
+    id_proceso = request.GET.get('proceso')
+
+    data ={
+        'procesos' : listar_anidado(p_detalle,id_proceso)
+    }
+
+    return render(request, 'core/detalle_proceso.html', data)
+
 def registro_coach(request):
     p_coach = 'SP_LISTA_COACH'
     data ={
@@ -133,6 +150,7 @@ def registro_coachee(request):
     p_coachee = 'SP_LISTA_COACHEE'
     data= {
         'empresas': listar(p_empresa),
+        'coachees' : listar(p_coachee)
     }
 
     if request.POST:
@@ -144,7 +162,7 @@ def registro_coachee(request):
         correo = request.POST.get('correo')
         empresa = request.POST.get('empresa')
         
-        contrasena = make_password( run[:4])
+        contrasena = make_password(run[:4])
         contrato = '1'
        
 
@@ -169,7 +187,6 @@ def agregar_coach(run,nombre,ap_paterno,ap_materno,telefono,correo,contrasena,co
 
     return salida.getvalue()
 
-#arreglar la BD
 def agregar_coachee(run,amaterno,nombre,cargo,apaterno,correo,rut_empresa,contrasena,contrato):
     django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
@@ -229,5 +246,4 @@ def listar_anidado(procedimiento,filtro):
     for fila in out_cur:
         lista.append(fila)
     return lista
-
 

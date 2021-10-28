@@ -14,6 +14,7 @@
       <table class="table table-bordered">
         <thead>
           <tr>
+            <th>#</th>
             <th>Proceso</th>
             <th>Modalidad</th>
             <th>Coach</th>
@@ -24,15 +25,22 @@
         <tbody>
           {% for i in procesos%}
           <tr>
-            <td>{{i.0}}</td>
+            <td id="id_proceso">{{i.0}}</td>
             <td>{{i.1}}</td>
             <td>{{i.2}}</td>
             <td>{{i.3}}</td>
-            <th><input type="button" value="Modificar"></th>
+            <td>{{i.4}}</td>
+            <th><input onclick="detalle()" type="button" class="btnDetalle" value="Detalle"></th>
           </tr>
           {% endfor %}
         </tbody>
       </table>
+      <div class="col">
+        <h2>Aqui el detalle del proceso</h2>
+        <div id="detalleProceso">
+
+        </div>
+      </div>
     </div>
     <div class="col-md-6">
       <div class="container">
@@ -84,8 +92,6 @@
               </div>
               <div class="card-footer">
                 <input class="btn btn-primary" type="submit" value="Agregar">
-
-
               </div>
             </div>
           </form>
@@ -99,6 +105,7 @@
 {% endblock %}
 
 {% block js%}
+<!--Script de la tabla proceso-->
 <script>
   var clients = [
     { "Name": "Otto Clay", "Age": 25, "Country": 1, "Address": "Ap #897-1459 Quam Avenue", "Married": false },
@@ -136,5 +143,23 @@
       { type: "control" }
     ]
   });
+</script>
+<!--Rescatar la id del proceso y mandarla por URL al detalle-->
+<script>
+  function detalle(){
+    
+    //var UserData = {};
+    
+    
+    let id_proceso = document.getElementById("id_proceso").value;
+      let url = '/detalle_proceso/?proceso='+id_proceso;
+      fetch(url)
+      .then(function(result){
+        return result.text();
+      })
+      .then(function(result){
+        document.getElementById("detalleProceso").innerHTML = result;
+      });    
+  };
 </script>
 {% endblock %}
