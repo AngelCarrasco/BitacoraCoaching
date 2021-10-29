@@ -26,7 +26,8 @@
               {% for i in procesos %}
               <tr id="datos">
                 <td>{{i.0}}</td>
-                <td><a href="#" onclick="detalle()">{{i.1}}</a></td>
+                <td>{{i.1}}</td>
+                <th><input type="button" class="btnDetalle" value="Detalle"></th>
                 {% endfor %}
                 <!--
                 <td>1.</td>
@@ -81,9 +82,8 @@
   <br>
   <!--Detalle proceso-->
   <div class="row">
-    <div class="col" id="detalle_proceso">
-      <h1>Aqui colocar todo el detalle del proceso</h1>
-      
+    <div class="col-md-8" id="detalle_proceso">
+
     </div>
   </div>
 </div>
@@ -92,12 +92,14 @@
 {% block js %}
 <!--Detalle del proceso sacado de la ID-->
 <script>
-  function detalle(){
+  $(".btnDetalle").click(function(){
+    var UserData = {};
+    var id = $(this).closest('tr').find('td');
 
-    $('#tbProceso tr#datos').each(function() { 
-    var customerId = $(this).find("td:first").html(); 
-    //alert(customerId)
-    let url = '/detalle_proceso/?proceso='+customerId;
+    UserData = id.filter(":eq(0)").text();
+
+    //alert(UserData)
+    let url = '/detalle_proceso/?proceso='+UserData;
     fetch(url)
     .then(function(result){
       return result.text();
@@ -106,7 +108,6 @@
       document.getElementById("detalle_proceso").innerHTML = result;
     });
   });
-};
 </script>
 <!--<script>
   document.addEventListener('DOMContentLoaded', function () {

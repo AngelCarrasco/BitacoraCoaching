@@ -1,23 +1,28 @@
-{{procesos}}
+
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Detalle proceso</h3> 
     </div>
     <div class="card-body">
         <div class="row">
+            {% for i in procesos %}
             <div class="col">
                 
-                <input type="text" name="" id="" value="{{procesos}}" placeholder="Proceso" readonly>
-                <input type="text" name="" id="" placeholder="Coach" readonly>
-                <input type="text" name="" id="" placeholder="Empresa" readonly>
-    
+                <label for="exampleInputFile">Nombre proceso</label> <input class="form-control" type="text" value="{{i.0}}" readonly>
+                <label for="exampleInputFile">Coach encargado</label> <input class="form-control" type="text" value="{{i.2}}" readonly>
+                <label for="exampleInputFile">Empresa</label> <input class="form-control" type="text" value="{{i.7}}" readonly>
+                <br>
+                <div class="row">
+                    <div class="col-sm-9">
+                        <label for="exampleInputFile">Coachee</label> <input class="form-control" type="text" value="{{i.6}}" readonly>
+                        <label for="exampleInputFile">Jefe responsable</label> <input class="form-control" type="text" value="{{i.3}}"readonly>
+                        <label for="exampleInputFile">Correo jefe</label> <input class="form-control" type="text" value="{{i.5}}"readonly>
+                        <label for="exampleInputFile">Telefono jefe</label> <input class="form-control" type="text" value="{{i.5}}"readonly>
+                    </div>
+                </div>
             </div>
-            <div class="col">
-                <input type="textarea" name="" id="" placeholder="Coachees" readonly>
-                <input type="text" name="" id="" placeholder="Jefe responsable" readonly>
-                <input type="text" name="" id="" placeholder="Correo jefe" readonly>
-    
-            </div>
-        </div>
+            {% endfor %}
+
+        </div>   
     </div>
 </div>
