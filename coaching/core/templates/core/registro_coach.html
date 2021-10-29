@@ -8,35 +8,61 @@
 <br>
 <div class="container">
   <div class="row">
-    <div class="col-12 col-md-8">
-      <table  class="table table-bordered">
-        <thead>
-          <tr>
-            <th>Run</th>
-            <th>Nombre</th>
-            <th>Apellido P</th>
-            <th>Apellido M</th>
-            <th>Correo</th>
-            <th>Telefono</th>
-            <th>Opciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for i in coachs%}
-            <tr>
-              <td>{{i.0}}</td>
-              <td>{{i.1}} </td>
-              <td>{{i.2}}</td>
-              <td>{{i.3}}</td>
-              <td>{{i.5}}</td>
-              <td>{{i.4}}</td>
-              <td><input type="button" class="btnModificar" value="Modificar"></td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Listado de coachs</h3>
+        </div>
+        <div class="card-body">
+          <table  class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Run</th>
+                <th>Nombre</th>
+                <th>Apellido Paterno</th>
+                <th>Apellido Materno</th>
+                <th>Correo</th>
+                <th style="text-align: center">Telefono</th>
+                <th>Opciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for i in coachs%}
+                <tr>
+                  <td>{{i.0}}</td>
+                  <td>{{i.1}} </td>
+                  <td>{{i.2}}</td>
+                  <td>{{i.3}}</td>
+                  <td>{{i.5}}</td>
+                  <td>{{i.4}}</td>
+                  <td><input type="button" class="btnModificar" value="Modificar"></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="card-footer clearfix">
+          <ul class="pagination pagination-sm m-0 float-right">
+            <li class="page-item">
+              <a class="page-link" href="#">«</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">1</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">2</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">3</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">»</a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
-    <div class="col-6 col-md-4 ">
+    <div class="col">
       <div class="container">
         <div class="card">
           <div class="card-header">
