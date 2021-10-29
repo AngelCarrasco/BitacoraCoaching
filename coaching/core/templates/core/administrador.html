@@ -14,17 +14,21 @@
           <h3 class="card-title">Listado de procesos</h3>
         </div><!-- /.card-header -->
         <div class="card-body">
-          <table class="table table-bordered">
+          <table class="table table-bordered" id="tbProceso">
             <thead>
               <tr>
                 <th style="width: 10px">#</th>
                 <th>Procesos</th>
-                <th>Progreso</th>
-                <th style="width: 40px">Porcentaje</th>
+
               </tr>
             </thead>
             <tbody>
-              <tr>
+              {% for i in procesos %}
+              <tr id="datos">
+                <td>{{i.0}}</td>
+                <td><a href="#" onclick="detalle()">{{i.1}}</a></td>
+                {% endfor %}
+                <!--
                 <td>1.</td>
                 <td>Update software</td>
                 <td>
@@ -32,7 +36,7 @@
                     <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
                   </div>
                 </td>
-                <td><span class="badge bg-danger">55%</span></td>
+                <td><span class="badge bg-danger">55%</span></td>-->
               </tr>
             </tbody>
           </table>
@@ -63,9 +67,11 @@
         <div class="card ">
           <div class="card-header">
             <h3 class="card-title">Calendario</h3>
-
           </div>
           <div class="card-body">
+            <div>
+
+            </div>
           </div>
         </div>
       </div>
@@ -75,13 +81,49 @@
   <br>
   <!--Detalle proceso-->
   <div class="row">
-    <div class="col">
+    <div class="col" id="detalle_proceso">
       <h1>Aqui colocar todo el detalle del proceso</h1>
+      
     </div>
   </div>
 </div>
-    {% endblock %}
+{% endblock %}
 
-    {% block js %}
+{% block js %}
+<!--Detalle del proceso sacado de la ID-->
+<script>
+  function detalle(){
 
-    {% endblock js %}
+    $('#tbProceso tr#datos').each(function() { 
+    var customerId = $(this).find("td:first").html(); 
+    //alert(customerId)
+    let url = '/detalle_proceso/?proceso='+customerId;
+    fetch(url)
+    .then(function(result){
+      return result.text();
+    })
+    .then(function(result){
+      document.getElementById("detalle_proceso").innerHTML = result;
+    });
+  });
+};
+</script>
+<!--<script>
+  document.addEventListener('DOMContentLoaded', function () {
+      var calendarEl = document.getElementById('calendar');
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+          events: [
+              {% for p in sesiones %} 
+              {
+              title: "{{p.3}}",
+              start: '{{ p.1 | date:"Y-m-d" }}',
+
+          },
+          {% endfor %}
+      ]
+      });
+  calendar.render();
+  calendar.setOption('locales', 'es');
+  });
+</script>-->
+{% endblock js %}

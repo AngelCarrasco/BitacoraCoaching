@@ -19,6 +19,8 @@
               <tr>
                 <th>Run</th>
                 <th>Nombre</th>
+                <th>Apellido Paterno</th>
+                <th>Apellido Materno</th>
                 <th>Correo</th>
                 <th>Empresa</th>
                 <th>Opciones</th>
@@ -31,7 +33,9 @@
                 <td>{{i.1}}</td>
                 <td>{{i.2}}</td>
                 <td>{{i.3}}</td>
-                <th><input type="button" value="Modificar"></th>
+                <td>{{i.4}}</td>
+                <td>{{i.5}}</td>
+                <th><input type="button" class="btnModificar" value="Modificar"></th>
               </tr>
               {% endfor %}
             </tbody>
@@ -115,5 +119,36 @@
 {% block js%}
 <script src="{%static 'jsgrid/demos/db.js' %}"></script>
 <script src="{%static 'jsgrid/jsgrid.min.js' %}"></script>
+<!--Rellenar form con los datos-->
+<script>
+  $(".btnModificar").click(function(){
 
+    var UserData = {};
+    var UserData2 = {};
+    var UserData3 = {};
+    var UserData4 = {};
+    var UserData5 = {};
+    var UserData6 = {};
+    var UserData7 = {};
+    var UserData8 = {};
+
+    var id = $(this).closest('tr').find('td');
+
+    UserData = id.filter(":eq(0)").text();
+    UserData2 = id.filter(":eq(1)").text();
+    UserData3 = id.filter(":eq(2)").text();
+    UserData4 = id.filter(":eq(3)").text();
+    UserData5 = id.filter(":eq(4)").text();
+    UserData6 = id.filter(":eq(5)").text();
+
+    $("#run").val(UserData);
+    $("#nombre").val(UserData2);
+    $("#a_paterno").val(UserData3);
+    $("#a_materno").val(UserData4);
+    $("#correo").val(UserData5);
+    $("#cargo").val(UserData6);
+    //solo lectura el run
+    $('#run').attr('readonly', true);
+  });
+</script>
 {% endblock %}

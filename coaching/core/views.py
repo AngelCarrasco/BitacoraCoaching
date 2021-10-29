@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.db import connection
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.hashers import make_password
+from datetime import datetime
 import cx_Oracle
 
 #redirect usuarios 
@@ -94,7 +95,8 @@ def registro_proceso(request):
 
         nombre = request.POST.get('nom_proceso')
         modalidad = request.POST.get('modalidad')
-        fecha = request.POST.get('fecha')
+        fecha_acordada = request.POST.get('fecha_acordada')
+        fecha = datetime.strptime(fecha_acordada, '%d-%m-%YT%H:%M')
         run_coach = request.POST.get('coach')
         empresa = request.POST.get('empresa')
         status = '1'

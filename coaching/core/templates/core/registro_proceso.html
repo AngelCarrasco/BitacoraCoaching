@@ -24,7 +24,6 @@
                 <th>Modalidad</th>
                 <th>Coach</th>
                 <th>Empresa</th>
-                <th>Opciones</th>
               </tr>
             </thead>
             <tbody>
@@ -35,7 +34,6 @@
                 <td>{{i.2}}</td>
                 <td>{{i.3}}</td>
                 <td>{{i.4}}</td>
-                <th><input onclick="detalle()" type="button" class="btnDetalle" value="Detalle"></th>
               </tr>
               {% endfor %}
             </tbody>
@@ -83,8 +81,7 @@
               </div>
               <div class="form-group">
                 <label for="exampleInputEmail1">Fecha Contrato</label>
-                <input class="form-control" type="date" id="fecha" name="fecha" required="" value="2018-07-22"
-                  min="2018-01-01">
+                <input class="form-control" data-date-format="d-m-YTH:i" data-time_24hr=true type="date" id="fecha_acordada" placeholder="dd-mm-yyyy" name="fecha_acordada" required="">
               </div>
               <div class="form-group">
                 <label for="exampleInputEmail1">Clausula</label>
@@ -164,6 +161,25 @@
     ]
   });
 </script>
+<!--Fecha-->
+<script>
+  config = {    
+      minDate: "today",
+      locale: { 
+      firstDayOfWeek: 1,
+      weekdays: {
+        shorthand: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+        longhand: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],         
+      }, 
+      months: {
+        shorthand: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Оct', 'Nov', 'Dic'],
+        longhand: ['Enero', 'Febreo', 'Мarzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+      }
+      }}
+  flatpickr("#fecha_acordada",config);
+
+</script>
+
 <!--Rescatar la id del proceso y mandarla por URL al detalle-->
 <script>
   function detalle(){

@@ -72,6 +72,9 @@
             {% csrf_token %}
             <div class="card-body">
               <div class="form-group">
+                <label for="exampleInputFile">Run</label> <input class="form-control" type="text" name="run" id="run" placeholder="Run" oninput="checkRut(this)" maxlength="10" required="">
+              </div>
+              <div class="form-group">
                 <label for="exampleInputFile">Nombre</label> <input class="form-control" type="text" name="nombre" id="nombres" placeholder="Ingrese su Nombre" required="">
               </div>
               <div class="form-group">
@@ -79,9 +82,6 @@
               </div>
               <div class="form-group">
                 <label for="exampleInputFile">Apellido materno</label> <input class="form-control" type="text" name="a_materno" id="a_materno" placeholder="Apellido materno" required="">
-              </div>
-              <div class="form-group">
-                <label for="exampleInputFile">Run</label> <input class="form-control" type="text" name="run" id="run" placeholder="Run" oninput="checkRut(this)" maxlength="10" required="">
               </div>
               <div class="form-group">
                 <label for="exampleInputFile">Correo electronico</label> <input class="form-control" type="email" name="correo" id="correos" placeholder="Ingrese su correo" required="">
@@ -163,6 +163,8 @@
     $("#a_materno").val(UserData4);
     $("#correos").val(UserData5);
     $("#telefono").val(UserData6);
+    //solo lectura el run
+    $('#run').attr('readonly', true);
   });
 </script>
 {% endblock %}
