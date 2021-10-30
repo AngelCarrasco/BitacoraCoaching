@@ -1,5 +1,5 @@
 -- Generado por Oracle SQL Developer Data Modeler 20.4.1.406.0906
---   en:        2021-10-15 00:01:23 CLST
+--   en:        2021-10-28 18:59:21 CLST
 --   sitio:      Oracle Database 12c
 --   tipo:      Oracle Database 12c
 
@@ -40,7 +40,7 @@ CREATE TABLE coach (
     apellido_m  VARCHAR2(50) NOT NULL,
     telefono    NUMBER(9) NOT NULL,
     correo      VARCHAR2(50) NOT NULL,
-    contrasena  VARCHAR2(16) NOT NULL,
+    contrasena  VARCHAR2(200) NOT NULL,
     contrato    NUMBER NOT NULL
 );
 
@@ -55,8 +55,7 @@ CREATE TABLE coachee (
     correo       VARCHAR2(50) NOT NULL,
     contrasena   VARCHAR2(200) NOT NULL,
     contrato     NUMBER NOT NULL,
-    rut_empresa  VARCHAR2(13) NOT NULL,
-    id_sesion    NUMBER(4) NOT NULL
+    rut_empresa  VARCHAR2(13) NOT NULL
 );
 
 ALTER TABLE coachee ADD CONSTRAINT coachee_pk PRIMARY KEY ( run_coachee );
@@ -66,14 +65,10 @@ CREATE TABLE documentacion (
     archivo       CLOB NOT NULL,
     fecha_subida  DATE NOT NULL,
     fecha_vista   DATE,
-    run_coachee   VARCHAR2(13) NOT NULL,
-    run_coach     VARCHAR2(13) NOT NULL
+    id_sesion     NUMBER(4) NOT NULL
 );
 
-ALTER TABLE documentacion
-    ADD CONSTRAINT documentacion_pk PRIMARY KEY ( id_doc,
-                                                  run_coach,
-                                                  run_coachee );
+ALTER TABLE documentacion ADD CONSTRAINT documentacion_pk PRIMARY KEY ( id_doc );
 
 CREATE TABLE empresa (
     rut_empresa    VARCHAR2(13) NOT NULL,
@@ -186,17 +181,9 @@ ALTER TABLE coachee
     ADD CONSTRAINT coachee_empresa_fk FOREIGN KEY ( rut_empresa )
         REFERENCES empresa ( rut_empresa );
 
-ALTER TABLE coachee
-    ADD CONSTRAINT coachee_sesion_fk FOREIGN KEY ( id_sesion )
+ALTER TABLE documentacion
+    ADD CONSTRAINT documentacion_sesion_fk FOREIGN KEY ( id_sesion )
         REFERENCES sesion ( id_sesion );
-
-ALTER TABLE documentacion
-    ADD CONSTRAINT documentacion_coach_fk FOREIGN KEY ( run_coach )
-        REFERENCES coach ( run_coach );
-
-ALTER TABLE documentacion
-    ADD CONSTRAINT documentacion_coachee_fk FOREIGN KEY ( run_coachee )
-        REFERENCES coachee ( run_coachee );
 
 ALTER TABLE evaluacion
     ADD CONSTRAINT evaluacion_encuesta_fk FOREIGN KEY ( id_pregunta )
@@ -244,20 +231,119 @@ ALTER TABLE sesion
         REFERENCES proceso ( id_proceso,
                              run_coach );
 
+CREATE SEQUENCE documentacion_id_doc_seq START WITH 1 NOCACHE ORDER;
+
+CREATE OR REPLACE TRIGGER documentacion_id_doc_trg BEFORE
+    INSERT ON documentacion
+    FOR EACH ROW
+    WHEN ( new.id_doc IS NULL )
+BEGIN
+    :new.id_doc := documentacion_id_doc_seq.nextval;
+END;
+/
+
+CREATE SEQUENCE encuesta_id_pregunta_seq START WITH 1 NOCACHE ORDER;
+
+CREATE OR REPLACE TRIGGER encuesta_id_pregunta_trg BEFORE
+    INSERT ON encuesta
+    FOR EACH ROW
+    WHEN ( new.id_pregunta IS NULL )
+BEGIN
+    :new.id_pregunta := encuesta_id_pregunta_seq.nextval;
+END;
+/
+
+CREATE SEQUENCE evaluacion_id_encuesta_seq START WITH 1 NOCACHE ORDER;
+
+CREATE OR REPLACE TRIGGER evaluacion_id_encuesta_trg BEFORE
+    INSERT ON evaluacion
+    FOR EACH ROW
+    WHEN ( new.id_encuesta IS NULL )
+BEGIN
+    :new.id_encuesta := evaluacion_id_encuesta_seq.nextval;
+END;
+/
+
+CREATE SEQUENCE indicador_id_incador_seq START WITH 1 NOCACHE ORDER;
+
+CREATE OR REPLACE TRIGGER indicador_id_incador_trg BEFORE
+    INSERT ON indicador
+    FOR EACH ROW
+    WHEN ( new.id_incador IS NULL )
+BEGIN
+    :new.id_incador := indicador_id_incador_seq.nextval;
+END;
+/
+
+CREATE SEQUENCE objetivo_id_objetivo_seq START WITH 1 NOCACHE ORDER;
+
+CREATE OR REPLACE TRIGGER objetivo_id_objetivo_trg BEFORE
+    INSERT ON objetivo
+    FOR EACH ROW
+    WHEN ( new.id_objetivo IS NULL )
+BEGIN
+    :new.id_objetivo := objetivo_id_objetivo_seq.nextval;
+END;
+/
+
+CREATE SEQUENCE plan_accion_id_plan_seq START WITH 1 NOCACHE ORDER;
+
+CREATE OR REPLACE TRIGGER plan_accion_id_plan_trg BEFORE
+    INSERT ON plan_accion
+    FOR EACH ROW
+    WHEN ( new.id_plan IS NULL )
+BEGIN
+    :new.id_plan := plan_accion_id_plan_seq.nextval;
+END;
+/
+
+CREATE SEQUENCE proceso_id_proceso_seq START WITH 1 NOCACHE ORDER;
+
+CREATE OR REPLACE TRIGGER proceso_id_proceso_trg BEFORE
+    INSERT ON proceso
+    FOR EACH ROW
+    WHEN ( new.id_proceso IS NULL )
+BEGIN
+    :new.id_proceso := proceso_id_proceso_seq.nextval;
+END;
+/
+
+CREATE SEQUENCE reunion_id_reunion_seq START WITH 1 NOCACHE ORDER;
+
+CREATE OR REPLACE TRIGGER reunion_id_reunion_trg BEFORE
+    INSERT ON reunion
+    FOR EACH ROW
+    WHEN ( new.id_reunion IS NULL )
+BEGIN
+    :new.id_reunion := reunion_id_reunion_seq.nextval;
+END;
+/
+
+CREATE SEQUENCE sesion_id_sesion_seq START WITH 1 NOCACHE ORDER;
+
+CREATE OR REPLACE TRIGGER sesion_id_sesion_trg BEFORE
+    INSERT ON sesion
+    FOR EACH ROW
+    WHEN ( new.id_sesion IS NULL )
+BEGIN
+    :new.id_sesion := sesion_id_sesion_seq.nextval;
+END;
+/
+
 
 
 -- Informe de Resumen de Oracle SQL Developer Data Modeler: 
 -- 
 -- CREATE TABLE                            12
 -- CREATE INDEX                             0
--- ALTER TABLE                             25
+-- ALTER TABLE                             23
 -- CREATE VIEW                              0
 -- ALTER VIEW                               0
 -- CREATE PACKAGE                           0
 -- CREATE PACKAGE BODY                      0
 -- CREATE PROCEDURE                         0
 -- CREATE FUNCTION                          0
--- CREATE TRIGGER                           0
+-- CREATE TRIGGER                           9
 -- ALTER TRIGGER                            0
 -- CREATE COLLECTION TYPE                   0
 -- CREATE STRUCTURED TYPE                   0
@@ -270,7 +356,7 @@ ALTER TABLE sesion
 -- CREATE DISK GROUP                        0
 -- CREATE ROLE                              0
 -- CREATE ROLLBACK SEGMENT                  0
--- CREATE SEQUENCE                          0
+-- CREATE SEQUENCE                          9
 -- CREATE MATERIALIZED VIEW                 0
 -- CREATE MATERIALIZED VIEW LOG             0
 -- CREATE SYNONYM                           0

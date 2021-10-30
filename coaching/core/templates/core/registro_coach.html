@@ -1,103 +1,170 @@
 {% extends 'core/base.html' %}
-
-{% block titulo %}
-<title>Registro_coach</title>
-{% endblock %}
-
 {% load static %}
-
-{% block css %}
-<link rel="stylesheet" href="{% static 'core/css/estilo_r_coach.css' %}">
-{% endblock %}
-
-{% block contenido %}
-<div class="row">
-  <div class="col-md-6">
-    <h3>Coachs registrados</h3>
-    <table id="tablaCoach" class="table table-bordered table-dark">
-      <thead>
-        <tr>
-          <th scope="col">Run</th>
-          <th scope="col">Nombre</th>
-          <th scope="col">Apellido Paterno</th>
-          <th scope="col">Apellido Materno</th>
-          <th scope="col">Correo</th>
-          <th scope="col">Telefono</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for coach in coachs%}
-          <tr>
-            <td>{{coach.0}}</td>
-            <td>{{coach.1}}</td>
-            <td>{{coach.2}}</td>
-            <td>{{coach.3}}</td>
-            <td>{{coach.5}}</td>
-            <td>{{coach.4}}</td>
-            <td><input type="button" class="btnModificar" value="Modificar"></td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-  <div class="col-md-5 ml-auto">
-    <h3>Registro Coach</h3>
-    <form id="FormCoach" action="" method="POST">
-      {% csrf_token %} 
-      <input class="controls" type="text" name="run" id="run" placeholder="Run" oninput="checkRut(this)" maxlength="10" required>
-      <input class="controls" type="text" name="nombre" id="nombre" placeholder="Ingrese su Nombre" required>
-      <input class="controls" type="text" name="a_paterno" id="a_paterno" placeholder="Apellido paterno" required>
-      <input class="controls" type="text" name="a_materno" id="a_materno" placeholder="Apellido materno" required>
-      <input class="controls" type="email" name="correo" id="correo" placeholder="Ingrese su correo" required>
-      <input class="controls" type="text" name="telefono" id="telefono" placeholder="Telefono" required>
-  
-      <input class="botons" type="submit" value="Guardar" {% comment %} onclick="limpiarFormulario()" {% endcomment %} >
-    </form>
-    {{mensaje}}
+ {% block titulo%}
+  <title>Coach</title>
+  {% endblock %}
+{%block contenido%}
+<br>
+<br>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Listado de coachs</h3>
+        </div>
+        <div class="card-body">
+          <table  class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Run</th>
+                <th>Nombre</th>
+                <th>Apellido Paterno</th>
+                <th>Apellido Materno</th>
+                <th>Correo</th>
+                <th style="text-align: center">Telefono</th>
+                <th>Opciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for i in coachs%}
+                <tr>
+                  <td>{{i.0}}</td>
+                  <td>{{i.1}} </td>
+                  <td>{{i.2}}</td>
+                  <td>{{i.3}}</td>
+                  <td>{{i.5}}</td>
+                  <td>{{i.4}}</td>
+                  <td><input type="button" class="btnModificar" value="Modificar"></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="card-footer clearfix">
+          <ul class="pagination pagination-sm m-0 float-right">
+            <li class="page-item">
+              <a class="page-link" href="#">«</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">1</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">2</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">3</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">»</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="container">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Registrar Coach</h3>
+          </div>
+          <form id="form-coach" action="" method="post">
+            {% csrf_token %}
+            <div class="card-body">
+              <div class="form-group">
+                <label for="exampleInputFile">Run</label> <input class="form-control" type="text" name="run" id="run" placeholder="Run" oninput="checkRut(this)" maxlength="10" required="">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputFile">Nombre</label> <input class="form-control" type="text" name="nombre" id="nombres" placeholder="Ingrese su Nombre" required="">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputFile">Apellido paterno</label> <input class="form-control" type="text" name="a_paterno" id="a_paterno" placeholder="Apellido paterno" required="">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputFile">Apellido materno</label> <input class="form-control" type="text" name="a_materno" id="a_materno" placeholder="Apellido materno" required="">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputFile">Correo electronico</label> <input class="form-control" type="email" name="correo" id="correos" placeholder="Ingrese su correo" required="">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputFile">Telefono</label> <input class="form-control" type="number" name="telefono" id="telefono" placeholder="Telefono" max="999999999" required="">
+              </div>
+              {{mensaje}}
+              <div class="card-footer">
+                <input class="btn btn-primary" type="submit" value="Guardar">
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 {% endblock %}
 
 {% block js%}
-
-{% comment %} limpiar el formulario despues de agregar (no funca por alguna razon) {% endcomment %}
-<script src=" static/core/js/validacion.js"></script>
+<script src="{%static 'jsgrid/demos/db.js' %}"></script>
+<script src="{%static 'jsgrid/jsgrid.min.js' %}"></script>
 <script>
-  function limpiarFormulario(){
-    document.getElementById("FormCoach").reset();
-  };
-</script>
+  
+  var Coach = [
+    { "Run": "123456789", "Nombre": "wacoldo soto", "Telefono": 123456, "Correo": "algo@alog.cl"},
+    { "Run": "123456789", "Nombre": "wacoldo soto", "Telefono": 123456, "Correo": "algo@alog.cl"}
 
-{% comment %} traspasar los datos de la tabla al formulario {% endcomment %}
+  ];
+
+  $("#jsGrid").jsGrid({
+    width: "100%",
+    height: "100%",
+
+    filtering: true,
+    editing: true,
+    sorting: true,
+    paging: true,
+    autoload: true,
+
+    data: Coach,
+
+    fields: [
+      { name: "Run", type: "text", width: 130, validate: "required" },
+      { name: "Nombre", type: "text", width: 150 },
+      { name: "Telefono", type: "number", width: 90 },
+      { name: "Correo", type: "text", textField: "Name", width: 150 },
+      { type: "control" }
+    ]
+  });
+</script>
 <script>
   $(".btnModificar").click(function(){
 
-      var UserData = {};
-      var UserData2 = {};
-      var UserData3 = {};
-      var UserData4 = {};
-      var UserData5 = {};
-      var UserData6 = {};
-      var UserData7 = {};
-      var UserData8 = {};
+    var UserData = {};
+    var UserData2 = {};
+    var UserData3 = {};
+    var UserData4 = {};
+    var UserData5 = {};
+    var UserData6 = {};
+    var UserData7 = {};
+    var UserData8 = {};
 
-      var id = $(this).closest('tr').find('td');
-        UserData = id.filter(":eq(0)").text();
-        UserData2 = id.filter(":eq(1)").text();
-        UserData3 = id.filter(":eq(2)").text();
-        UserData4 = id.filter(":eq(3)").text();
-        UserData5 = id.filter(":eq(4)").text();
-        UserData6 = parseInt(id.filter(":eq(5)").text());
-        UserData7 = id.filter(":eq(6)").text();
-        UserData8 = parseInt(id.filter(":eq(7)").text());
-        $("#run").val(UserData);
-        $("#nombre").val(UserData2);
-        $("#a_paterno").val(UserData3);
-        $("#a_materno").val(UserData4);
-        $("#correo").val(UserData5);
-        $("#telefono").val(UserData6);
-        $("#contrasena").val(UserData7);
-        $("#contrato").val(UserData8);
-        });
+    var id = $(this).closest('tr').find('td');
+
+    UserData = id.filter(":eq(0)").text();
+    UserData2 = id.filter(":eq(1)").text();
+    UserData3 = id.filter(":eq(2)").text();
+    UserData4 = id.filter(":eq(3)").text();
+    UserData5 = id.filter(":eq(4)").text();
+    UserData6 = id.filter(":eq(5)").text();
+    //UserData7 = id.filter(":eq(0)").text();
+    //UserData8 = id.filter(":eq(0)").text();
+
+    $("#run").val(UserData);
+    $("#nombres").val(UserData2);
+    $("#a_paterno").val(UserData3);
+    $("#a_materno").val(UserData4);
+    $("#correos").val(UserData5);
+    $("#telefono").val(UserData6);
+    //solo lectura el run
+    $('#run').attr('readonly', true);
+  });
 </script>
 {% endblock %}
