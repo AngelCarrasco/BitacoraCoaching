@@ -53,15 +53,23 @@
       <ul class="navbar-nav ml-auto">
         <!-- Messages Dropdown Menu -->
         
-          <li class="nav-item dropdown">
+        <li class="nav-item dropdown">
           <a class="nav-link" data-toggle="" href="#">
-            <i class="bi bi-person-circle"> Administrador</i>
+            <i class="bi bi-person-circle"> {{ user| upper }}</i>
           </a>
         </li>
+        {% if user.authenticated %}
+        <li class="nav-item dropdown">
+          <a class="nav-link" data-toggle="" href="{% url 'logout'%}">
+            Cerrar sesion
+          </a>
+        </li>
+        {% endif %}
 
         <li class="nav-item dropdown">
           <a class="nav-link" data-toggle="" href="#">
-            <i class="bi bi-gear"></i>
+            <i class="bi bi-gear">
+            </i>
           </a>
         </li>
       </ul>

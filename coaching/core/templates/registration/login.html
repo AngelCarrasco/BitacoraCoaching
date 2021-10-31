@@ -1,28 +1,55 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'fontawesome-free/css/all.min.css' %}">
+    <!-- bootstrap theme -->
+    <link rel="stylesheet" href="{% static 'css/adminlte.min.css' %}">
+    <!-- Estilo -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- iconos
+      <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
     <title>Ingreso al sistema</title>
 </head>
 <body>
+    <br><br><br><br>
     <div class="container">
         <div class="row">
-            <div class="col-12 col-md-6 offset-md-3">
+            <div class="col-md-6">
                 <div class="card">
-                    <div class="card-body">
-                        <h2>Ingresar credenciales</h2>
+                    <div class="card-header">
+                        <h2 class="card-title">Ingresar credenciales</h2>
                         <hr>
-                        <form action="">
+                    </div>
+                    <div class="card-body">
+                        <form action="" method="post" id="form-login">
                             {% csrf_token %}
-                            {{form}}
+                            <div class="form-group" id="username">
+                                <label for="exampleInputFile">Usuario</label>
+                                <div>
+                                    {{ form.username }}
+                                </div>
+                                
+                            </div>
+                            <div class="form-group" id="password">
+                                <label for="exampleInputFile">Contraseña</label>
+                                <div>
+                                    {{ form.password }}
+                                </div> 
+                            </div>
                             <input type="submit" value="ingresar">
                         </form>
                     </div>
+        
                 </div>
             </div>
-        </div>
+        </div> 
     </div>
 </body>
 </html>
