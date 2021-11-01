@@ -19,7 +19,7 @@
               <tr>
                 <th style="width: 10px">#</th>
                 <th>Procesos</th>
-
+                <th>Opciones</th>
               </tr>
             </thead>
             <tbody>
@@ -81,11 +81,11 @@
   <br>
   <br>
   <!--Detalle proceso-->
-  <div class="row">
-    <div class="col-md-8" id="detalle_proceso">
+ <h5>{{mensaje}}</h5>
+<div class="col" id="detalle_proceso">
 
-    </div>
-  </div>
+</div>
+
 </div>
 {% endblock %}
 
@@ -109,6 +109,7 @@
     });
   });
 </script>
+
 <!--<script>
   document.addEventListener('DOMContentLoaded', function () {
       var calendarEl = document.getElementById('calendar');

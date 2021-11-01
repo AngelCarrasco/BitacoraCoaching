@@ -13,5 +13,7 @@ urlpatterns = [
     path('coach/', views.coach, name="coach"),
     path('contrato/', views.contrato , name="contrato"),
     path('combox/', views.lista_coach_proceso, name="combox"),
+    path('user/', views.users, name="user"),
+    path('coachee/', views.coachee, name="coachee")
     #path('login_sucess/$', views.login_sucess, name='login_success'),
 ]

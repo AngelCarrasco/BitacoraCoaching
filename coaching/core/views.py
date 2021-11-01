@@ -5,20 +5,24 @@ from django.contrib.auth.hashers import make_password
 from datetime import datetime
 import cx_Oracle
 
-#redirect usuarios 
-#def login_sucess(request):
-
-#    if request.user.groups.filter(name = "admin").exists():
-#        return redirect (administrador)
-#    else:
-#        return redirect(coach)
-#
-# Create your views here.
+def users(request):
+    rut = request.user.username
+    from .models import Coach,Coachee
+    
+    if Coach.objects.filter(run_coach = rut):
+        return redirect (coach)
+    elif Coachee.objects.filter(run_coachee = rut) :
+        return redirect (coachee)
+    else :
+        return redirect (administrador)
 
 #FUNCIONES COACH
 def coach(request):
 
     return render(request, 'core/coach.html')
+
+def coachee(request):
+    return render(request, 'core/coachee.html')
 
 #FUNCIONES ADMINISTRADOR 
 def administrador(request):
@@ -33,6 +37,7 @@ def administrador(request):
         'empresas': listar(p_empresa),
         'procesos': listar(p_proceso)
     }
+ 
     return render(request, 'core/administrador.html',data)
 
 def contrato(request):
@@ -249,3 +254,11 @@ def listar_anidado(procedimiento,filtro):
         lista.append(fila)
     return lista
 
+def deshabilitar(procedimiento, filtro):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+
+    cursor.callproc(procedimiento,[filtro,salida])
+
+    return salida.getvalue()
