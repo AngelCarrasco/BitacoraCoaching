@@ -1,19 +1,30 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.db import connection
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.hashers import make_password
+from datetime import datetime
 import cx_Oracle
 
-# Create your views here.
+def users(request):
+    rut = request.user.username
+    from .models import Coach,Coachee
+    
+    if Coach.objects.filter(run_coach = rut):
+        return redirect (coach)
+    elif Coachee.objects.filter(run_coachee = rut) :
+        return redirect (coachee)
+    else :
+        return redirect (administrador)
 
-def login(request):
-    return render(request, 'core/login.html')
-
+#FUNCIONES COACH
 def coach(request):
 
     return render(request, 'core/coach.html')
 
-#CRUD ADMINISTRADOR 
+def coachee(request):
+    return render(request, 'core/coachee.html')
+
+#FUNCIONES ADMINISTRADOR 
 def administrador(request):
     p_coach = 'SP_LISTA_COACH'
     p_coachee = 'SP_LISTA_COACHEE'
@@ -26,11 +37,13 @@ def administrador(request):
         'empresas': listar(p_empresa),
         'procesos': listar(p_proceso)
     }
+ 
     return render(request, 'core/administrador.html',data)
 
 def contrato(request):
     pass
 
+#COMBOBOX 
 def lista_coach_proceso(request):
     p_list = 'SP_LIST_PROCESO_COACH'
     id_proceso = request.GET.get('proceso')
@@ -87,7 +100,8 @@ def registro_proceso(request):
 
         nombre = request.POST.get('nom_proceso')
         modalidad = request.POST.get('modalidad')
-        fecha = request.POST.get('fecha')
+        fecha_acordada = request.POST.get('fecha_acordada')
+        fecha = datetime.strptime(fecha_acordada, '%d-%m-%YT%H:%M')
         run_coach = request.POST.get('coach')
         empresa = request.POST.get('empresa')
         status = '1'
@@ -101,6 +115,47 @@ def registro_proceso(request):
             data['mensaje'] = 'no se ha agregado'
 
     return render(request, 'core/registro_proceso.html',data)
+
+def detalle_proceso(request):
+    p_detalle = 'SP_DETALLE_PROCESO'
+    id_proceso = request.GET.get('proceso')
+
+    data ={
+        'procesos' : listar_anidado(p_detalle,id_proceso)
+    }
+
+    return render(request, 'core/detalle_proceso.html', data)
+
+def deshabilitar_proceso(request):
+
+    p_deshabilitar = 'SP_DESHABILITAR_PROCESO'
+    id_proceso = request.GET.get('proceso')
+
+    data ={
+        'procesos' : deshabilitar(p_deshabilitar,id_proceso)
+    }
+
+    return render(request, 'core/deshabilitar_proceso.html', data)
+
+def deshabilitar_coach(request):
+    p_deshabilitar_c = 'SP_DESHABILITAR_COACH'
+    run_coach = request.GET.get('coach')
+
+    data ={
+        'coachs' : deshabilitar(p_deshabilitar_c,run_coach)
+    }
+
+    return render(request, 'core/deshabilitar_coach.html', data)
+
+def deshabilitar_coachee(request):
+    p_deshabilitar_ce = 'SP_DESHABILITAR_COACHEE'
+    run_coachee = request.GET.get('coachee')
+
+    data ={
+        'coachs' : deshabilitar(p_deshabilitar_ce,run_coachee)
+    }
+
+    return render(request, 'core/deshabilitar_coachee.html', data)
 
 def registro_coach(request):
     p_coach = 'SP_LISTA_COACH'
@@ -133,6 +188,7 @@ def registro_coachee(request):
     p_coachee = 'SP_LISTA_COACHEE'
     data= {
         'empresas': listar(p_empresa),
+        'coachees' : listar(p_coachee)
     }
 
     if request.POST:
@@ -144,7 +200,7 @@ def registro_coachee(request):
         correo = request.POST.get('correo')
         empresa = request.POST.get('empresa')
         
-        contrasena = make_password( run[:4])
+        contrasena = make_password(run[:4])
         contrato = '1'
        
 
@@ -169,7 +225,6 @@ def agregar_coach(run,nombre,ap_paterno,ap_materno,telefono,correo,contrasena,co
 
     return salida.getvalue()
 
-#arreglar la BD
 def agregar_coachee(run,amaterno,nombre,cargo,apaterno,correo,rut_empresa,contrasena,contrato):
     django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
@@ -230,4 +285,11 @@ def listar_anidado(procedimiento,filtro):
         lista.append(fila)
     return lista
 
+def deshabilitar(procedimiento, filtro):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
 
+    cursor.callproc(procedimiento,[filtro,salida])
+
+    return salida.getvalue()

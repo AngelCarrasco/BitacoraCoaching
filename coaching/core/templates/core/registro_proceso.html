@@ -10,31 +10,57 @@
 <!-- separar la wea en dos!-->
 <div class="container">
   <div class="row">
-    <div class="col-md-6">
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>Proceso</th>
-            <th>Modalidad</th>
-            <th>Coach</th>
-            <th>Empresa</th>
-            <th>Opciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for i in procesos%}
-          <tr>
-            <td>{{i.0}}</td>
-            <td>{{i.1}}</td>
-            <td>{{i.2}}</td>
-            <td>{{i.3}}</td>
-            <th><input type="button" value="Modificar"></th>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Listado de procesos</h3>
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Proceso</th>
+                <th>Modalidad</th>
+                <th>Coach</th>
+                <th>Empresa</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for i in procesos%}
+              <tr>
+                <td id="id_proceso">{{i.0}}</td>
+                <td>{{i.1}}</td>
+                <td>{{i.2}}</td>
+                <td>{{i.3}}</td>
+                <td>{{i.4}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="card-footer clearfix">
+          <ul class="pagination pagination-sm m-0 float-right">
+            <li class="page-item">
+              <a class="page-link" href="#">«</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">1</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">2</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">3</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">»</a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
-    <div class="col-md-6">
+    <div class="col">
       <div class="container">
         <div class="card">
           <div class="card-header">
@@ -55,8 +81,7 @@
               </div>
               <div class="form-group">
                 <label for="exampleInputEmail1">Fecha Contrato</label>
-                <input class="form-control" type="date" id="fecha" name="fecha" required="" value="2018-07-22"
-                  min="2018-01-01" max="2018-12-31">
+                <input class="form-control" data-date-format="d-m-YTH:i" data-time_24hr=true type="date" id="fecha_acordada" placeholder="dd-mm-yyyy" name="fecha_acordada" required="">
               </div>
               <div class="form-group">
                 <label for="exampleInputEmail1">Clausula</label>
@@ -84,8 +109,6 @@
               </div>
               <div class="card-footer">
                 <input class="btn btn-primary" type="submit" value="Agregar">
-
-
               </div>
             </div>
           </form>
@@ -99,6 +122,7 @@
 {% endblock %}
 
 {% block js%}
+<!--Script de la tabla proceso-->
 <script>
   var clients = [
     { "Name": "Otto Clay", "Age": 25, "Country": 1, "Address": "Ap #897-1459 Quam Avenue", "Married": false },
@@ -136,5 +160,42 @@
       { type: "control" }
     ]
   });
+</script>
+<!--Fecha-->
+<script>
+  config = {    
+      minDate: "today",
+      locale: { 
+      firstDayOfWeek: 1,
+      weekdays: {
+        shorthand: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+        longhand: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],         
+      }, 
+      months: {
+        shorthand: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Оct', 'Nov', 'Dic'],
+        longhand: ['Enero', 'Febreo', 'Мarzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+      }
+      }}
+  flatpickr("#fecha_acordada",config);
+
+</script>
+
+<!--Rescatar la id del proceso y mandarla por URL al detalle-->
+<script>
+  function detalle(){
+    
+    //var UserData = {};
+    
+    
+    let id_proceso = document.getElementById("id_proceso").value;
+      let url = '/detalle_proceso/?proceso='+id_proceso;
+      fetch(url)
+      .then(function(result){
+        return result.text();
+      })
+      .then(function(result){
+        document.getElementById("detalleProceso").innerHTML = result;
+      });    
+  };
 </script>
 {% endblock %}
