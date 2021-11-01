@@ -28,6 +28,7 @@
                 <td>{{i.0}}</td>
                 <td>{{i.1}}</td>
                 <th><input type="button" class="btnDetalle" value="Detalle"></th>
+                <th><input type="button" class="btnDeshabilitar" value="Deshabilitar"></th>
                 {% endfor %}
                 <!--
                 <td>1.</td>
@@ -108,6 +109,17 @@
       document.getElementById("detalle_proceso").innerHTML = result;
     });
   });
+</script>
+
+<script>
+$(".btnDeshabilitar").click(function(){
+    var UserData = {};
+    var id = $(this).closest('tr').find('td');
+
+    UserData = id.filter(":eq(0)").text();
+    let url = '/deshabilitar_proceso/?proceso='+UserData;
+    fetch(url)
+    });
 </script>
 
 <!--<script>

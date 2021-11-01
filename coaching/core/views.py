@@ -126,6 +126,37 @@ def detalle_proceso(request):
 
     return render(request, 'core/detalle_proceso.html', data)
 
+def deshabilitar_proceso(request):
+
+    p_deshabilitar = 'SP_DESHABILITAR_PROCESO'
+    id_proceso = request.GET.get('proceso')
+
+    data ={
+        'procesos' : deshabilitar(p_deshabilitar,id_proceso)
+    }
+
+    return render(request, 'core/deshabilitar_proceso.html', data)
+
+def deshabilitar_coach(request):
+    p_deshabilitar_c = 'SP_DESHABILITAR_COACH'
+    run_coach = request.GET.get('coach')
+
+    data ={
+        'coachs' : deshabilitar(p_deshabilitar_c,run_coach)
+    }
+
+    return render(request, 'core/deshabilitar_coach.html', data)
+
+def deshabilitar_coachee(request):
+    p_deshabilitar_ce = 'SP_DESHABILITAR_COACHEE'
+    run_coachee = request.GET.get('coachee')
+
+    data ={
+        'coachs' : deshabilitar(p_deshabilitar_ce,run_coachee)
+    }
+
+    return render(request, 'core/deshabilitar_coachee.html', data)
+
 def registro_coach(request):
     p_coach = 'SP_LISTA_COACH'
     data ={

@@ -36,6 +36,7 @@
                   <td>{{i.5}}</td>
                   <td>{{i.4}}</td>
                   <td><input type="button" class="btnModificar" value="Modificar"></td>
+                  <td><input type="button" class="btnDeshabilitar" value="Deshabilitar"></td>
                 </tr>
               {% endfor %}
             </tbody>
@@ -166,5 +167,15 @@
     //solo lectura el run
     $('#run').attr('readonly', true);
   });
+</script>
+<script>
+$(".btnDeshabilitar").click(function(){
+    var UserData = {};
+    var id = $(this).closest('tr').find('td');
+
+    UserData = id.filter(":eq(0)").text();
+    let url = '/deshabilitar_coach/?coach='+UserData;
+    fetch(url)
+    });
 </script>
 {% endblock %}
