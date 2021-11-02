@@ -17,4 +17,5 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name="dashboard"),
     path('proceso_empresa/',views.lista_proceso_por_empresa, name="proceso_empresa"),
     path('archivo_coach/',views.subir_archivo_coach, name="archivo_coach"),
+    path('detalle_proceso_coach/', views.detalle_proceso_coach, name="detalle_proceso_coach")
 ]

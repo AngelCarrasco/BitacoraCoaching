@@ -2,6 +2,8 @@
 {% load static %}
 {%block css %}
 
+
+
 {%endblock%}
 {% block contenido%}
 
@@ -12,7 +14,7 @@
                 <div class="card-header">
                     <h3 class="card-title">Crear una nueva sesion</h3>
                 </div>
-                <form action="" method="POST">
+                <form action="" method="POST" enctype = "multipart/form-data">
                     {% csrf_token %}
                     <div class="card-body">
                         
@@ -35,10 +37,10 @@
                         <!-- EMPRESA  -->
                         <div class="form-group">
                             <label for="exampleInputFile">Seleciona una empresa</label>
-                            <select class="form-control" name="empresa" id="empresa" required=""
+                            <select class="form-control" name="empresa" id="empresa" style="height: 100%;"  required=""
                                 onchange="sub_procesos()">
 
-                                <option value="">Selecciona</option>
+                                <option></option>
                                 {% for i in empresas %}
                                 <option value="{{i.0}}">{{i.1}}</option>
                                 {% endfor %}
@@ -51,9 +53,12 @@
                             <label for="exampleInputFile">Seleciona un proceso</label>
                             <select class="form-control" name="proceso" id="proceso" >
                                 <option value="">Selecciona</option>
-
-                                
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Seleciona los archivos para la sesion</label>
+                            <input class="controls" type="file" name="archivo" id="archivo" multiple="true" onchange="return validarExt()" 
+                            accept=".xlsx,.pptx,.pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
                         </div>
                         <div class="card-footer">
                             <input class="btn btn-primary" type="submit" value="Agregar">
@@ -73,6 +78,16 @@
 {%endblock%}
 
 {% block js %}
+
+<script>
+    
+    $('#empresa').select2({ 
+        placeholder: "Seleccione Empresa"
+}); 
+    
+
+</script>
+
 <script>
     function sub_procesos() {
         let id_empresa = document.getElementById("empresa").value;
@@ -117,6 +132,33 @@
         }}
     flatpickr("#fecha_acordada",config);
 
+</script>
+<script type="text/javascript">
+    function validarExt()
+    {
+        var  archivo = document.getElementById('archivo');
+        var archivoRuta = archivo.value;
+        var extPermitidas = /(.pdf|.xlsx|.docx|.doc|.pptx|.png)$/i;
+
+        if(!extPermitidas.exec(archivoRuta))
+        {
+            alert('Ingrese un archivo correspondiente a word, pdf, excel u imagen')
+            archivo.value='';
+            return false
+        }
+        else
+        {
+            if(archivo.files && archivo.files[0])
+            var visor = new FileReader();
+            visor.onload=function(e)
+            {
+                document.getElementById('visorArchivo').innerHTML=
+                '<embed src=" '+e.target.result+'"width="500" height="500">';
+            };
+            visor.readAsDataURL(archivo.files[0])
+
+        }
+    }
 </script>
 
 
