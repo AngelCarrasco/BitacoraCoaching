@@ -34,72 +34,72 @@ DROP TABLE sesion CASCADE CONSTRAINTS;
 -- predefined type, no DDL - XMLTYPE
 
 CREATE TABLE coach (
-    run_coach  VARCHAR2(13) NOT NULL,
-    nombre     VARCHAR2(50) NOT NULL,
-    apellido_p VARCHAR2(50) NOT NULL,
-    apellido_m VARCHAR2(50) NOT NULL,
-    telefono   NUMBER(9) NOT NULL,
-    correo     VARCHAR2(50) NOT NULL,
-    contrasena VARCHAR2(200) NOT NULL,
-    contrato   NUMBER NOT NULL
+    run_coach   VARCHAR2(13) NOT NULL,
+    nombre      VARCHAR2(50) NOT NULL,
+    apellido_p  VARCHAR2(50) NOT NULL,
+    apellido_m  VARCHAR2(50) NOT NULL,
+    telefono    NUMBER(9) NOT NULL,
+    correo      VARCHAR2(50) NOT NULL,
+    contrasena  VARCHAR2(200) NOT NULL,
+    contrato    NUMBER NOT NULL
 );
 
 ALTER TABLE coach ADD CONSTRAINT coach_pk PRIMARY KEY ( run_coach );
 
 CREATE TABLE coachee (
-    run_coachee VARCHAR2(13) NOT NULL,
-    apellido_m  VARCHAR2(50) NOT NULL,
-    nombre      VARCHAR2(50) NOT NULL,
-    cargo       VARCHAR2(20) NOT NULL,
-    apellido_p  VARCHAR2(50) NOT NULL,
-    correo      VARCHAR2(50) NOT NULL,
-    contrasena  VARCHAR2(200) NOT NULL,
-    contrato    NUMBER NOT NULL,
-    rut_empresa VARCHAR2(13) NOT NULL
+    run_coachee  VARCHAR2(13) NOT NULL,
+    apellido_m   VARCHAR2(50) NOT NULL,
+    nombre       VARCHAR2(50) NOT NULL,
+    cargo        VARCHAR2(20) NOT NULL,
+    apellido_p   VARCHAR2(50) NOT NULL,
+    correo       VARCHAR2(50) NOT NULL,
+    contrasena   VARCHAR2(200) NOT NULL,
+    contrato     NUMBER NOT NULL,
+    rut_empresa  VARCHAR2(13) NOT NULL
 );
 
 ALTER TABLE coachee ADD CONSTRAINT coachee_pk PRIMARY KEY ( run_coachee );
 
 CREATE TABLE documentacion (
-    id_doc       NUMBER NOT NULL,
-    archivo      CLOB NOT NULL,
-    fecha_subida DATE NOT NULL,
-    fecha_vista  DATE,
-    id_sesion    NUMBER(4) NOT NULL
+    id_doc        NUMBER NOT NULL,
+    archivo       CLOB NOT NULL,
+    fecha_subida  DATE NOT NULL,
+    fecha_vista   DATE,
+    id_sesion     NUMBER(4) NOT NULL
 );
 
 ALTER TABLE documentacion ADD CONSTRAINT documentacion_pk PRIMARY KEY ( id_doc );
 
 CREATE TABLE empresa (
-    rut_empresa   VARCHAR2(13) NOT NULL,
-    direccion     VARCHAR2(30) NOT NULL,
-    telefono      NUMBER(9) NOT NULL,
-    nombre        VARCHAR2(30) NOT NULL,
-    correo        VARCHAR2(50) NOT NULL,
-    contrato      NUMBER NOT NULL,
-    nombre_jefe   VARCHAR2(50) NOT NULL,
-    correo_jefe   VARCHAR2(60) NOT NULL,
-    telefono_jefe NUMBER(9) NOT NULL
+    rut_empresa    VARCHAR2(13) NOT NULL,
+    direccion      VARCHAR2(30) NOT NULL,
+    telefono       NUMBER(9) NOT NULL,
+    nombre         VARCHAR2(30) NOT NULL,
+    correo         VARCHAR2(50) NOT NULL,
+    contrato       NUMBER NOT NULL,
+    nombre_jefe    VARCHAR2(50) NOT NULL,
+    correo_jefe    VARCHAR2(60) NOT NULL,
+    telefono_jefe  NUMBER(9) NOT NULL
 );
 
 ALTER TABLE empresa ADD CONSTRAINT empresa_pk PRIMARY KEY ( rut_empresa );
 
 CREATE TABLE encuesta (
-    id_pregunta NUMBER NOT NULL,
-    pregunta    VARCHAR2(20) NOT NULL,
-    nota        FLOAT
+    id_pregunta  NUMBER NOT NULL,
+    pregunta     VARCHAR2(20) NOT NULL,
+    nota         FLOAT
 );
 
 ALTER TABLE encuesta ADD CONSTRAINT encuesta_pk PRIMARY KEY ( id_pregunta );
 
 CREATE TABLE evaluacion (
-    id_encuesta NUMBER NOT NULL,
-    fecha       DATE NOT NULL,
-    comentario  VARCHAR2(100),
-    promedio    FLOAT,
-    id_proceso  NUMBER NOT NULL,
-    run_coach   VARCHAR2(13) NOT NULL,
-    id_pregunta NUMBER NOT NULL
+    id_encuesta  NUMBER NOT NULL,
+    fecha        DATE NOT NULL,
+    comentario   VARCHAR2(100),
+    promedio     FLOAT,
+    id_proceso   NUMBER NOT NULL,
+    run_coach    VARCHAR2(13) NOT NULL,
+    id_pregunta  NUMBER NOT NULL
 );
 
 ALTER TABLE evaluacion
@@ -108,71 +108,71 @@ ALTER TABLE evaluacion
                                                id_encuesta );
 
 CREATE TABLE indicador (
-    id_incador  NUMBER NOT NULL,
-    nombre      VARCHAR2(50) NOT NULL,
-    valor_meta  NUMBER NOT NULL,
-    descripcion VARCHAR2(150) NOT NULL,
-    id_objetivo NUMBER NOT NULL
+    id_incador   NUMBER NOT NULL,
+    nombre       VARCHAR2(50) NOT NULL,
+    valor_meta   NUMBER NOT NULL,
+    descripcion  VARCHAR2(150) NOT NULL,
+    id_objetivo  NUMBER NOT NULL
 );
 
 ALTER TABLE indicador ADD CONSTRAINT indicador_pk PRIMARY KEY ( id_incador );
 
 CREATE TABLE objetivo (
-    id_objetivo NUMBER NOT NULL,
-    nombre      VARCHAR2(150) NOT NULL,
-    id_proceso  NUMBER NOT NULL,
-    run_coach   VARCHAR2(13) NOT NULL
+    id_objetivo  NUMBER NOT NULL,
+    nombre       VARCHAR2(150) NOT NULL,
+    id_proceso   NUMBER NOT NULL,
+    run_coach    VARCHAR2(13) NOT NULL
 );
 
 ALTER TABLE objetivo ADD CONSTRAINT objetivo_pk PRIMARY KEY ( id_objetivo );
 
 CREATE TABLE plan_accion (
-    id_plan    NUMBER NOT NULL,
-    fecha      DATE NOT NULL,
-    tema       VARCHAR2(50) NOT NULL,
-    accion     VARCHAR2(150) NOT NULL,
-    id_proceso NUMBER NOT NULL,
-    run_coach  VARCHAR2(13) NOT NULL
+    id_plan     NUMBER NOT NULL,
+    fecha       DATE NOT NULL,
+    tema        VARCHAR2(50) NOT NULL,
+    accion      VARCHAR2(150) NOT NULL,
+    id_proceso  NUMBER NOT NULL,
+    run_coach   VARCHAR2(13) NOT NULL
 );
 
 ALTER TABLE plan_accion ADD CONSTRAINT plan_accion_pk PRIMARY KEY ( id_plan );
 
 CREATE TABLE proceso (
-    id_proceso     NUMBER NOT NULL,
-    nombre         VARCHAR2(50) NOT NULL,
-    modalidad      VARCHAR2(15) NOT NULL,
-    status         VARCHAR2(50) NOT NULL,
-    fecha_contrato DATE NOT NULL,
-    clausula       CLOB NOT NULL,
-    run_coach      VARCHAR2(13) NOT NULL,
-    rut_empresa    VARCHAR2(13) NOT NULL
+    id_proceso      NUMBER NOT NULL,
+    nombre          VARCHAR2(50) NOT NULL,
+    modalidad       VARCHAR2(15) NOT NULL,
+    status          VARCHAR2(50) NOT NULL,
+    fecha_contrato  DATE NOT NULL,
+    clausula        CLOB NOT NULL,
+    run_coach       VARCHAR2(13) NOT NULL,
+    rut_empresa     VARCHAR2(13) NOT NULL
 );
 
 ALTER TABLE proceso ADD CONSTRAINT proceso_pk PRIMARY KEY ( id_proceso,
                                                             run_coach );
 
 CREATE TABLE reunion (
-    id_reunion          NUMBER NOT NULL,
-    fecha               DATE NOT NULL,
-    participante        CLOB NOT NULL,
-    tipo_reunion        VARCHAR2(15) NOT NULL,
-    observacion         VARCHAR2(200),
-    antecedente_coachee CLOB,
-    id_proceso          NUMBER NOT NULL,
-    run_coach           VARCHAR2(13) NOT NULL
+    id_reunion           NUMBER NOT NULL,
+    fecha                DATE NOT NULL,
+    participante         CLOB NOT NULL,
+    tipo_reunion         VARCHAR2(15) NOT NULL,
+    observacion          VARCHAR2(200),
+    antecedente_coachee  CLOB,
+    id_proceso           NUMBER NOT NULL,
+    run_coach            VARCHAR2(13) NOT NULL
 );
 
 ALTER TABLE reunion ADD CONSTRAINT reunion_pk PRIMARY KEY ( id_reunion );
 
 CREATE TABLE sesion (
-    id_sesion           NUMBER(4) NOT NULL,
-    fecha_acordada      DATE NOT NULL,
-    fecha_realizada     DATE,
-    descripcion         VARCHAR2(200) NOT NULL,
-    estado              NUMBER NOT NULL,
-    asignacion_acuerdos CLOB NOT NULL,
-    id_proceso          NUMBER NOT NULL,
-    run_coach           VARCHAR2(13) NOT NULL
+    id_sesion            NUMBER(4) NOT NULL,
+    fecha_acordada       DATE NOT NULL,
+    fecha_realizada      DATE,
+    descripcion          VARCHAR2(200) NOT NULL,
+    estado               NUMBER NOT NULL,
+    asignacion_acuerdos  CLOB NOT NULL,
+    id_proceso           NUMBER NOT NULL,
+    run_coach            VARCHAR2(13) NOT NULL
 );
 
 ALTER TABLE sesion ADD CONSTRAINT sesion_pk PRIMARY KEY ( id_sesion );

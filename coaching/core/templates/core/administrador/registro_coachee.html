@@ -1,0 +1,194 @@
+{% extends 'core/administrador/base.html' %}
+{% load static %}
+ {% block titulo%}
+  <title>Coachee</title>
+  {% endblock %}
+{%block contenido%}
+<br>
+<br>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Listado de coachees</h3>
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Run</th>
+                <th>Nombre</th>
+                <th>Apellido Paterno</th>
+                <th>Apellido Materno</th>
+                <th>Correo</th>
+                <th>Empresa</th>
+                <th>Opciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for i in coachees %}
+              <tr>
+                <td>{{i.0}}</td>
+                <td>{{i.1}}</td>
+                <td>{{i.2}}</td>
+                <td>{{i.3}}</td>
+                <td>{{i.4}}</td>
+                <td>{{i.6}}</td>
+                <th><input type="button" class="btnModificar" value="Modificar"></th>
+                <th><input type="button" class="btnDeshabilitar" value="Deshabilitar"></th>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="card-footer clearfix">
+          <ul class="pagination pagination-sm m-0 float-right">
+            <li class="page-item">
+              <a class="page-link" href="#">«</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">1</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">2</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">3</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">»</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="container">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Registra un coachee</h3>
+          </div><!-- /.card-header -->
+          <!-- form start -->
+          <form method="post">
+            {% csrf_token %}
+            <div class="card-body">
+              <div class="form-group">
+                <label for="exampleInputFile">Run coachee</label> <input class="form-control" type="text" name="run"
+                  id="run" placeholder="Run" oninput="checkRut(this)" maxlength="10" required="">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Nombre</label> <input class="form-control" type="text" name="nombre"
+                  id="nombre" placeholder="Nombre" required="">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputPassword1">Apellido paterno</label> <input class="form-control" type="text"
+                  name="a_paterno" id="a_paterno" placeholder="Apellido paterno" required="">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputPassword1">Apellido materno</label> <input class="form-control" type="text"
+                  name="a_materno" id="a_materno" placeholder="Apellido materno" required="">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputFile">Correo electronico</label> <input class="form-control" type="email"
+                  name="correo" id="correo" placeholder="Correo" required="">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputFile">Cargo</label> <input class="form-control" type="text" name="cargo"
+                  id="cargo" placeholder="Cargo" required="">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputFile">Empresa</label> <select class="form-control" name="empresa" id="empresa"
+                  required="">
+                  <option value="">Seleciona</option>
+                  {% for i in empresas %}
+                  <option value="{{i.0}}">{{i.1}}</option>
+                  {% endfor %}
+                </select>
+              </div><!-- /.card-body -->
+              <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div><!-- /.card -->
+</div>
+{% endblock %}
+{% block js%}
+<script src="{%static 'jsgrid/demos/db.js' %}"></script>
+<script src="{%static 'jsgrid/jsgrid.min.js' %}"></script>
+
+<!-- ALERTAS -->
+{% if messages %}
+{% for m in messages %}
+{% if m.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+<script>
+   Swal.fire(
+  'Perfecto',
+  '{{m}}',
+  'success'
+)
+</script>
+{% endif %}
+
+{% if m.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+<script>
+   Swal.fire(
+  'Error!!!',
+  '{{m}}',
+  'warning'
+)
+</script>
+{% endif %}
+
+{% endfor %}
+{%endif%}
+<!-- FIN ALERTAS -->
+
+
+<!--Rellenar form con los datos-->
+<script>
+  $(".btnModificar").click(function(){
+
+    var UserData = {};
+    var UserData2 = {};
+    var UserData3 = {};
+    var UserData4 = {};
+    var UserData5 = {};
+    var UserData6 = {};
+    var UserData7 = {};
+    var UserData8 = {};
+
+    var id = $(this).closest('tr').find('td');
+
+    UserData = id.filter(":eq(0)").text();
+    UserData2 = id.filter(":eq(1)").text();
+    UserData3 = id.filter(":eq(2)").text();
+    UserData4 = id.filter(":eq(3)").text();
+    UserData5 = id.filter(":eq(4)").text();
+    UserData6 = id.filter(":eq(5)").text();
+
+    $("#run").val(UserData);
+    $("#nombre").val(UserData2);
+    $("#a_paterno").val(UserData3);
+    $("#a_materno").val(UserData4);
+    $("#correo").val(UserData5);
+    $("#cargo").val(UserData6);
+    //solo lectura el run
+    $('#run').attr('readonly', true);
+  });
+</script>
+<script>
+$(".btnDeshabilitar").click(function(){
+    var UserData = {};
+    var id = $(this).closest('tr').find('td');
+
+    UserData = id.filter(":eq(0)").text();
+    let url = '/deshabilitar_coachee/?coachee='+UserData;
+    fetch(url)
+    });
+</script>
+{% endblock %}
