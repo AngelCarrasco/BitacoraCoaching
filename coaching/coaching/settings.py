@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'coaching.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': '127.0.0.1:1521/xe',
+        'NAME': '127.0.0.1:1521/orcl',
         'USER': 'c##py_coaching',
         'PASSWORD': 'coaching',
         'TEST': {

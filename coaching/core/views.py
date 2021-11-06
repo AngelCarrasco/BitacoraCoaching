@@ -24,7 +24,14 @@ def coach(request):
     return render(request, 'core/administrador/coach.html')
 
 def coachee(request):
-    return render(request, 'core/administrador/coachee.html')
+    data = {}
+    p_detalle = 'SP_DETALLE_PROCESO_COACHEE'
+    p_sesion = 'SP_LISTA_SESION_COACHEE'
+    data = {
+        'detalles' : listar_anidado(p_detalle,request.user.username),
+        'sesiones' : listar_anidado(p_sesion,request.user.username)
+    }
+    return render(request, 'core/coachee/coachee.html', data)
 
 #FUNCIONES ADMINISTRADOR 
 def administrador(request):
@@ -127,8 +134,6 @@ def registro_proceso(request):
             fs = FileSystemStorage()
             name = fs.save(archivo.name, archivo)
             url = fs.url(name)
-
-
             nombre = request.POST.get('nom_proceso')
             modalidad = request.POST.get('modalidad')
             fecha_acordada = request.POST.get('fecha_acordada')
@@ -136,15 +141,12 @@ def registro_proceso(request):
             run_coach = request.POST.get('coach')
             empresa = request.POST.get('empresa')
             status = '1'
-
-            salida = agregar_proceso(nombre,modalidad,status,fecha,url,request.user.username,empresa)
-
+            salida = agregar_proceso(nombre,modalidad,status,fecha,url,run_coach,empresa)
             if salida == 1:
                 messages.success(request,"Proceso agregado correctamente")
                 data['procesos'] = listar(p_proceso)
             else:
                 messages.error(request,"Error no se pudo agregar")
-
         return render(request, 'core/administrador/registro_proceso.html',data)
     except:
         messages.error(request,"Error no se pudo agregar")
@@ -310,7 +312,6 @@ def registro_coachee(request):
         messages.error(request,"Error no se pudo agregar")
     return render(request, 'core/administrador/registro_coachee.html', data)
     
-
 
 #PROCEDIMIENTOS ALMACENADOS
 def agregar_coach(run,nombre,ap_paterno,ap_materno,telefono,correo,contrasena,contrato):
