@@ -1,0 +1,127 @@
+{% extends 'core/coach/base.html' %} {% load static %} {%block css %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            events: [
+                {% for p in sesiones %} 
+                {
+                title: "{{p.3}}",
+                start: '{{ p.1 | date:"Y-m-d" }}',
+
+            },
+            {% endfor %}
+        ]
+        });
+    calendar.render();
+    calendar.setOption('locales', 'es');
+    });
+</script>
+
+{%endblock%} {% block contenido%}
+
+
+<div class="container mt-3">
+    <div class="row">
+        <div class="col">
+            <div class="card" style="position: relative; height: 100%; width: 100%;">
+                <div class="card-header">
+                    <h3 class="card-title">Mis Procesos</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th style="width: 10px">N°</th>
+                                <th>Nombre proceso</th>
+                                <th>Opcion</th>
+                                
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {%for p in procesos%}
+                            <tr>
+                                <td>{{ p.0 }}</td>
+                                <td >{{p.1}}</td>
+                                <th><input type="button" class="btnDetalle" value="Detalle"></th>
+                              
+                               
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer clearfix">
+                    <ul class="pagination pagination-sm m-0 float-right">
+                        <li class="page-item">
+                            <a class="page-link" href="#">«</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">1</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">2</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">3</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">»</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+
+            <div class="card" style="position: relative; height: 100%; width: 100%;">
+                <div class="card-header">
+                    <h3 class="card-title">Calendario</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <div id="calendar"></div>
+                </div>
+
+            </div>
+            
+
+
+        </div>
+
+        </div>
+        <br>
+        <br>
+        <div class="container mt-3">
+       
+        <div class="row" id="detalle_proceso_coach"></div>
+        
+        </div>
+
+        {%endblock%}
+
+        {%block js %}
+        <script>
+            $(".btnDetalle").click(function(){
+              var UserData = {};
+              var id = $(this).closest('tr').find('td');
+              
+              UserData = id.filter(":eq(0)").text();
+          
+              //alert(UserData)
+              let url = '/detalle_proceso_coach/?proceso='+UserData;
+            
+
+              fetch(url)
+              .then(function(result){
+                return result.text();
+              })
+              .then(function(result){
+                document.getElementById("detalle_proceso_coach").innerHTML = result;
+              });
+            });
+          </script>
+
+          {% endblock %}
+          

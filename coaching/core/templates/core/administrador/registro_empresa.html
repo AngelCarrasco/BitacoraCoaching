@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+{% extends 'core/administrador/base.html' %}
+{% load static %}
+ {% block titulo%}
+  <title>Empresa</title>
+  {% endblock %}
+
+{%block contenido%}
+
+<br>
+<br>
+<!-- separar la wea en dos!-->
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Listado de empresas</h3>
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Rut</th>
+                <th>Empresa</th>
+                <th>Correo</th>
+                <th>Jefe</th>
+                <th>Telefono</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for i in empresas%}
+              <tr>
+                <td>{{i.0}}</td>
+                <td>{{i.1}}</td>
+                <td>{{i.2}}</td>
+                <td>{{i.3}}</td>
+                <td>{{i.4}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="card-footer clearfix">
+          <ul class="pagination pagination-sm m-0 float-right">
+            <li class="page-item">
+              <a class="page-link" href="#">«</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">1</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">2</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">3</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">»</a>
+            </li>
+          </ul>
+        </div>
+      </div> 
+    </div>
+  
+  <div class="col">
+    <div class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Registra una empresa</h3>
+        </div>
+        <form action="" method="post">
+          {% csrf_token %}
+          <div class="card-body">
+            <div class="form-group">
+              <label for="exampleInputFile">Rut empresa</label> <input class="form-control" type="text" name="rut"
+                id="rut" placeholder="Rut empresa" maxlength="10" required="">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Nombre Empresa</label> <input class="form-control" type="text"
+                name="nombre" id="nombre" placeholder="Nombre Empresa" required="">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPassword1">Dirrecion</label> <input class="form-control" type="text"
+                name="direccion" id="direccion" placeholder="Direccion Empresa" required="">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputFile">Telefono</label> <input class="form-control" type="number" name="telefono"
+                id="telefono" placeholder="Telefono Empresa" max="999999999" required="">
+            </div>
+            
+            <div class="form-group">
+              <label for="exampleInputFile">Correo electronico</label> <input class="form-control" type="email"
+                name="correo" id="correo" placeholder="Correo empresa" required="">
+            </div><!-- /.card-body -->
+            <div class="form-group">
+              <label for="exampleInputFile">Nombre jefe</label> <input class="form-control" type="text" name="jefe_nombre"
+                id="jefe_nombre" placeholder="Nombre jefe" oninput="" required="">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputFile">Correo jefe</label> <input class="form-control" type="text" name="jefe_correo"
+                id="jefe_correo" placeholder="Correo jefe" oninput="" required="">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputFile">Telefono jefe</label> <input class="form-control" type="text" name="jefe_telefono"
+                id="jefe_telefono" placeholder="Telefono jefe" oninput="" required="">
+            </div>
+            {{mensaje}}
+            <div class="card-footer">
+              
+              <button type="submit" class="btn btn-primary">Registrar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block js%}
+<!-- ALERTAS -->
+{% if messages %}
+{% for m in messages %}
+{% if m.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+<script>
+   Swal.fire(
+  'Perfecto',
+  '{{m}}',
+  'success'
+)
+</script>
+{% endif %}
+
+{% if m.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+<script>
+   Swal.fire(
+  'Error!!!',
+  '{{m}}',
+  'warning'
+)
+</script>
+{% endif %}
+
+{% endfor %}
+{%endif%}
+<!-- FIN ALERTAS -->
+{% endblock %}
