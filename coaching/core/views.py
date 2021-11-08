@@ -188,8 +188,13 @@ def registro_sesion(request):
          # el ruun tiene que ser de la persona que tenga la sesion iniciada en el sistema
         'empresas': filtro_empresa_coach('11113')
     }
- 
+    cursor = connection.cursor()
+    fs = FileSystemStorage()
     if request.POST:
+        archivo = request.FILES.getlist('archivo')
+        
+
+
         fecha_acordada = request.POST.get('fecha_acordada')
         print(fecha_acordada)
         fecha = datetime.strptime(fecha_acordada, '%d-%m-%YT%H:%M')
@@ -204,7 +209,15 @@ def registro_sesion(request):
 
         if salida == 1:
             messages.success(request,"Agregado correctamente")
-        
+            v_id_sesion = cursor.execute("select id_sesion from sesion where ROWNUM <= 1 order by id_sesion desc")
+
+            for row in cursor:
+                for f in archivo:
+                    name = fs.save(f.name, f)
+                    url = fs.url(name)
+                    
+                    
+                    agregar_documento(url,int(row[0]))
 
 
     return render(request, 'core/coach/registro_sesion.html',data)
@@ -217,8 +230,32 @@ def dashboard(request):
 
 
 
-def subir_archivo_coach(request):
+def subir_archivo_coach(request,archivo, fecha_subida, fecha_vista, id_sesion):
+    
+    
+    if request.POST:
+        
+        archivo = request.FILES['archivo']
+        fs = FileSystemStorage()
+        name = fs.save(archivo.name, archivo)
+        url = fs.url(name)
+
+   
     return render(request, 'core/coach/archivo_coach.html')
+
+def detalle_proceso_coach(request):
+    id_proceso = request.GET.get('proceso')
+    run_coach = '11113'
+
+    
+    print(list_proceso_coach(run_coach,1))
+    data ={
+        'procesos_coach' : list_proceso_coach(run_coach,id_proceso)
+        
+    }
+
+    return render(request, 'core/coach/detalle_proceso_coach.html', data)
+
 
 def agregar_coach(run,nombre,ap_paterno,ap_materno,telefono,correo,contrasena,contrato):
     django_cursor = connection.cursor()
@@ -271,6 +308,15 @@ def agregar_sesion(fecha_acordada,fecha_realizada,descripcion,asignacion_acuerdo
     salida = cursor.var(cx_Oracle.NUMBER)
 
     cursor.callproc('SP_AGREGAR_SESION',[fecha_acordada,fecha_realizada,descripcion,asignacion_acuerdos,id_proceso,run_coach,salida])
+
+    return salida.getvalue()
+#sdfaskldfjadslkfasdjlaskdfjasdlksajklsafasdkfl
+def agregar_documento(archivo, id_sesion):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+
+    cursor.callproc('SP_AGREGAR_ARCHIVO',[archivo, id_sesion,salida])
 
     return salida.getvalue()
 
@@ -338,6 +384,17 @@ def filtro_proceso_coach(rut_coach):
     cursor = django_cursor.connection.cursor()
     out_cur = django_cursor.connection.cursor()
     cursor.callproc("SP_FILTRO_PROCESOS",[out_cur, rut_coach])
+
+    lista = []
+    for fila in out_cur:
+        lista.append(fila)
+    return lista
+
+def list_proceso_coach(rut_coach,id_proceso):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    out_cur = django_cursor.connection.cursor()
+    cursor.callproc("SP_DETALLE_PROCESO_COACH",[out_cur, id_proceso,rut_coach])
 
     lista = []
     for fila in out_cur:

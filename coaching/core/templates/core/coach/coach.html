@@ -34,9 +34,12 @@
                         <thead>
                             <tr>
                                 <th style="width: 10px">N°</th>
+                                <th style="width: 40px">id</th>
                                 <th>Nombre proceso</th>
                                 <th>Progress</th>
                                 <th style="width: 40px">Label</th>
+                                <th style="width: 40px">xd</th>
+
                             </tr>
                         </thead>
                         <tbody>
@@ -44,6 +47,8 @@
                             <tr>
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{p.0}}</td>
+                                <td >{{p.1}}</td>
+                                <th><input type="button" class="btnDetalle" value="Detalle"></th>
                                 <td>
                                     <div class="progress progress-xs">
                                         <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
@@ -88,8 +93,43 @@
                 </div>
 
             </div>
+            
 
 
         </div>
 
+        </div>
+        <br>
+        <br>
+        <div class="container">
+       
+        <div class="row" id="detalle_proceso_coach"></div>
+        
+        </div>
+
         {%endblock%}
+
+        {%block js %}
+        <script>
+            $(".btnDetalle").click(function(){
+              var UserData = {};
+              var id = $(this).closest('tr').find('td');
+              
+              UserData = id.filter(":eq(0)").text();
+          
+              //alert(UserData)
+              let url = '/detalle_proceso_coach/?proceso='+UserData;
+            
+
+              fetch(url)
+              .then(function(result){
+                return result.text();
+              })
+              .then(function(result){
+                document.getElementById("detalle_proceso_coach").innerHTML = result;
+              });
+            });
+          </script>
+
+          {% endblock %}
+          
