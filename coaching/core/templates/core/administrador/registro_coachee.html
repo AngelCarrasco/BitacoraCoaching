@@ -73,32 +73,38 @@
           <form method="post">
             {% csrf_token %}
             <div class="card-body">
+            <style>
+                  .required:after {
+                    content:" *";
+                    color: red;
+                  }
+                </style>
               <div class="form-group">
-                <label for="exampleInputFile">Run coachee</label> <input class="form-control" type="text" name="run"
+                <label for="exampleInputFile">Run coachee <span style="color:#ff0000">*</span></label> <input class="form-control" type="text" name="run"
                   id="run" placeholder="Run" oninput="checkRut(this)" maxlength="10" required="">
               </div>
               <div class="form-group">
-                <label for="exampleInputEmail1">Nombre</label> <input class="form-control" type="text" name="nombre"
+                <label for="exampleInputEmail1">Nombre <span style="color:#ff0000">*</span></label> <input class="form-control" type="text" name="nombre"
                   id="nombre" placeholder="Nombre" required="">
               </div>
               <div class="form-group">
-                <label for="exampleInputPassword1">Apellido paterno</label> <input class="form-control" type="text"
+                <label for="exampleInputPassword1">Apellido paterno <span style="color:#ff0000">*</span></label> <input class="form-control" type="text"
                   name="a_paterno" id="a_paterno" placeholder="Apellido paterno" required="">
               </div>
               <div class="form-group">
-                <label for="exampleInputPassword1">Apellido materno</label> <input class="form-control" type="text"
+                <label for="exampleInputPassword1">Apellido materno <span style="color:#ff0000">*</span></label> <input class="form-control" type="text"
                   name="a_materno" id="a_materno" placeholder="Apellido materno" required="">
               </div>
               <div class="form-group">
-                <label for="exampleInputFile">Correo electronico</label> <input class="form-control" type="email"
+                <label for="exampleInputFile">Correo electronico <span style="color:#ff0000">*</span></label> <input class="form-control" type="email"
                   name="correo" id="correo" placeholder="Correo" required="">
               </div>
               <div class="form-group">
-                <label for="exampleInputFile">Cargo</label> <input class="form-control" type="text" name="cargo"
+                <label for="exampleInputFile">Cargo <span style="color:#ff0000">*</span></label> <input class="form-control" type="text" name="cargo"
                   id="cargo" placeholder="Cargo" required="">
               </div>
               <div class="form-group">
-                <label for="exampleInputFile">Empresa</label> <select class="form-control" name="empresa" id="empresa"
+                <label for="exampleInputFile">Empresa <span style="color:#ff0000">*</span></label> <select class="form-control" name="empresa" id="empresa"
                   required="">
                   <option value="">Seleciona</option>
                   {% for i in empresas %}

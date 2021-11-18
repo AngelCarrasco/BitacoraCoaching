@@ -72,37 +72,43 @@
         <form action="" method="post">
           {% csrf_token %}
           <div class="card-body">
+          <style>
+                  .required:after {
+                    content:" *";
+                    color: red;
+                  }
+                </style>
             <div class="form-group">
-              <label for="exampleInputFile">Rut empresa</label> <input class="form-control" type="text" name="rut"
+              <label for="exampleInputFile">Rut empresa <span style="color:#ff0000">*</span></label> <input class="form-control" type="text" name="rut"
                 id="rut" placeholder="Rut empresa" maxlength="10" required="">
             </div>
             <div class="form-group">
-              <label for="exampleInputEmail1">Nombre Empresa</label> <input class="form-control" type="text"
+              <label for="exampleInputEmail1">Nombre Empresa <span style="color:#ff0000">*</span></label> <input class="form-control" type="text"
                 name="nombre" id="nombre" placeholder="Nombre Empresa" required="">
             </div>
             <div class="form-group">
-              <label for="exampleInputPassword1">Dirrecion</label> <input class="form-control" type="text"
+              <label for="exampleInputPassword1">Dirrecion <span style="color:#ff0000">*</span></label> <input class="form-control" type="text"
                 name="direccion" id="direccion" placeholder="Direccion Empresa" required="">
             </div>
             <div class="form-group">
-              <label for="exampleInputFile">Telefono</label> <input class="form-control" type="number" name="telefono"
+              <label for="exampleInputFile">Telefono <span style="color:#ff0000">*</span></label> <input class="form-control" type="number" name="telefono"
                 id="telefono" placeholder="Telefono Empresa" max="999999999" required="">
             </div>
             
             <div class="form-group">
-              <label for="exampleInputFile">Correo electronico</label> <input class="form-control" type="email"
+              <label for="exampleInputFile">Correo electronico <span style="color:#ff0000">*</span></label> <input class="form-control" type="email"
                 name="correo" id="correo" placeholder="Correo empresa" required="">
             </div><!-- /.card-body -->
             <div class="form-group">
-              <label for="exampleInputFile">Nombre jefe</label> <input class="form-control" type="text" name="jefe_nombre"
+              <label for="exampleInputFile">Nombre jefe <span style="color:#ff0000">*</span></label> <input class="form-control" type="text" name="jefe_nombre"
                 id="jefe_nombre" placeholder="Nombre jefe" oninput="" required="">
             </div>
             <div class="form-group">
-              <label for="exampleInputFile">Correo jefe</label> <input class="form-control" type="text" name="jefe_correo"
+              <label for="exampleInputFile">Correo jefe <span style="color:#ff0000">*</span></label> <input class="form-control" type="text" name="jefe_correo"
                 id="jefe_correo" placeholder="Correo jefe" oninput="" required="">
             </div>
             <div class="form-group">
-              <label for="exampleInputFile">Telefono jefe</label> <input class="form-control" type="text" name="jefe_telefono"
+              <label for="exampleInputFile">Telefono jefe <span style="color:#ff0000">*</span></label> <input class="form-control" type="text" name="jefe_telefono"
                 id="jefe_telefono" placeholder="Telefono jefe" oninput="" required="">
             </div>
             {{mensaje}}

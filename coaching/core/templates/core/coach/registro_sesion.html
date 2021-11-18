@@ -17,27 +17,32 @@
                 <form action="" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="card-body">
-
+                            <style>
+                            .required:after {
+                                content:" *";
+                                color: red;
+                            }
+                            </style>
                         <!--condicionar fecha de creacion  -->
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Fecha y hora Acordada</label>
+                            <label for="exampleInputEmail1">Fecha y hora Acordada <span style="color:#ff0000">*</span></label>
                             <input class="form-control" type="datetime-local" id="fecha_acordada" name="fecha_acordada"
                                 required="" placeholder="dd-mm-aaaa" data-date-format="d-m-YTH:i" data-enable-time=true
                                 data-time_24hr=true>
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Descripcion</label>
+                            <label for="exampleInputEmail1">Descripcion <span style="color:#ff0000">*</span></label>
                             <input class="form-control" type="text" name="descripcion" id="modalidad"
                                 placeholder="Modalidad" required="">
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Asignacion y acuerdos</label>
+                            <label for="exampleInputEmail1">Asignacion y acuerdos <span style="color:#ff0000">*</span></label>
                             <textarea class="form-control" type="text" name="asigyacuerd" id="asigyacuerd"
                                 placeholder="Acuerdos" required=""> </textarea>
                         </div>
                         <!-- EMPRESA  -->
                         <div class="form-group">
-                            <label for="exampleInputFile">Seleciona una empresa</label>
+                            <label for="exampleInputFile">Seleciona una empresa <span style="color:#ff0000">*</span></label>
                             <select class="form-control" name="empresa" id="empresa" style="height: 100%;" required=""
                                 onchange="sub_procesos()">
 
@@ -50,7 +55,7 @@
                         </div>
                         <!--Combox anidado empresa coachee-->
                         <div class="form-group">
-                            <label for="exampleInputFile">Coachee</label>
+                            <label for="exampleInputFile">Coachee <span style="color:#ff0000">*</span></label>
                             <select class="form-control" name="coachee" id="coachee" required="">
                                 <option value="">Selecciona</option>
 
@@ -59,13 +64,13 @@
                         <!-- PROCESO  -->
                         <div class="form-group">
                             <!--combobox anidado filtrar empresa y muestre  procesos asociados  -->
-                            <label for="exampleInputFile">Seleciona un proceso</label>
+                            <label for="exampleInputFile">Seleciona un proceso <span style="color:#ff0000">*</span></label>
                             <select class="form-control" name="proceso" id="proceso">
                                 <option value="">Selecciona</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="">Seleciona los archivos para la sesion</label>
+                            <label for="">Seleciona los archivos para la sesion <span style="color:#ff0000">*</span></label>
                             <input class="controls" type="file" name="archivo" id="archivo" multiple="true"
                                 onchange="return validarExt()"
                                 accept=".xlsx,.pptx,.pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">

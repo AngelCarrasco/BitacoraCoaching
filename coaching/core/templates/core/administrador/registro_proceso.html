@@ -69,36 +69,42 @@
           <form action="" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="card-body">
+            <style>
+                  .required:after {
+                    content:" *";
+                    color: red;
+                  }
+                </style>
               <div class="form-group">
-                <label for="exampleInputEmail1">Nombre Proceso</label>
+                <label for="exampleInputEmail1">Nombre Proceso <span style="color:#ff0000">*</span></label>
                 <input class="form-control" type="text" name="nom_proceso" id="nom_proceso" placeholder="Nombre Proceso"
                   required="">
               </div>
               <div class="form-group">
-                <label for="exampleInputEmail1">Modalidad</label>
+                <label for="exampleInputEmail1">Modalidad <span style="color:#ff0000">*</span></label>
                 <input class="form-control" type="text" name="modalidad" id="modalidad" placeholder="Modalidad"
                   required="">
               </div>
               <div class="form-group">
-                <label for="exampleInputEmail1">Fecha Contrato</label>
+                <label for="exampleInputEmail1">Fecha Contrato <span style="color:#ff0000">*</span></label>
                 <input class="form-control" data-date-format="d-m-YTH:i" data-time_24hr=true type="date" id="fecha_acordada" placeholder="dd-mm-yyyy" name="fecha_acordada" required="">
               </div>
               <div class="form-group">
-                <label for="exampleInputEmail1">Clausula</label>
+                <label for="exampleInputEmail1">Clausula <span style="color:#ff0000">*</span></label>
                 <input class="form-control-file" type="file" name="archivo" id="archivo" required=""
                   onchange="return validarExt()"
                   accept=".xlsx,.pptx,.pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
               </div>
               <div class="form-group">
-                <label for="exampleInputEmail1">Objetivo</label>
+                <label for="exampleInputEmail1">Objetivo <span style="color:#ff0000">*</span></label>
                 <textarea name="objetivo" id="objetivo" cols="30" rows="10"></textarea>
               </div>
               <div class="form-group">
-                <label for="exampleInputEmail1">Indicador de exito</label>
+                <label for="exampleInputEmail1">Indicador de exito <span style="color:#ff0000">*</span></label>
                 <textarea name="indicador" id="indicador" cols="30" rows="10"></textarea>
               </div>
               <div class="form-group">
-                <label for="exampleInputFile">Selecciona un Coach</label>
+                <label for="exampleInputFile">Selecciona un Coach <span style="color:#ff0000">*</span></label>
                 <select class="form-control" name="coach" id="coach" required="">
                   <option value="">Seleciona</option>
                   {% for i in coachs %}
@@ -107,7 +113,7 @@
                 </select>
               </div>
               <div class="form-group">
-                <label for="exampleInputFile">Empresa</label>
+                <label for="exampleInputFile">Empresa <span style="color:#ff0000">*</span></label>
                 <select class="form-control" onchange="sub_procesos()" name="empresa" id="empresa" required="">
                   <option value="">Seleciona</option>
                   {% for i in empresas %}
@@ -117,7 +123,7 @@
               </div>
               <!--Combox anidado empresa coachee-->
               <div class="form-group">
-                <label for="exampleInputFile">Coachee</label>
+                <label for="exampleInputFile">Coachee <span style="color:#ff0000">*</span></label>
                 <select  class="form-control" name="coachee" id="coachee" required="">
                   <option value="">Selecciona</option>
 
