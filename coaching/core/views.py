@@ -38,7 +38,7 @@ def registro_sesion(request):
 
             fecha_acordada = request.POST.get('fecha_acordada')
             print(fecha_acordada)
-            fecha = datetime.strptime(fecha_acordada, '%d-%m-%YT%H:%M')
+            fecha = datetime.strptime(fecha_acordada, '%d-%m-%YT%H%:i')
             print(fecha)
             fecha_realizada = None
             descripcion = request.POST.get('descripcion')
@@ -252,7 +252,7 @@ def registro_proceso(request):
             nombre = request.POST.get('nom_proceso')
             modalidad = request.POST.get('modalidad')
             fecha_acordada = request.POST.get('fecha_acordada')
-            fecha = datetime.strptime(fecha_acordada, '%d-%m-%YT%H:%M')
+            fecha = datetime.strptime(fecha_acordada, '%d-%m-%YT%H%:i')
             run_coach = request.POST.get('coach')
             empresa = request.POST.get('empresa')
             objetivo = request.POST.get('objetivo')

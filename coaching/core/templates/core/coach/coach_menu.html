@@ -36,7 +36,7 @@
                                 <th style="width: 10px">N°</th>
                                 <th>Nombre proceso</th>
                                 <th>Opcion</th>
-                                
+
 
                             </tr>
                         </thead>
@@ -44,11 +44,11 @@
                             {%for p in procesos%}
                             <tr>
                                 <td>{{ p.0 }}</td>
-                                <td >{{p.1}}</td>
+                                <td>{{p.1}}</td>
                                 <th><input type="button" class="btnDetalle btn btn-success" value="Detalle"></th>
-                              
-                               
-                            {% endfor %}
+
+
+                                {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -85,43 +85,42 @@
                 </div>
 
             </div>
-            
 
 
-        </div>
 
         </div>
-        <br>
-        <br>
-        <div class="container mt-3">
-       
+
+    </div>
+    <br>
+    <br>
+    <div class="container mt-3">
+
         <div class="row" id="detalle_proceso_coach"></div>
-        
-        </div>
 
-        {%endblock%}
+    </div>
 
-        {%block js %}
-        <script>
-            $(".btnDetalle").click(function(){
-              var UserData = {};
-              var id = $(this).closest('tr').find('td');
-              
-              UserData = id.filter(":eq(0)").text();
-          
-              //alert(UserData)
-              let url = '/detalle_proceso_coach/?proceso='+UserData;
-            
+    {%endblock%}
 
-              fetch(url)
-              .then(function(result){
-                return result.text();
-              })
-              .then(function(result){
-                document.getElementById("detalle_proceso_coach").innerHTML = result;
-              });
-            });
-          </script>
+    {%block js %}
+    <script>
+        $(".btnDetalle").click(function () {
+            var UserData = {};
+            var id = $(this).closest('tr').find('td');
 
-          {% endblock %}
-          
+            UserData = id.filter(":eq(0)").text();
+
+            //alert(UserData)
+            let url = '/detalle_proceso_coach/?proceso=' + UserData;
+
+
+            fetch(url)
+                .then(function (result) {
+                    return result.text();
+                })
+                .then(function (result) {
+                    document.getElementById("detalle_proceso_coach").innerHTML = result;
+                });
+        });
+    </script>
+
+    {% endblock %}

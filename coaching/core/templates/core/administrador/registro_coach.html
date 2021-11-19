@@ -1,9 +1,21 @@
 {% extends 'core/administrador/base.html' %}
 {% load static %}
- {% block titulo%}
-  <title>Coach</title>
-  {% endblock %}
+{% block titulo%}
+<title>Coach</title>
+{% endblock %}
 {%block contenido%}
+
+<style>
+  .required:after {
+    content: " *";
+    color: red;
+  }
+
+  h6 {
+    font-size: 12px;
+  }
+</style>
+
 <br>
 <br>
 <div class="container">
@@ -14,30 +26,31 @@
           <h3 class="card-title">Listado de coachs</h3>
         </div>
         <div class="card-body">
-          <table  class="table table-bordered">
+          <table class="table table-bordered">
             <thead>
-              <tr >
+              <tr>
                 <th>Run</th>
                 <th>Nombre</th>
                 <th>Apellido Paterno</th>
                 <th>Apellido Materno</th>
-                <th >Correo</th>
+                <th>Correo</th>
                 <th style="text-align: center">Telefono</th>
                 <th>Opciones</th>
               </tr>
             </thead>
             <tbody>
               {% for i in coachs%}
-                <tr >
-                  <td>{{i.0}}</td>
-                  <td>{{i.1}} </td>
-                  <td>{{i.2}}</td>
-                  <td>{{i.3}}</td>
-                  <td>{{i.5}}</td>
-                  <td>{{i.4}}</td>
-                  <td><input type="button" class="btnModificar btn btn-success" value="Modificar"></td>
-                  <td><input type="button" class="btnDeshabilitar btn btn-danger" value="Deshabilitar"></td>
-                </tr>
+              <tr>
+                <td>{{i.0}}</td>
+                <td>{{i.1}} </td>
+                <td>{{i.2}}</td>
+                <td>{{i.3}}</td>
+                <td>{{i.5}}</td>
+                <td>{{i.4}}</td>
+                <th><input type="button" class="btnModificar btn btn-success" value="Modificar">
+                  <input type="button" class="btnDeshabilitar btn btn-danger" value="Deshabilitar">
+                </th>
+              </tr>
               {% endfor %}
             </tbody>
           </table>
@@ -63,6 +76,10 @@
         </div>
       </div>
     </div>
+
+  </div>
+  <div class="row">
+    <div class="col"></div>
     <div class="col">
       <div class="container">
         <div class="card">
@@ -72,29 +89,37 @@
           <form id="form-coach" action="" method="post">
             {% csrf_token %}
             <div class="card-body">
-                <style>
-                  .required:after {
-                    content:" *";
-                    color: red;
-                  }
-                </style>
+              <h6>Todos los campos marcados con un asterisco son de carácter obligatorio</h6>
+              <br>
               <div class="form-group">
-                <label for="exampleInputFile">Run <span style="color:#ff0000">*</span></label> <input class="form-control" type="text" name="run" id="run" placeholder="Run" oninput="checkRut(this)" maxlength="10" required="">
+                <label for="exampleInputFile">Run <span style="color:#ff0000">*</span></label> <input
+                  class="form-control" type="text" name="run" id="run" placeholder="Run" oninput="checkRut(this)"
+                  maxlength="10" required="">
               </div>
               <div class="form-group">
-                <label for="exampleInputFile">Nombre <span style="color:#ff0000">*</span></label> <input class="form-control" type="text" name="nombre" id="nombres" placeholder="Ingrese su Nombre" required="">
+                <label for="exampleInputFile">Nombre <span style="color:#ff0000">*</span></label> <input
+                  class="form-control" type="text" name="nombre" id="nombres" placeholder="Ingrese su Nombre"
+                  required="">
               </div>
               <div class="form-group">
-                <label for="exampleInputFile">Apellido paterno <span style="color:#ff0000">*</span></label> <input class="form-control" type="text" name="a_paterno" id="a_paterno" placeholder="Apellido paterno" required="">
+                <label for="exampleInputFile">Apellido paterno <span style="color:#ff0000">*</span></label> <input
+                  class="form-control" type="text" name="a_paterno" id="a_paterno" placeholder="Apellido paterno"
+                  required="">
               </div>
               <div class="form-group">
-                <label for="exampleInputFile">Apellido materno <span style="color:#ff0000">*</span></label> <input class="form-control" type="text" name="a_materno" id="a_materno" placeholder="Apellido materno" required="">
+                <label for="exampleInputFile">Apellido materno <span style="color:#ff0000">*</span></label> <input
+                  class="form-control" type="text" name="a_materno" id="a_materno" placeholder="Apellido materno"
+                  required="">
               </div>
               <div class="form-group">
-                <label for="exampleInputFile">Correo electronico <span style="color:#ff0000">*</span></label> <input class="form-control" type="email" name="correo" id="correos" placeholder="Ingrese su correo" required="">
+                <label for="exampleInputFile">Correo electronico <span style="color:#ff0000">*</span></label> <input
+                  class="form-control" type="email" name="correo" id="correos" placeholder="Ingrese su correo"
+                  required="">
               </div>
               <div class="form-group">
-                <label for="exampleInputFile">Telefono <span style="color:#ff0000">*</span></label> <input class="form-control" type="number" name="telefono" id="telefono" placeholder="Telefono" max="999999999" required="">
+                <label for="exampleInputFile">Telefono <span style="color:#ff0000">*</span></label> <input
+                  class="form-control" type="number" name="telefono" id="telefono" placeholder="Telefono"
+                  max="999999999" required="">
               </div>
               {{mensaje}}
               <div class="card-footer">
@@ -118,21 +143,21 @@
 {% for m in messages %}
 {% if m.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
 <script>
-   Swal.fire(
-  'Perfecto',
-  '{{m}}',
-  'success'
-)
+  Swal.fire(
+    'Perfecto',
+    '{{m}}',
+    'success'
+  )
 </script>
 {% endif %}
 
 {% if m.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
 <script>
-   Swal.fire(
-  'Error!!!',
-  '{{m}}',
-  'warning'
-)
+  Swal.fire(
+    'Error!!!',
+    '{{m}}',
+    'warning'
+  )
 </script>
 {% endif %}
 
@@ -141,10 +166,10 @@
 <!-- FIN ALERTAS -->
 
 <script>
-  
+
   var Coach = [
-    { "Run": "123456789", "Nombre": "wacoldo soto", "Telefono": 123456, "Correo": "algo@alog.cl"},
-    { "Run": "123456789", "Nombre": "wacoldo soto", "Telefono": 123456, "Correo": "algo@alog.cl"}
+    { "Run": "123456789", "Nombre": "wacoldo soto", "Telefono": 123456, "Correo": "algo@alog.cl" },
+    { "Run": "123456789", "Nombre": "wacoldo soto", "Telefono": 123456, "Correo": "algo@alog.cl" }
 
   ];
 
@@ -170,7 +195,7 @@
   });
 </script>
 <script>
-  $(".btnModificar").click(function(){
+  $(".btnModificar").click(function () {
 
     var UserData = {};
     var UserData2 = {};
@@ -203,13 +228,13 @@
   });
 </script>
 <script>
-$(".btnDeshabilitar").click(function(){
+  $(".btnDeshabilitar").click(function () {
     var UserData = {};
     var id = $(this).closest('tr').find('td');
 
     UserData = id.filter(":eq(0)").text();
-    let url = '/deshabilitar_coach/?coach='+UserData;
+    let url = '/deshabilitar_coach/?coach=' + UserData;
     fetch(url)
-    });
+  });
 </script>
 {% endblock %}

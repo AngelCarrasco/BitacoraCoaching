@@ -1,9 +1,23 @@
 {% extends 'core/administrador/base.html' %}
 {% load static %}
- {% block titulo%}
-  <title>Coachee</title>
-  {% endblock %}
+{% block titulo%}
+<title>Coachee</title>
+{% endblock %}
 {%block contenido%}
+
+{% block css%}
+<style>
+  .required:after {
+    content: " *";
+    color: red;
+  }
+
+  h6 {
+    font-size: 12px;
+  }
+</style>
+{% endblock %}
+
 <br>
 <br>
 <div class="container">
@@ -35,8 +49,9 @@
                 <td>{{i.3}}</td>
                 <td>{{i.4}}</td>
                 <td>{{i.6}}</td>
-                <th><input type="button" class="btnModificar btn btn-success" value="Modificar"></th>
-                <th><input type="button" class="btnDeshabilitar btn btn-danger" value="Deshabilitar"></th>
+                <th><input type="button" class="btnModificar btn btn-success" value="Modificar">
+                  <input type="button" class="btnDeshabilitar btn btn-danger" value="Deshabilitar">
+                </th>
               </tr>
               {% endfor %}
             </tbody>
@@ -63,6 +78,10 @@
         </div>
       </div>
     </div>
+
+  </div><!-- /.card -->
+  <div class="row">
+    <div class="col"></div>
     <div class="col">
       <div class="container">
         <div class="card">
@@ -73,39 +92,38 @@
           <form method="post">
             {% csrf_token %}
             <div class="card-body">
-            <style>
-                  .required:after {
-                    content:" *";
-                    color: red;
-                  }
-                </style>
+              <h6>Todos los campos marcados con un asterisco son de carácter obligatorio</h6>
+              <br>
               <div class="form-group">
-                <label for="exampleInputFile">Run coachee <span style="color:#ff0000">*</span></label> <input class="form-control" type="text" name="run"
-                  id="run" placeholder="Run" oninput="checkRut(this)" maxlength="10" required="">
+                <label for="exampleInputFile">Run coachee <span style="color:#ff0000">*</span></label> <input
+                  class="form-control" type="text" name="run" id="run" placeholder="Run" oninput="checkRut(this)"
+                  maxlength="10" required="">
               </div>
               <div class="form-group">
-                <label for="exampleInputEmail1">Nombre <span style="color:#ff0000">*</span></label> <input class="form-control" type="text" name="nombre"
-                  id="nombre" placeholder="Nombre" required="">
+                <label for="exampleInputEmail1">Nombre <span style="color:#ff0000">*</span></label> <input
+                  class="form-control" type="text" name="nombre" id="nombre" placeholder="Nombre" required="">
               </div>
               <div class="form-group">
-                <label for="exampleInputPassword1">Apellido paterno <span style="color:#ff0000">*</span></label> <input class="form-control" type="text"
-                  name="a_paterno" id="a_paterno" placeholder="Apellido paterno" required="">
-              </div>
-              <div class="form-group">
-                <label for="exampleInputPassword1">Apellido materno <span style="color:#ff0000">*</span></label> <input class="form-control" type="text"
-                  name="a_materno" id="a_materno" placeholder="Apellido materno" required="">
-              </div>
-              <div class="form-group">
-                <label for="exampleInputFile">Correo electronico <span style="color:#ff0000">*</span></label> <input class="form-control" type="email"
-                  name="correo" id="correo" placeholder="Correo" required="">
-              </div>
-              <div class="form-group">
-                <label for="exampleInputFile">Cargo <span style="color:#ff0000">*</span></label> <input class="form-control" type="text" name="cargo"
-                  id="cargo" placeholder="Cargo" required="">
-              </div>
-              <div class="form-group">
-                <label for="exampleInputFile">Empresa <span style="color:#ff0000">*</span></label> <select class="form-control" name="empresa" id="empresa"
+                <label for="exampleInputPassword1">Apellido paterno <span style="color:#ff0000">*</span></label> <input
+                  class="form-control" type="text" name="a_paterno" id="a_paterno" placeholder="Apellido paterno"
                   required="">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputPassword1">Apellido materno <span style="color:#ff0000">*</span></label> <input
+                  class="form-control" type="text" name="a_materno" id="a_materno" placeholder="Apellido materno"
+                  required="">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputFile">Correo electronico <span style="color:#ff0000">*</span></label> <input
+                  class="form-control" type="email" name="correo" id="correo" placeholder="Correo" required="">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputFile">Cargo <span style="color:#ff0000">*</span></label> <input
+                  class="form-control" type="text" name="cargo" id="cargo" placeholder="Cargo" required="">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputFile">Empresa <span style="color:#ff0000">*</span></label> <select
+                  class="form-control" name="empresa" id="empresa" required="">
                   <option value="">Seleciona</option>
                   {% for i in empresas %}
                   <option value="{{i.0}}">{{i.1}}</option>
@@ -120,33 +138,40 @@
         </div>
       </div>
     </div>
-  </div><!-- /.card -->
+
+  </div>
 </div>
 {% endblock %}
 {% block js%}
 <script src="{%static 'jsgrid/demos/db.js' %}"></script>
 <script src="{%static 'jsgrid/jsgrid.min.js' %}"></script>
 
+<script>
+
+  $('#empresa').select2({
+    placeholder: "Seleccione Empresa"
+  });
+</script>
 <!-- ALERTAS -->
 {% if messages %}
 {% for m in messages %}
 {% if m.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
 <script>
-   Swal.fire(
-  'Perfecto',
-  '{{m}}',
-  'success'
-)
+  Swal.fire(
+    'Perfecto',
+    '{{m}}',
+    'success'
+  )
 </script>
 {% endif %}
 
 {% if m.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
 <script>
-   Swal.fire(
-  'Error!!!',
-  '{{m}}',
-  'warning'
-)
+  Swal.fire(
+    'Error!!!',
+    '{{m}}',
+    'warning'
+  )
 </script>
 {% endif %}
 
@@ -157,7 +182,7 @@
 
 <!--Rellenar form con los datos-->
 <script>
-  $(".btnModificar").click(function(){
+  $(".btnModificar").click(function () {
 
     var UserData = {};
     var UserData2 = {};
@@ -188,13 +213,13 @@
   });
 </script>
 <script>
-$(".btnDeshabilitar").click(function(){
+  $(".btnDeshabilitar").click(function () {
     var UserData = {};
     var id = $(this).closest('tr').find('td');
 
     UserData = id.filter(":eq(0)").text();
-    let url = '/deshabilitar_coachee/?coachee='+UserData;
+    let url = '/deshabilitar_coachee/?coachee=' + UserData;
     fetch(url)
-    });
+  });
 </script>
 {% endblock %}
