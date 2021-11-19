@@ -22,6 +22,7 @@ urlpatterns = [
     path('coach_menu/', views.lista_coach_Sesion, name="coach_menu"),
     path('proceso_empresa/',views.lista_proceso_por_empresa, name="proceso_empresa"),
     path('registro_sesion/', views.registro_sesion, name="registro_sesion"),
-    path('detalle_proceso_coach/', views.detalle_proceso_coach, name="detalle_proceso_coach")
+    path('detalle_proceso_coach/', views.detalle_proceso_coach, name="detalle_proceso_coach"),
+    path('forgetpass/', views.forgetpass, name="forgetpass"),
     #path('login_sucess/$', views.login_sucess, name='login_success'),
 ]

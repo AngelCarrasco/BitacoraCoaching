@@ -6,6 +6,12 @@ from datetime import datetime
 from django.contrib import messages
 import cx_Oracle
 
+
+
+
+
+
+
 def users(request):
     rut = request.user.username
     from .models import Coach,Coachee
@@ -263,7 +269,7 @@ def registro_coach(request):
             telefono = request.POST.get('telefono')
             correo = request.POST.get('correo')
             
-            contra = make_password(run[:4])
+            contra = (run[:4])
             
             contrato = '1'
             salida = agregar_coach(run,nombre,ap_paterno,ap_materno,telefono,correo,contra,contrato)
@@ -295,7 +301,7 @@ def registro_coachee(request):
             correo = request.POST.get('correo')
             empresa = request.POST.get('empresa')
             
-            contrasena = make_password(run[:4])
+            contrasena = (run[:4])
             contrato = '1'
         
 
@@ -433,3 +439,5 @@ def deshabilitar(procedimiento, filtro):
     cursor.callproc(procedimiento,[filtro,salida])
 
     return salida.getvalue()
+
+
