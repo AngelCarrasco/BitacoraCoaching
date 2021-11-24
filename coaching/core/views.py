@@ -6,6 +6,8 @@ from datetime import datetime
 from django.contrib import messages
 import cx_Oracle
 
+
+
 def users(request):
     rut = request.user.username
     from .models import Coach,Coachee
@@ -32,41 +34,71 @@ def registro_sesion(request):
     }
     cursor = connection.cursor()
     fs = FileSystemStorage()
-    try:
-        if request.POST:
-            archivo = request.FILES.getlist('archivo')
+    #try:
+    if request.POST:
+            #archivo = request.FILES.getlist('archivo')
 
-            fecha_acordada = request.POST.get('fecha_acordada')
-            print(fecha_acordada)
-            fecha = datetime.strptime(fecha_acordada, '%d-%m-%YT%H:%M')
-            print(fecha)
+            fecha_acordada = request.POST.getlist('fecha_a')
+            
             fecha_realizada = None
-            descripcion = request.POST.get('descripcion')
-            asignacion_acuerdos = request.POST.get('asigyacuerd')
+            descripcion = request.POST.getlist('descripcion')
+            asignacion_acuerdos = request.POST.getlist('asigyacuerd')
             id_proceso = request.POST.get('proceso')
             estado = 1
-            # el ruun tiene que ser de la persona que tenga la sesion iniciada en el sistema 
-            run_coach = '11113'
+            v_sesiones = []
+            v_sesiones = fecha_acordada,descripcion,asignacion_acuerdos
             
-            salida = agregar_sesion(fecha,fecha_realizada,descripcion,estado,asignacion_acuerdos,id_proceso,request.user.username)
+            for col in range(len(v_sesiones[0])): 
+                arreglo = [v_sesiones[0][col], v_sesiones[1][col], v_sesiones[2][col] , id_proceso]  
+                #print(arreglo)
+                fecha = datetime.strptime(arreglo[0], '%Y-%m-%dT%H:%M')
+                salida = agregar_sesion(fecha, fecha_realizada, arreglo[1], estado, arreglo[2], id_proceso,request.user.username)
+              
+                
             
-            if salida == 1:
-                messages.success(request,"Sesion Agregado correctamente")
-                v_id_sesion = cursor.execute("select id_sesion from sesion where ROWNUM <= 1 order by id_sesion desc")
+                
 
-                for row in cursor:
-                    for f in archivo:
-                        name = fs.save(f.name, f)
-                        url = fs.url(name)
+          
+            
+           
+            
+            
+
+
+            
+            
+            
+          
+                
+
+
+            
+
+           
+                
+
+
+
+            
+         #   salida = agregar_sesion(fecha,fecha_realizada,descripcion,estado,asignacion_acuerdos,id_proceso,request.user.username)
+            
+           # if salida == 1:
+           #     messages.success(request,"Sesion Agregado correctamente")
+             #   v_id_sesion = cursor.execute("select id_sesion from sesion where ROWNUM <= 1 order by id_sesion desc")
+
+              #  for row in cursor:
+                  #  for f in archivo:
+                  #      name = fs.save(f.name, f)
+                   #     url = fs.url(name)
                         
                         
-                        agregar_documento(url,int(row[0]))
-            else:
-                messages.error(request,"Error no se pudo agregar")
-        return render(request, 'core/coach/registro_sesion.html',data)
+                       # agregar_documento(url,int(row[0]))
+         #   else:
+              #  messages.error(request,"Error no se pudo agregar")
+       # return render(request, 'core/coach/registro_sesion.html',data)
 
-    except:
-       messages.error(request,"Error no se pudo agregar")
+    #except:
+      # messages.error(request,"Error no se pudo agregar")
     return render(request, 'core/coach/registro_sesion.html', data)
         
 def lista_coach_Sesion(request):
@@ -371,8 +403,9 @@ def agregar_sesion(fecha_acordada,fecha_realizada,descripcion,estado,asignacion_
     cursor = django_cursor.connection.cursor()
     salida = cursor.var(cx_Oracle.NUMBER)
 
+    
     cursor.callproc('SP_AGREGAR_SESION',[fecha_acordada,fecha_realizada,descripcion,estado,asignacion_acuerdos,id_proceso,run_coach,salida])
-
+    #cursor.executemany('SP_AGREGAR_SESION',[fecha_acordada,fecha_realizada,descripcion,estado,asignacion_acuerdos,id_proceso,run_coach,salida])
     return salida.getvalue()
 
 def listar(procedimiento):

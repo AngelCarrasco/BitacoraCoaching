@@ -1,18 +1,11 @@
-{% extends 'core/coach/base.html' %}
-{% load static %}
-{%block css %}
-
-
-
-{%endblock%}
-{% block contenido%}
+{% extends 'core/coach/base.html' %} {% load static %} {%block css %} {%endblock%} {% block contenido%}
 
 <style>
     .required:after {
         content: " *";
         color: red;
     }
-
+    
     h6 {
         font-size: 12px;
     }
@@ -32,31 +25,11 @@
                     <div class="card-body">
                         <h6>Todos los campos marcados con un asterisco son de carácter obligatorio</h6>
                         <br>
-                        <!--condicionar fecha de creacion  -->
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Fecha y hora Acordada <span
-                                    style="color:#ff0000">*</span></label>
-                            <input class="form-control" type="datetime-local" id="fecha_acordada" name="fecha_acordada"
-                                required="" placeholder="dd/mm/aaaa" data-date-format="d-m-Y - H:i"
-                                data-enable-time=true data-time_24hr=true>
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Descripcion <span style="color:#ff0000">*</span></label>
-                            <input class="form-control" type="text" name="descripcion" id="modalidad"
-                                placeholder="Modalidad" required="">
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Asignacion y acuerdos <span
-                                    style="color:#ff0000">*</span></label>
-                            <textarea class="form-control" type="text" name="asigyacuerd" id="asigyacuerd"
-                                style="resize: none; " placeholder="Acuerdos" required=""> </textarea>
-                        </div>
                         <!-- EMPRESA  -->
                         <div class="form-group">
                             <label for="exampleInputFile">Seleciona una empresa <span
                                     style="color:#ff0000">*</span></label>
-                            <select class="form-control" name="empresa" id="empresa" style="height: 100%;" required=""
-                                onchange="sub_procesos()">
+                            <select class="form-control" name="empresa" id="empresa" style="height: 100%;" required="" onchange="sub_procesos()">
 
                                 <option></option>
                                 {% for i in empresas %}
@@ -65,21 +38,10 @@
 
                             </select>
                         </div>
-                        <br>
-                        <div class="form-group">
-                            <label for="">Seleciona los archivos para la sesion</label>
-                            <h6>Solo se permiten los siguientes formatos: .pdf|.xlsx|.docx|.doc|.pptx|.png</h6>
-                            <input class="controls" type="file" name="archivo" id="archivo" multiple="true"
-                                onchange="return validarExt()"
-                                accept=".xlsx,.pptx,.pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
-                        </div>
-                        <br>
-                        <!--Combox anidado empresa coachee-->
                         <div class="form-group">
                             <label for="exampleInputFile">Coachee <span style="color:#ff0000">*</span></label>
                             <select class="form-control" name="coachee" id="coachee" required="">
                                 <option value="">Selecciona</option>
-
                             </select>
                         </div>
                         <!-- PROCESO  -->
@@ -91,26 +53,67 @@
                                 <option value="">Selecciona</option>
                             </select>
                         </div>
-                        <div class="card-footer">
-                            <input class="btn btn-primary" type="submit" value="Agregar">
+                        <div class="inputs">
+                            <!--condicionar fecha de creacion  -->
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Fecha y hora Acordada <span
+                                    style="color:#ff0000">*</span></label>
+                                <input class="form-control" id="fecha_a" name="fecha_a" type="datetime-local" required="" placeholder="Dd-Mm-YYYY" data-date-format="Y-m-dTH:i" data-time_24hr=true>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Descripcion <span style="color:#ff0000">*</span></label>
+                                <input class="form-control" type="text" name="descripcion" id="descripcion" placeholder="Descripcion" required="">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Asignacion y acuerdos <span
+                                    style="color:#ff0000">*</span></label>
+                                <textarea class="form-control" type="text" name="asigyacuerd" id="asigyacuerd" style="resize: none; " placeholder="Acuerdos" required=""> </textarea>
+                            </div>
+
+
 
 
                         </div>
+
+                        <!--Combox anidado empresa coachee-->
+
+
                     </div>
+                    <a href="#" class="addRow">Nueva sesion</a>
+                    <input class="btn btn-primary" type="submit" value="Agregar">
                 </form>
 
             </div>
         </div>
     </div>
 </div>
+</div>
 
 
-{%endblock%}
 
-{% block js %}
+
+
+
+{%endblock%} {% block js %}
 
 <script>
+    var javascriptArray = [];
+    //Function to replicate fields in the form     
+    function replicateFields() {
+        var elementToReplicate = $('.inputs').first(),
+            //Only clone first group of inputs             
+            clonedElement = elementToReplicate.clone(); //Cloned the element         
+        clonedElement.find('input').val('');
+        clonedElement.find('textarea').val(''); //Clear cloned elements value on each new addition         
+        clonedElement.insertBefore($('form a'));
+    }
+    //Calling function on click     
+    $('.addRow').click(function() {
+        replicateFields();
+    });
+</script>
 
+<script>
     $.fn.select2.defaults.set('language', 'es');
 
     $('select').select2();
@@ -126,8 +129,6 @@
     $('#proceso').select2({
         placeholder: "Seleccione proceso"
     });
-
-
 </script>
 
 
@@ -137,32 +138,29 @@
         /* Aqui se rescata el id del view rut_empresa = request.GET.get('***empresa****')*/
         let url = '/proceso_empresa/?empresa=' + id_empresa;
         fetch(url)
-            .then(function (result) {
+            .then(function(result) {
                 return result.text();
             })
-            .then(function (result) {
+            .then(function(result) {
 
                 document.getElementById("proceso").innerHTML = result;
             });
 
         let url1 = '/coachee_empresa_filt/?empresa=' + id_empresa;
         fetch(url1)
-            .then(function (result) {
+            .then(function(result) {
                 return result.text();
             })
-            .then(function (result) {
+            .then(function(result) {
 
                 document.getElementById("coachee").innerHTML = result;
             });
 
     }
-
 </script>
 
 <!-- ALERTAS -->
-{% if messages %}
-{% for m in messages %}
-{% if m.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+{% if messages %} {% for m in messages %} {% if m.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
 <script>
     Swal.fire(
         'Perfecto',
@@ -170,9 +168,7 @@
         'success'
     )
 </script>
-{% endif %}
-
-{% if m.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+{% endif %} {% if m.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
 <script>
     Swal.fire(
         'Error!!!',
@@ -180,10 +176,7 @@
         'warning'
     )
 </script>
-{% endif %}
-
-{% endfor %}
-{%endif%}
+{% endif %} {% endfor %} {%endif%}
 <!-- FIN ALERTAS -->
 >
 
@@ -191,16 +184,18 @@
 <script>
     config = {
         minDate: "today",
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
         "disable": [
-        function(date) {
-            // return true to disable
-            return (date.getDay() === 0 || date.getDay() === 6);
+            function(date) {
+                // return true //to disable
+                return (date.getDay() === 0 || date.getDay() === 6);
 
-        }
-    ],
-    //bloquear feriados irrenunciables
-    disable: ["25-11-21", "2025-02-21", "2025-03-08"],
-    dateFormat: "d-m-y",
+            }
+        ],
+
+        //bloquear feriados irrenunciables
+        disable: ["25-11-21", "2025-02-21", "2025-03-08"],
         locale: {
             firstDayOfWeek: 1,
             weekdays: {
@@ -213,10 +208,17 @@
             }
         }
     }
-   
-     flatpickr("#fecha_acordada", config);
-   
+
+    flatpickr("#fecha", config);
 </script>
+
+<script>
+    const today = (new Date()).toLocaleString("EN-CA").slice(0, 10); // get local current date
+    document.querySelectorAll('input[type="datetime-local"]').forEach(el => {
+        el.min = today + "T00:00";
+    })
+</script>
+
 
 <script type="text/javascript">
     function validarExt() {
@@ -228,11 +230,10 @@
             alert('Ingrese un archivo correspondiente a word, pdf, excel u imagen')
             archivo.value = '';
             return false
-        }
-        else {
+        } else {
             if (archivo.files && archivo.files[0])
                 var visor = new FileReader();
-            visor.onload = function (e) {
+            visor.onload = function(e) {
                 document.getElementById('visorArchivo').innerHTML =
                     '<embed src=" ' + e.target.result + '"width="500" height="500">';
             };
