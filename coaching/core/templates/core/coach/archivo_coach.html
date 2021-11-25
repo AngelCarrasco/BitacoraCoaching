@@ -1,70 +1,108 @@
-{% extends 'core/coach/base.html' %} {% load static %} {%block css %}
-
-
-{%endblock%} {% block contenido%}
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-
-<body>
-    <form action="" method="POST" enctype="multipart/form-data">
+{% extends 'core/coach/base.html' %} {% load static %} {%block css %} {%endblock%} {% block contenido%}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Subir archivo</h3>
+    </div>
+    <form action="" method="POST" enctype="multipart/form-data" id="elForm">
         {% csrf_token %}
-        <input class="controls" type="file" name="archivo" id="archivo" required onchange="return validarExt()"
-            accept=".xlsx,.pptx,.pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+        <div class="card-body">
 
-        <select name="coachee" id="coachee">
-            <option value="">Destinatario</option>
+            <div class="form-group">
+                <label for="exampleInputFile">Seleciona una empresa <span
+                        style="color:#ff0000">*</span></label>
+                <select class="form-control" name="empresa" id="empresa" style="height: 100%;" required="" onchange="sub_procesos()">
 
-            {% for c in coachees %}
-            <option value="{{c.0}}">{{c.1}}</option>
-            {% endfor %}
+                    <option></option>
+                    {% for i in empresas %}
+                    <option value="{{i.0}}">{{i.1}}</option>
+                    {% endfor %}
 
-        </select>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputFile">Coachee <span style="color:#ff0000">*</span></label>
+                <select class="form-control" name="coachee" id="coachee" required="">
+                    <option value="">Selecciona</option>      
+                </select>
+            </div>
+
+            <br>
+            <!-- EMPRESA  -->
+            <div class="form-group">
+                <label for="">Seleciona los archivos para la sesion</label>
+                <h6>Solo se permiten los siguientes formatos: .pdf|.xlsx|.docx|.doc|.pptx|.png</h6>
+                <input class="controls" type="file" name="archivo" id="archivo" multiple="true" onchange="return validarExt()" accept=".xlsx,.pptx,.pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+            </div>
 
 
-        <input class="botons" type="submit" value="Subir Archivo">
-        <br>
-        <br>
-        <div id="visorArchivo">
+            <input class="btn btn-primary" type="submit" value="Agregar">
+
         </div>
-    </form>
-    {{mensaje}}
-    <script type="text/javascript">
-        function validarExt() {
-            var archivo = document.getElementById('archivo');
-            var archivoRuta = archivo.value;
-            var extPermitidas = /(.pdf|.xlsx|.docx|.doc|.pptx|.png)$/i;
 
-            if (!extPermitidas.exec(archivoRuta)) {
-                alert('Ingrese un archivo correspondiente a word, pdf, excel u imagen')
-                archivo.value = '';
-                return false
-            }
-            else {
-                if (archivo.files && archivo.files[0])
-                    var visor = new FileReader();
-                visor.onload = function (e) {
-                    document.getElementById('visorArchivo').innerHTML =
-                        '<embed src=" ' + e.target.result + '"width="500" height="500">';
-                };
-                visor.readAsDataURL(archivo.files[0])
+        <!--Combox anidado empresa coachee-->
 
-            }
+
+</div>
+
+</form>
+
+</div>
+
+
+{%endblock%} {% block js %}
+<script type="text/javascript">
+    function validarExt() {
+        var archivo = document.getElementById('archivo');
+        var archivoRuta = archivo.value;
+        var extPermitidas = /(.pdf|.xlsx|.docx|.doc|.pptx|.png)$/i;
+
+        if (!extPermitidas.exec(archivoRuta)) {
+            alert('Ingrese un archivo correspondiente a word, pdf, excel u imagen')
+            archivo.value = '';
+            return false
+        } else {
+            if (archivo.files && archivo.files[0])
+                var visor = new FileReader();
+            visor.onload = function(e) {
+                document.getElementById('visorArchivo').innerHTML =
+                    '<embed src=" ' + e.target.result + '"width="500" height="500">';
+            };
+            visor.readAsDataURL(archivo.files[0])
+
         }
-        function validartamanio() {
-            var tArchivo = document.getElementById('archivo').files[0].size;
-            if (tArchivo > 10485760) {
-                alert("el tamaño excede lo permitido 10 mg")
-            }
-        }
-    </script>
-</body>
+    }
+</script>
+<script>
+    function sub_procesos() {
+        let id_empresa = document.getElementById("empresa").value;
+        /* Aqui se rescata el id del view rut_empresa = request.GET.get('***empresa****')*/
+        let url1 = '/coachee_empresa_filt/?empresa=' + id_empresa;
+        fetch(url1)
+            .then(function(result) {
+                return result.text();
+            })
+            .then(function(result) {
 
-</html>
-{%endblock%}
+                document.getElementById("coachee").innerHTML = result;
+            });
+    }
+</script>
+
+<script>
+    $.fn.select2.defaults.set('language', 'es');
+
+    $('select').select2();
+
+    $('#empresa').select2({
+        placeholder: "Seleccione Empresa"
+    });
+
+    $('#coachee').select2({
+        //placeholder: "Seleccione coachee"
+    });
+
+    $('#coach').select2({
+        placeholder: "Seleccione coach"
+    });
+</script>
+{% endblock %}

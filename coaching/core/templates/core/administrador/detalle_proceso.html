@@ -7,23 +7,19 @@
             {% for i in procesos %}
             <div class="col-md-6">
 
-                <label for="exampleInputFile">Nombre proceso</label> <input class="form-control" type="text"
-                    value="{{i.0}}" readonly>
-                <label for="exampleInputFile">Coach encargado</label> <input class="form-control" type="text"
-                    value="{{i.2}}" readonly>
-                <label for="exampleInputFile">Empresa</label> <input class="form-control" type="text" value="{{i.6}}"
-                    readonly>
+                <label for="exampleInputFile">Nombre proceso</label> <input class="form-control" type="text" value="{{i.0}}" readonly>
+                <label for="exampleInputFile">Coach encargado</label> <input class="form-control" type="text" value="{{i.2}}" readonly>
+                <label for="exampleInputFile">Empresa</label> <input class="form-control" type="text" value="{{i.6}}" readonly>
+                <label for="exampleInputFile">Run coachee</label> <input class="form-control" type="text" value="{{i.7}}" readonly>
+                <label for="exampleInputFile">Objetivos</label> <textarea class="form-control" type="text" style="resize: none;" readonly>{{i.9}}</textarea>
             </div>
             <div class="col-md-6">
-                <label for="exampleInputFile">Jefe responsable</label> <input class="form-control" type="text"
-                    value="{{i.3}}" readonly>
-                <label for="exampleInputFile">Correo jefe</label> <input class="form-control" type="text"
-                    value="{{i.5}}" readonly>
-                <label for="exampleInputFile">Telefono jefe</label> <input class="form-control" type="text"
-                    value="{{i.4}}" readonly>
+                <label for="exampleInputFile">Jefe responsable</label> <input class="form-control" type="text" value="{{i.3}}" readonly>
+                <label for="exampleInputFile">Correo jefe</label> <input class="form-control" type="text" value="{{i.5}}" readonly>
+                <label for="exampleInputFile">Telefono jefe</label> <input class="form-control" type="text" value="{{i.4}}" readonly>
+                <label for="exampleInputFile">Coachee</label> <input class="form-control" type="text" value="{{i.8}}" readonly>
+                <label for="exampleInputFile">Indicadores de exito</label> <textarea class="form-control" type="text" style="resize: none;" readonly>{{i.10}}</textarea>
             </div>
-
-
             {% endfor %}
 
         </div>

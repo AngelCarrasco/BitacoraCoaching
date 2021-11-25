@@ -3,6 +3,7 @@ from django.db import connection
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.hashers import make_password
 from datetime import datetime
+from datetime import date
 from django.contrib import messages
 import cx_Oracle
 
@@ -32,41 +33,71 @@ def registro_sesion(request):
     }
     cursor = connection.cursor()
     fs = FileSystemStorage()
-    try:
-        if request.POST:
-            archivo = request.FILES.getlist('archivo')
+    #try:
+    if request.POST:
+            #archivo = request.FILES.getlist('archivo')
 
-            fecha_acordada = request.POST.get('fecha_acordada')
-            print(fecha_acordada)
-            fecha = datetime.strptime(fecha_acordada, '%d-%m-%YT%H:%M')
-            print(fecha)
+            fecha_acordada = request.POST.getlist('fecha_a')
+            
             fecha_realizada = None
-            descripcion = request.POST.get('descripcion')
-            asignacion_acuerdos = request.POST.get('asigyacuerd')
+            descripcion = request.POST.getlist('descripcion')
+            asignacion_acuerdos = request.POST.getlist('asigyacuerd')
             id_proceso = request.POST.get('proceso')
             estado = 1
-            # el ruun tiene que ser de la persona que tenga la sesion iniciada en el sistema 
-            run_coach = '11113'
+            v_sesiones = []
+            v_sesiones = fecha_acordada,descripcion,asignacion_acuerdos
             
-            salida = agregar_sesion(fecha,fecha_realizada,descripcion,estado,asignacion_acuerdos,id_proceso,request.user.username)
+            for col in range(len(v_sesiones[0])): 
+                arreglo = [v_sesiones[0][col], v_sesiones[1][col], v_sesiones[2][col] , id_proceso]  
+                #print(arreglo)
+                fecha = datetime.strptime(arreglo[0], '%Y-%m-%dT%H:%M')
+                salida = agregar_sesion(fecha, fecha_realizada, arreglo[1], estado, arreglo[2], id_proceso,request.user.username)
+              
+                
             
-            if salida == 1:
-                messages.success(request,"Sesion Agregado correctamente")
-                v_id_sesion = cursor.execute("select id_sesion from sesion where ROWNUM <= 1 order by id_sesion desc")
+                
 
-                for row in cursor:
-                    for f in archivo:
-                        name = fs.save(f.name, f)
-                        url = fs.url(name)
+          
+            
+           
+            
+            
+
+
+            
+            
+            
+          
+                
+
+
+            
+
+           
+                
+
+
+
+            
+         #   salida = agregar_sesion(fecha,fecha_realizada,descripcion,estado,asignacion_acuerdos,id_proceso,request.user.username)
+            
+           # if salida == 1:
+           #     messages.success(request,"Sesion Agregado correctamente")
+             #   v_id_sesion = cursor.execute("select id_sesion from sesion where ROWNUM <= 1 order by id_sesion desc")
+
+              #  for row in cursor:
+                  #  for f in archivo:
+                  #      name = fs.save(f.name, f)
+                   #     url = fs.url(name)
                         
                         
-                        agregar_documento(url,int(row[0]))
-            else:
-                messages.error(request,"Error no se pudo agregar")
-        return render(request, 'core/coach/registro_sesion.html',data)
+                       # agregar_documento(url,int(row[0]))
+         #   else:
+              #  messages.error(request,"Error no se pudo agregar")
+       # return render(request, 'core/coach/registro_sesion.html',data)
 
-    except:
-       messages.error(request,"Error no se pudo agregar")
+    #except:
+      # messages.error(request,"Error no se pudo agregar")
     return render(request, 'core/coach/registro_sesion.html', data)
         
 def lista_coach_Sesion(request):
@@ -94,6 +125,23 @@ def lista_proceso_por_empresa(request):
 
     return render(request, 'core/coach/comboanidado.html',data)
 
+#NUEVOOOOOOOO AGREGAR RAMA MAIN
+
+def proceso_por_sesion(request):
+    #id_proceso = request.GET.get('proceso')
+
+    lolo = 3
+    cursor = connection.cursor()
+    sql = "SELECT ROW_NUMBER() OVER (ORDER BY id_sesion),id_sesion FROM sesion where id_proceso = :1"
+    comand = cursor.execute(sql,(lolo))
+    print(comand)
+    #data ={
+     #  'proceso_sesion' : comand
+      
+    #}
+
+    return render(request, 'core/coach/anidadoSesion.html')
+
 def empresa_coachee_filt(request):
     p_list = 'SP_COACHEE_EMPRESA'
     empresa = request.GET.get('empresa')
@@ -112,6 +160,28 @@ def detalle_proceso_coach(request):
     }
 
     return render(request, 'core/coach/detalle_proceso_coach.html', data)
+
+def subir_archivo(request):
+    p_fil_proceso ='SP_FILTRO_EMPRESA'
+    
+    run_coach = '11113'
+    data ={
+         # el ruun tiene que ser de la persona que tenga la sesion iniciada en el sistema
+        'empresas': listar_anidado(p_fil_proceso,request.user.username)
+    }
+    cursor = connection.cursor()
+    fs = FileSystemStorage()
+
+    v_fecha_s = date.today()
+    
+
+    
+
+   # if request.POST
+    #v_fecha_s = 
+
+    #archivo = request.FILES.getlist('archivo') 
+    return render(request, 'core/coach/archivo_coach.html', data)
 
 
 #FUNCIONES COACHEE

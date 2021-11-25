@@ -7,6 +7,7 @@ urlpatterns = [
     #URLS ADMIN
     path('administrador/', views.administrador, name="administrador"),
     path('registro_coach/', views.registro_coach, name="registro_coach"),
+    path('archivo_coach/', views.subir_archivo, name="archivo_coach"),
     path('registro_coachee/', views.registro_coachee, name="registro_coachee"),
     path('registro_empresa/', views.registro_empresa, name="registro_empresa"),
     path('registro_proceso/', views.registro_proceso, name="registro_proceso"),
@@ -28,4 +29,7 @@ urlpatterns = [
     path('registro_sesion/', views.registro_sesion, name="registro_sesion"),
     path('detalle_proceso_coach/', views.detalle_proceso_coach, name="detalle_proceso_coach"),
     path('coachee_empresa_filt/', views.empresa_coachee_filt, name="empresa_coachee_filt"),
+    path('subir_archivo/', views.subir_archivo, name="subir_archivo"),
+    path('proceso_sesion/',views.proceso_por_sesion, name="proceso_sesion"),
+
 ]
