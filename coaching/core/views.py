@@ -35,7 +35,6 @@ def registro_sesion(request):
     fs = FileSystemStorage()
     #try:
     if request.POST:
-            #archivo = request.FILES.getlist('archivo')
 
             fecha_acordada = request.POST.getlist('fecha_a')
             
@@ -54,30 +53,6 @@ def registro_sesion(request):
                 salida = agregar_sesion(fecha, fecha_realizada, arreglo[1], estado, arreglo[2], id_proceso,request.user.username)
               
                 
-            
-                
-
-          
-            
-           
-            
-            
-
-
-            
-            
-            
-          
-                
-
-
-            
-
-           
-                
-
-
-
             
          #   salida = agregar_sesion(fecha,fecha_realizada,descripcion,estado,asignacion_acuerdos,id_proceso,request.user.username)
             
@@ -128,19 +103,15 @@ def lista_proceso_por_empresa(request):
 #NUEVOOOOOOOO AGREGAR RAMA MAIN
 
 def proceso_por_sesion(request):
-    #id_proceso = request.GET.get('proceso')
-
-    lolo = 3
-    cursor = connection.cursor()
-    sql = "SELECT ROW_NUMBER() OVER (ORDER BY id_sesion),id_sesion FROM sesion where id_proceso = :1"
-    comand = cursor.execute(sql,(lolo))
-    print(comand)
-    #data ={
-     #  'proceso_sesion' : comand
+    id_proceso = request.GET.get('empresa')
+    v_filtro = 'SP_FILTRO_SESION'
+    
+    data ={
+        'proceso_sesion' : listar_anidado(v_filtro,id_proceso)
       
-    #}
+    }
 
-    return render(request, 'core/coach/anidadoSesion.html')
+    return render(request, 'core/coach/anidadoSesion.html',data)
 
 def empresa_coachee_filt(request):
     p_list = 'SP_COACHEE_EMPRESA'
@@ -162,25 +133,24 @@ def detalle_proceso_coach(request):
     return render(request, 'core/coach/detalle_proceso_coach.html', data)
 
 def subir_archivo(request):
-    p_fil_proceso ='SP_FILTRO_EMPRESA'
+    run_sesion ='SP_RUN_SESION'
     
-    run_coach = '11113'
+ 
     data ={
          # el ruun tiene que ser de la persona que tenga la sesion iniciada en el sistema
-        'empresas': listar_anidado(p_fil_proceso,request.user.username)
+        'run_sesion': listar_anidado(run_sesion,request.user.username)
     }
     cursor = connection.cursor()
-    fs = FileSystemStorage()
+    fs = FileSystemStorage()    
+    if request.POST:
+        v_sesion = request.POST.get('sesion')
+        archivo = request.FILES.getlist('archivo')
+   
+        for f in archivo:
+            name = fs.save(f.name, f)
+            url = fs.url(name)
+            salida = agregar_documento(url,v_sesion)
 
-    v_fecha_s = date.today()
-    
-
-    
-
-   # if request.POST
-    #v_fecha_s = 
-
-    #archivo = request.FILES.getlist('archivo') 
     return render(request, 'core/coach/archivo_coach.html', data)
 
 
