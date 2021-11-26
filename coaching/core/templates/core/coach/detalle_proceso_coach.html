@@ -1,33 +1,33 @@
 <div class="container">
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Detalle proceso</h3> 
-    </div>
-    <div class="card-body">
-        <div class="row">
-            {% for i in procesos_coach %}
-            <div class="col-md-6">
-            
-                <label for="exampleInputFile">Nombre</label> <input class="form-control" type="text" value="{{i.0}}"
-                    readonly>
-                <label for="exampleInputFile">Modalidad</label> <input class="form-control" type="text" value="{{i.1}}"
-                    readonly>
-                <label for="exampleInputFile">Jefe</label> <input class="form-control" type="text" value="{{i.2}}"
-                readonly>
-            </div>
-            <div class="col-md-6">
-                <label for="exampleInputFile">Telefono jefe</label> <input class="form-control" type="text" value="{{i.3}}"
-                    readonly>
-                <label for="exampleInputFile">Correo jefe</label> <input class="form-control" type="text" value="{{i.4}}"
-                    readonly>
-                <label for="exampleInputFile">Empresa</label> <input class="form-control" type="text" value="{{i.5}}"
-                readonly>
-            </div>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Detalle proceso</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {% for i in procesos_coach %}
+                <div class="col-md-6">
 
-            
-            {% endfor %}
+                    <label for="exampleInputFile">Nombre</label> <input class="form-control" type="text" value="{{i.0}}"
+                        readonly>
+                    <label for="exampleInputFile">Modalidad</label> <input class="form-control" type="text"
+                        value="{{i.1}}" readonly>
+                    <label for="exampleInputFile">Jefe</label> <input class="form-control" type="text" value="{{i.2}}"
+                        readonly>
+                </div>
+                <div class="col-md-6">
+                    <label for="exampleInputFile">Telefono jefe</label> <input class="form-control" type="text"
+                        value="{{i.3}}" readonly>
+                    <label for="exampleInputFile">Correo jefe</label> <input class="form-control" type="text"
+                        value="{{i.4}}" readonly>
+                    <label for="exampleInputFile">Empresa</label> <input class="form-control" type="text"
+                        value="{{i.5}}" readonly>
+                </div>
 
-        </div>   
+
+                {% endfor %}
+
+            </div>
+        </div>
     </div>
-</div>
 </div>

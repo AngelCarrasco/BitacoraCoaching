@@ -1,0 +1,16 @@
+{% extends 'core/coachee/base.html' %} {% load static %} {%block css %} {%endblock%} {% block contenido%}
+
+<div class="card">
+    <form action="" method="POST" enctype="multipart/form-data" id="elForm">
+    {% csrf_token %}
+        <div class="card-body">
+            <div>
+                {% for i in context %}
+                <h1>Descargar archivo vinculado a su sesión?<a href="{{i.archivo}}" download> Descargar</a></h1>
+                {% endfor %}
+            </div>
+        </div>
+    </form>
+            
+</div>
+{%endblock%}

@@ -5,6 +5,16 @@
 {% endblock %}
 {%block contenido%}
 
+<style>
+  .required:after {
+    content: " *";
+    color: red;
+  }
+
+  h6 {
+    font-size: 12px;
+  }
+</style>
 <br>
 <br>
 <!-- separar la wea en dos!-->
@@ -69,42 +79,65 @@
           <form action="" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="card-body">
+              <h6>Todos los campos marcados con un asterisco son de carácter obligatorio</h6>
+              <br>
               <div class="form-group">
-                <label for="exampleInputEmail1">Nombre Proceso</label>
+                <label for="exampleInputEmail1">Nombre Proceso <span style="color:#ff0000">*</span></label>
                 <input class="form-control" type="text" name="nom_proceso" id="nom_proceso" placeholder="Nombre Proceso"
                   required="">
               </div>
               <div class="form-group">
-                <label for="exampleInputEmail1">Modalidad</label>
+                <label for="exampleInputEmail1">Modalidad <span style="color:#ff0000">*</span></label>
                 <input class="form-control" type="text" name="modalidad" id="modalidad" placeholder="Modalidad"
                   required="">
               </div>
               <div class="form-group">
-                <label for="exampleInputEmail1">Fecha Contrato</label>
-                <input class="form-control" data-date-format="d-m-YTH:i" data-time_24hr=true type="date" id="fecha_acordada" placeholder="dd-mm-yyyy" name="fecha_acordada" required="">
+                <label for="exampleInputEmail1">Fecha Contrato <span style="color:#ff0000">*</span></label>
+                <input class="form-control" placeholder="dd/mm/aaaa" data-date-format="d-m-Y" data-time_24hr=true
+                  type="date" id="fecha_acordada" name="fecha_acordada" required="">
               </div>
+              <!--  -->
+              <br>
               <div class="form-group">
-                <label for="exampleInputEmail1">Clausula</label>
+                <label for="exampleInputEmail1">Clausula <span style="color:#ff0000">*</span></label>
+                <h6>Solo se permiten los siguientes formatos: .pdf|.docx|.doc</h6>
                 <input class="form-control-file" type="file" name="archivo" id="archivo" required=""
                   onchange="return validarExt()"
                   accept=".xlsx,.pptx,.pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
               </div>
+              <br>
               <div class="form-group">
-                <label for="exampleInputFile">Selecciona un Coach</label>
-                <select class="form-control" name="coach" id="coach" required="">
+                <label for="exampleInputEmail1">Objetivo <span style="color:#ff0000">*</span></label>
+                <textarea class="form-control" name="objetivo" id="objetivo" style="resize: none; "></textarea>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Indicador de exito <span style="color:#ff0000">*</span></label>
+                <textarea class="form-control" name="indicador" id="indicador" style="resize: none;"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputFile">Selecciona un Coach <span style="color:#ff0000">*</span></label>
+                <select class="form-control" name="coach" id="coach" style="height: 100%;" required="">
                   <option value="">Seleciona</option>
                   {% for i in coachs %}
-                  <option value="{{i.0}}">{{i.1}}</option>
+                  <option value="{{i.0}}">{{i.1}} {{i.2}} {{i.3}} ({{i.0}})</option>
                   {% endfor %}
                 </select>
               </div>
               <div class="form-group">
-                <label for="exampleInputFile">Empresa</label>
-                <select class="form-control" name="empresa" id="empresa" required="">
+                <label for="exampleInputFile">Empresa <span style="color:#ff0000">*</span></label>
+                <select class="form-control" onchange="sub_procesos()" name="empresa" id="empresa" required="">
                   <option value="">Seleciona</option>
                   {% for i in empresas %}
-                  <option value="{{i.0}}">{{i.1}}</option> 
+                  <option value="{{i.0}}">{{i.1}}</option>
                   {% endfor %}
+                </select>
+              </div>
+              <!--Combox anidado empresa coachee-->
+              <div class="form-group">
+                <label for="exampleInputFile">Coachee <span style="color:#ff0000">*</span></label>
+                <select class="form-control" name="coachee" id="coachee" required="">
+                  <option value="">Selecciona</option>
+
                 </select>
               </div>
               <div class="card-footer">
@@ -123,26 +156,61 @@
 
 {% block js%}
 
+<script>
+
+  $.fn.select2.defaults.set('language', 'es');
+
+  $('select').select2();
+
+  $('#empresa').select2({
+    placeholder: "Seleccione Empresa"
+  });
+
+  $('#coachee').select2({
+    //placeholder: "Seleccione coachee"
+  });
+
+  $('#coach').select2({
+    placeholder: "Seleccione coach"
+  });
+</script>
+
+<script>
+  function sub_procesos() {
+    let id_empresa = document.getElementById("empresa").value;
+    /* Aqui se rescata el id del view rut_empresa = request.GET.get('***empresa****')*/
+    let url = '/coachee_empresa/?empresa=' + id_empresa;
+    fetch(url)
+      .then(function (result) {
+        return result.text();
+      })
+      .then(function (result) {
+        document.getElementById("coachee").innerHTML = result;
+      });
+  }
+</script>
+
+
 <!-- ALERTAS -->
 {% if messages %}
 {% for m in messages %}
 {% if m.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
 <script>
-   Swal.fire(
-  'Perfecto',
-  '{{m}}',
-  'success'
-)
+  Swal.fire(
+    'Perfecto',
+    '{{m}}',
+    'success'
+  )
 </script>
 {% endif %}
 
 {% if m.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
 <script>
-   Swal.fire(
-  'Error!!!',
-  '{{m}}',
-  'warning'
-)
+  Swal.fire(
+    'Error!!!',
+    '{{m}}',
+    'warning'
+  )
 </script>
 {% endif %}
 
@@ -150,80 +218,63 @@
 {%endif%}
 <!-- FIN ALERTAS -->
 
-<!--Script de la tabla proceso-->
-<script>
-  var clients = [
-    { "Name": "Otto Clay", "Age": 25, "Country": 1, "Address": "Ap #897-1459 Quam Avenue", "Married": false },
-    { "Name": "Connor Johnston", "Age": 45, "Country": 2, "Address": "Ap #370-4647 Dis Av.", "Married": true },
-    { "Name": "Lacey Hess", "Age": 29, "Country": 3, "Address": "Ap #365-8835 Integer St.", "Married": false },
-    { "Name": "Timothy Henson", "Age": 56, "Country": 1, "Address": "911-5143 Luctus Ave", "Married": true }
-
-  ];
-
-  var countries = [
-    { Name: "", Id: 0 },
-    { Name: "United States", Id: 1 },
-    { Name: "Canada", Id: 2 },
-    { Name: "United Kingdom", Id: 3 }
-  ];
-
-  $("#jsGrid").jsGrid({
-    width: "100%",
-    height: "100%",
-
-    filtering: true,
-    editing: true,
-    sorting: true,
-    paging: true,
-    autoload: true,
-
-    data: clients,
-
-    fields: [
-      { name: "Name", type: "text", width: 150, validate: "required" },
-      { name: "Age", type: "number", width: 50 },
-      { name: "Address", type: "text", width: 200 },
-      { name: "Country", type: "select", items: countries, valueField: "Id", textField: "Name" },
-      { name: "Married", type: "checkbox", title: "Is Married", sorting: false },
-      { type: "control" }
-    ]
-  });
-</script>
 <!--Fecha-->
 <script>
-  config = {    
-      minDate: "today",
-      locale: { 
+  config = {
+    minDate: "today",
+    locale: {
       firstDayOfWeek: 1,
       weekdays: {
         shorthand: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
-        longhand: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],         
-      }, 
+        longhand: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+      },
       months: {
         shorthand: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Оct', 'Nov', 'Dic'],
         longhand: ['Enero', 'Febreo', 'Мarzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
       }
-      }}
-  flatpickr("#fecha_acordada",config);
+    }
+  }
+  flatpickr("#fecha_acordada", config);
 
 </script>
 
 <!--Rescatar la id del proceso y mandarla por URL al detalle-->
 <script>
-  function detalle(){
-    
-    //var UserData = {};
-    
-    
+  function detalle() {
+    //var UserData = {}; 
     let id_proceso = document.getElementById("id_proceso").value;
-      let url = '/detalle_proceso/?proceso='+id_proceso;
-      fetch(url)
-      .then(function(result){
+    let url = '/detalle_proceso/?proceso=' + id_proceso;
+    fetch(url)
+      .then(function (result) {
         return result.text();
       })
-      .then(function(result){
+      .then(function (result) {
         document.getElementById("detalleProceso").innerHTML = result;
-      });    
+      });
   };
+</script>
+
+<script type="text/javascript">
+  function validarExt() {
+    var archivo = document.getElementById('archivo');
+    var archivoRuta = archivo.value;
+    var extPermitidas = /(.pdf|.docx|.doc)$/i;
+
+    if (!extPermitidas.exec(archivoRuta)) {
+      alert('Ingrese un archivo correspondiente a word o pdf')
+      archivo.value = '';
+      return false
+    }
+    else {
+      if (archivo.files && archivo.files[0])
+        var visor = new FileReader();
+      visor.onload = function (e) {
+        document.getElementById('visorArchivo').innerHTML =
+          '<embed src=" ' + e.target.result + '"width="500" height="500">';
+      };
+      visor.readAsDataURL(archivo.files[0])
+
+    }
+  }
 </script>
 {% endblock %}

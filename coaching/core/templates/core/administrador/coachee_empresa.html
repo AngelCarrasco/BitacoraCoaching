@@ -1,0 +1,7 @@
+{% if coachees %}
+    {% for i in coachees %}
+        <option value="{{i.0}}">{{i.1}}</option>
+    {% endfor %}
+    {% else %}
+        <option value="">Sin registro</option>
+{% endif %}

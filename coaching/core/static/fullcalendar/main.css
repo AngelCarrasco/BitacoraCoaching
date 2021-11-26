@@ -6,6 +6,14 @@
   cursor: not-allowed;
 }
 
+.fc-event-time{
+  display : none;
+}
+
+.fc-time{
+  display : none;
+}
+
 /* TODO: not attached to body. attached to specific els. move */
 .fc-unselectable {
   -webkit-user-select: none;

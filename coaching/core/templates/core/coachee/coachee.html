@@ -1,29 +1,22 @@
-{% extends 'core/coachee/base.html' %}
-
-{% load static %}
-
-{% block css %}
+{% extends 'core/coachee/base.html' %} {% load static %} {% block css %}
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
-            events: [
-                {% for p in sesiones %} 
-                {
+            events: [{ %
+                for p in sesiones %
+            } {
                 title: "{{p.1}}",
                 start: '{{ p.0 | date:"Y-m-d" }}',
 
-            },
-            {% endfor %}
-        ]
+            }, { % endfor %
+            }]
         });
-    calendar.render();
-    calendar.setOption('locales', 'es');
+        calendar.render();
+        calendar.setOption('locales', 'es');
     });
 </script>
-{% endblock %}
-
-{% block contenido %}
+{% endblock %} {% block contenido %}
 <div class="container mt-3">
     <div class="row">
         <div class="col">
@@ -37,13 +30,15 @@
                             <tr>
                                 <th>Proceso</th>
                                 <th>Coach</th>
+                                <th>Archivo Proceso</th>
                             </tr>
                         </thead>
                         <tbody>
-                           {% for i in detalles %}
-                                <td>{{i.0}}</td>
-                                <td>{{i.1}}</td>
-                           {% endfor %}
+                            {% for i in detalles %}
+                            <td>{{i.0}}</td>
+                            <td>{{i.1}}</td>
+                            {% endfor %}
+                            <a href="media/Proyecto-sistema-coach_3ZmvWdn.pdf" class="btn btn-primary">Descargar Archivo</a>
                         </tbody>
                     </table>
                 </div>

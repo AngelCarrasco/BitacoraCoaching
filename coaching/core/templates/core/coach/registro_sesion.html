@@ -1,44 +1,35 @@
-{% extends 'core/coach/base.html' %}
-{% load static %}
-{%block css %}
+{% extends 'core/coach/base.html' %} {% load static %} {%block css %} {%endblock%} {% block contenido%}
+
+<style>
+    .required:after {
+        content: " *";
+        color: red;
+    }
+    
+    h6 {
+        font-size: 12px;
+    }
+</style>
 
 
 
-{%endblock%}
-{% block contenido%}
-
-<div class="container mt-3"  style="width:40%">
+<div class="container mt-3" style="width:40%">
     <div class="row">
         <div class="col">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Crear una nueva sesion</h3>
                 </div>
-                <form action="" method="POST" enctype = "multipart/form-data">
+                <form action="" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="card-body">
-                        
-                        <!--condicionar fecha de creacion  -->
-                        <div class="form-group" >
-                            <label for="exampleInputEmail1">Fecha y hora Acordada</label>
-                            <input class="form-control" type="datetime-local" id="fecha_acordada" name="fecha_acordada" required=""
-                            placeholder="dd-mm-aaaa" data-date-format="d-m-YTH:i" data-enable-time=true data-time_24hr=true>
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Descripcion</label>
-                            <input class="form-control" type="text" name="descripcion" id="modalidad"
-                                placeholder="Modalidad" required="">
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Asignacion y acuerdos</label>
-                            <textarea class="form-control" type="text" name="asigyacuerd" id="asigyacuerd" placeholder="Acuerdos"
-                                required=""> </textarea>
-                        </div>
+                        <h6>Todos los campos marcados con un asterisco son de carácter obligatorio</h6>
+                        <br>
                         <!-- EMPRESA  -->
                         <div class="form-group">
-                            <label for="exampleInputFile">Seleciona una empresa</label>
-                            <select class="form-control" name="empresa" id="empresa" style="height: 100%;"  required=""
-                                onchange="sub_procesos()">
+                            <label for="exampleInputFile">Seleciona una empresa <span
+                                    style="color:#ff0000">*</span></label>
+                            <select class="form-control" name="empresa" id="empresa" style="height: 100%;" required="" onchange="sub_procesos()">
 
                                 <option></option>
                                 {% for i in empresas %}
@@ -47,46 +38,99 @@
 
                             </select>
                         </div>
-                        <!-- PROCESO  -->
                         <div class="form-group">
-                            <!--combobox anidado filtrar empresa y muestre  procesos asociados  -->
-                            <label for="exampleInputFile">Seleciona un proceso</label>
-                            <select class="form-control" name="proceso" id="proceso" >
+                            <label for="exampleInputFile">Coachee <span style="color:#ff0000">*</span></label>
+                            <select class="form-control" name="coachee" id="coachee" required="">
                                 <option value="">Selecciona</option>
                             </select>
                         </div>
+                        <!-- PROCESO  -->
                         <div class="form-group">
-                            <label for="">Seleciona los archivos para la sesion</label>
-                            <input class="controls" type="file" name="archivo" id="archivo" multiple="true" onchange="return validarExt()" 
-                            accept=".xlsx,.pptx,.pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                            <!--combobox anidado filtrar empresa y muestre  procesos asociados  -->
+                            <label for="exampleInputFile">Seleciona un proceso <span
+                                    style="color:#ff0000">*</span></label>
+                            <select class="form-control" name="proceso" id="proceso">
+                                <option value="">Selecciona</option>
+                            </select>
                         </div>
-                        <div class="card-footer">
-                            <input class="btn btn-primary" type="submit" value="Agregar">
+                        <div class="inputs">
+                            <!--condicionar fecha de creacion  -->
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Fecha y hora Acordada <span
+                                    style="color:#ff0000">*</span></label>
+                                <input class="form-control" id="fecha_a" name="fecha_a" type="datetime-local" required="" placeholder="Dd-Mm-YYYY" data-date-format="Y-m-dTH:i" data-time_24hr=true>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Descripcion <span style="color:#ff0000">*</span></label>
+                                <input class="form-control" type="text" name="descripcion" id="descripcion" placeholder="Descripcion" required="">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Asignacion y acuerdos <span
+                                    style="color:#ff0000">*</span></label>
+                                <textarea class="form-control" type="text" name="asigyacuerd" id="asigyacuerd" style="resize: none; " placeholder="Acuerdos" required=""> </textarea>
+                            </div>
+
+
 
 
                         </div>
+
+                        <!--Combox anidado empresa coachee-->
+
+
                     </div>
+                    <a href="#" class="addRow">Nueva sesion</a>
+                    <input class="btn btn-primary" type="submit" value="Agregar">
                 </form>
-             
+
             </div>
         </div>
     </div>
 </div>
+</div>
 
 
 
-{%endblock%}
 
-{% block js %}
+
+
+{%endblock%} {% block js %}
 
 <script>
-    
-    $('#empresa').select2({ 
-        placeholder: "Seleccione Empresa"
-}); 
-    
-
+    var javascriptArray = [];
+    //Function to replicate fields in the form     
+    function replicateFields() {
+        var elementToReplicate = $('.inputs').first(),
+            //Only clone first group of inputs             
+            clonedElement = elementToReplicate.clone(); //Cloned the element         
+        clonedElement.find('input').val('');
+        clonedElement.find('textarea').val(''); //Clear cloned elements value on each new addition         
+        clonedElement.insertBefore($('form a'));
+    }
+    //Calling function on click     
+    $('.addRow').click(function() {
+        replicateFields();
+    });
 </script>
+
+<script>
+    $.fn.select2.defaults.set('language', 'es');
+
+    $('select').select2();
+
+    $('#empresa').select2({
+        placeholder: "Seleccione Empresa"
+    });
+
+    $('#coachee').select2({
+        placeholder: "Seleccione coachee"
+    });
+
+    $('#proceso').select2({
+        placeholder: "Seleccione proceso"
+    });
+</script>
+
 
 <script>
     function sub_procesos() {
@@ -94,81 +138,104 @@
         /* Aqui se rescata el id del view rut_empresa = request.GET.get('***empresa****')*/
         let url = '/proceso_empresa/?empresa=' + id_empresa;
         fetch(url)
-            .then(function (result) {
+            .then(function(result) {
                 return result.text();
             })
-            .then(function (result) {
+            .then(function(result) {
+
                 document.getElementById("proceso").innerHTML = result;
             });
+
+        let url1 = '/coachee_empresa_filt/?empresa=' + id_empresa;
+        fetch(url1)
+            .then(function(result) {
+                return result.text();
+            })
+            .then(function(result) {
+
+                document.getElementById("coachee").innerHTML = result;
+            });
+
     }
-    
 </script>
 
 <!-- ALERTAS -->
-{% if messages %}
-{% for m in messages %}
-{% if m.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+{% if messages %} {% for m in messages %} {% if m.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
 <script>
-   Swal.fire(
-  'Perfecto',
-  '{{m}}',
-  'success'
-)
+    Swal.fire(
+        'Perfecto',
+        '{{m}}',
+        'success'
+    )
 </script>
-{% endif %}
-
-{% if m.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+{% endif %} {% if m.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
 <script>
-   Swal.fire(
-  'Error!!!',
-  '{{m}}',
-  'warning'
-)
+    Swal.fire(
+        'Error!!!',
+        '{{m}}',
+        'warning'
+    )
 </script>
-{% endif %}
-
-{% endfor %}
-{%endif%}
+{% endif %} {% endfor %} {%endif%}
 <!-- FIN ALERTAS -->
+>
+
 
 <script>
-    config = {    
+    config = {
         minDate: "today",
-        locale: { 
-        firstDayOfWeek: 1,
-        weekdays: {
-          shorthand: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
-          longhand: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],         
-        }, 
-        months: {
-          shorthand: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Оct', 'Nov', 'Dic'],
-          longhand: ['Enero', 'Febreo', 'Мarzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-        }
-        }}
-    flatpickr("#fecha_acordada",config);
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        "disable": [
+            function(date) {
+                // return true //to disable
+                return (date.getDay() === 0 || date.getDay() === 6);
 
+            }
+        ],
+
+        //bloquear feriados irrenunciables
+        disable: ["25-11-21", "2025-02-21", "2025-03-08"],
+        locale: {
+            firstDayOfWeek: 1,
+            weekdays: {
+                shorthand: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+                longhand: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+            },
+            months: {
+                shorthand: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Оct', 'Nov', 'Dic'],
+                longhand: ['Enero', 'Febreo', 'Мarzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            }
+        }
+    }
+
+    flatpickr("#fecha", config);
 </script>
+
+<script>
+    const today = (new Date()).toLocaleString("EN-CA").slice(0, 10); // get local current date
+    document.querySelectorAll('input[type="datetime-local"]').forEach(el => {
+        el.min = today + "T00:00";
+    })
+</script>
+
+
 <script type="text/javascript">
-    function validarExt()
-    {
-        var  archivo = document.getElementById('archivo');
+    function validarExt() {
+        var archivo = document.getElementById('archivo');
         var archivoRuta = archivo.value;
         var extPermitidas = /(.pdf|.xlsx|.docx|.doc|.pptx|.png)$/i;
 
-        if(!extPermitidas.exec(archivoRuta))
-        {
+        if (!extPermitidas.exec(archivoRuta)) {
             alert('Ingrese un archivo correspondiente a word, pdf, excel u imagen')
-            archivo.value='';
+            archivo.value = '';
             return false
-        }
-        else
-        {
-            if(archivo.files && archivo.files[0])
-            var visor = new FileReader();
-            visor.onload=function(e)
-            {
-                document.getElementById('visorArchivo').innerHTML=
-                '<embed src=" '+e.target.result+'"width="500" height="500">';
+        } else {
+            if (archivo.files && archivo.files[0])
+                var visor = new FileReader();
+            visor.onload = function(e) {
+                document.getElementById('visorArchivo').innerHTML =
+                    '<embed src=" ' + e.target.result + '"width="500" height="500">';
             };
             visor.readAsDataURL(archivo.files[0])
 

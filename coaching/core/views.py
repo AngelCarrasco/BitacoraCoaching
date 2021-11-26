@@ -3,8 +3,26 @@ from django.db import connection
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.hashers import make_password
 from datetime import datetime
+from datetime import date
 from django.contrib import messages
+from .models import Documentacion
+from django.shortcuts import render
+from django.contrib.auth.models import User,auth
 import cx_Oracle
+    
+#Necesario para el descargar
+def descargar(request):
+    if request.method=='POST':
+        fs = FileSystemStorage()
+        archivo = request.FILES.getlist('archivo')
+        for f in archivo:
+            name = fs.save(f.name, f)
+            url = fs.url(name)
+            agregar_documento(url,1)
+    context=Documentacion.objects.all()
+    return render(request,'core/coachee/descargar_archivo.html',{'context':context})
+#Necesario para el descargar
+
 
 def users(request):
     rut = request.user.username
@@ -23,46 +41,81 @@ def coach(request):
 
     return render(request, 'core/administrador/coach.html')
 
-def coachee(request):
-    data = {}
-    p_detalle = 'SP_DETALLE_PROCESO_COACHEE'
-    p_sesion = 'SP_LISTA_SESION_COACHEE'
-    data = {
-        'detalles' : listar_anidado(p_detalle,request.user.username),
-        'sesiones' : listar_anidado(p_sesion,request.user.username)
-    }
-    return render(request, 'core/coachee/coachee.html', data)
-
-#FUNCIONES ADMINISTRADOR 
-def administrador(request):
-    p_coach = 'SP_LISTA_COACH'
-    p_coachee = 'SP_LISTA_COACHEE'
-    p_proceso = 'SP_LISTA_PROCESO'
-    p_empresa = 'SP_LISTA_EMPRESA'
-    p_proceso = 'SP_LISTA_PROCESO'
+def registro_sesion(request):
+    p_fil_proceso ='SP_FILTRO_EMPRESA'
+    run_coach = '11113'
     data ={
-        'coaches' : listar(p_coach),
-        'coachees': listar(p_coachee),
-        'empresas': listar(p_empresa),
-        'procesos': listar(p_proceso)
+         # el ruun tiene que ser de la persona que tenga la sesion iniciada en el sistema
+        'empresas': listar_anidado(p_fil_proceso,request.user.username)
     }
- 
-    return render(request, 'core/administrador/administrador.html',data)
+    cursor = connection.cursor()
+    fs = FileSystemStorage()
+    #try:
+    if request.POST:
 
-def contrato(request):
-    pass
+            fecha_acordada = request.POST.getlist('fecha_a')
+            
+            fecha_realizada = None
+            descripcion = request.POST.getlist('descripcion')
+            asignacion_acuerdos = request.POST.getlist('asigyacuerd')
+            id_proceso = request.POST.get('proceso')
+            estado = 1
+            v_sesiones = []
+            v_sesiones = fecha_acordada,descripcion,asignacion_acuerdos
+            
+            for col in range(len(v_sesiones[0])): 
+                arreglo = [v_sesiones[0][col], v_sesiones[1][col], v_sesiones[2][col] , id_proceso]  
+                #print(arreglo)
+                fecha = datetime.strptime(arreglo[0], '%Y-%m-%dT%H:%M')
+                salida = agregar_sesion(fecha, fecha_realizada, arreglo[1], estado, arreglo[2], id_proceso,request.user.username)
+              
+                
+            
+                
 
-#COMBOBOX 
-def lista_coach_proceso(request):
-    p_list = 'SP_LIST_PROCESO_COACH'
-    id_proceso = request.GET.get('proceso')
+          
+            
+           
+            
+            
 
-    data ={
-        'coachs' : listar_anidado(p_list,id_proceso)
-    }
 
-    return render(request, 'core/administrador/combox_coach.html', data)
+            
+            
+            
+          
+                
 
+
+            
+
+           
+                
+
+
+
+            
+         #   salida = agregar_sesion(fecha,fecha_realizada,descripcion,estado,asignacion_acuerdos,id_proceso,request.user.username)
+            
+           # if salida == 1:
+           #     messages.success(request,"Sesion Agregado correctamente")
+             #   v_id_sesion = cursor.execute("select id_sesion from sesion where ROWNUM <= 1 order by id_sesion desc")
+
+              #  for row in cursor:
+                  #  for f in archivo:
+                  #      name = fs.save(f.name, f)
+                   #     url = fs.url(name)
+                        
+                        
+                       # agregar_documento(url,int(row[0]))
+         #   else:
+              #  messages.error(request,"Error no se pudo agregar")
+       # return render(request, 'core/coach/registro_sesion.html',data)
+
+    #except:
+      # messages.error(request,"Error no se pudo agregar")
+    return render(request, 'core/coach/registro_sesion.html', data)
+        
 def lista_coach_Sesion(request):
     #aqui sera el rut del coach en la sesion, obtner mediante una etiqueta
     p_sesion = 'SP_LISTA_SESION'
@@ -80,7 +133,6 @@ def lista_coach_Sesion(request):
 def lista_proceso_por_empresa(request):
     p_fil_empresa ='SP_LISTA_PROCESO_FILT'
     rut_empresa = request.GET.get('empresa')
-    run_coach = '11113'
 
     data ={
        'sub_procesos' : combo_proceso_empresa(rut_empresa,request.user.username)
@@ -88,6 +140,155 @@ def lista_proceso_por_empresa(request):
     }
 
     return render(request, 'core/coach/comboanidado.html',data)
+
+#NUEVOOOOOOOO AGREGAR RAMA MAIN
+
+def proceso_por_sesion(request):
+    #id_proceso = request.GET.get('proceso')
+
+    lolo = 3
+    cursor = connection.cursor()
+    sql = "SELECT ROW_NUMBER() OVER (ORDER BY id_sesion),id_sesion FROM sesion where id_proceso = :1"
+    comand = cursor.execute(sql,(lolo))
+    print(comand)
+    #data ={
+     #  'proceso_sesion' : comand
+      
+    #}
+
+    return render(request, 'core/coach/anidadoSesion.html')
+
+def empresa_coachee_filt(request):
+    p_list = 'SP_COACHEE_EMPRESA'
+    empresa = request.GET.get('empresa')
+    data = {
+        'coachees' : listar_anidado(p_list,empresa)
+    }
+    return render(request, 'core/coach/empresa_coachee.html', data)
+
+def detalle_proceso_coach(request):
+    id_proceso = request.GET.get('proceso')
+    run_coach = '11113'
+    
+    data ={
+        'procesos_coach' : lista_proceso_coach(request.user.username,id_proceso)
+        
+    }
+
+    return render(request, 'core/coach/detalle_proceso_coach.html', data)
+
+def subir_archivo(request):
+    p_fil_proceso ='SP_FILTRO_EMPRESA'
+    
+    run_coach = '11113'
+    data ={
+         # el ruun tiene que ser de la persona que tenga la sesion iniciada en el sistema
+        'empresas': listar_anidado(p_fil_proceso,request.user.username)
+    }
+    cursor = connection.cursor()
+    fs = FileSystemStorage()
+
+    v_fecha_s = date.today()
+    
+
+    
+
+   # if request.POST
+    #v_fecha_s = 
+
+    #archivo = request.FILES.getlist('archivo') 
+    return render(request, 'core/coach/archivo_coach.html', data)
+
+
+#FUNCIONES COACHEE
+def coachee(request):
+    data = {}
+    p_detalle = 'SP_DETALLE_PROCESO_COACHEE'
+    p_sesion = 'SP_LISTA_SESION_COACHEE'
+    data = {
+        'detalles' : listar_anidado(p_detalle,request.user.username),
+        'sesiones' : listar_anidado(p_sesion,request.user.username)
+    }
+    return render(request, 'core/coachee/coachee.html', data)
+
+
+#FUNCIONES ADMINISTRADOR
+def administrador(request):
+    p_coach = 'SP_LISTA_COACH'
+    p_coachee = 'SP_LISTA_COACHEE'
+    p_empresa = 'SP_LISTA_EMPRESA'
+    p_proceso = 'SP_LISTA_PROCESO'
+    data ={
+        'coaches' : listar(p_coach),
+        'coachees': listar(p_coachee),
+        'empresas': listar(p_empresa),
+        'procesos': listar(p_proceso)
+    }
+ 
+    return render(request, 'core/administrador/administrador.html',data)
+
+def registro_coachee(request):
+    p_empresa = 'SP_LISTA_EMPRESA'
+    p_coachee = 'SP_LISTA_COACHEE'
+    data= {
+        'empresas': listar(p_empresa),
+        'coachees' : listar(p_coachee)
+    }
+    try:
+        if request.POST:
+            run = request.POST.get('run')
+            amaterno = request.POST.get('a_materno')
+            nombre = request.POST.get('nombre')
+            cargo = request.POST.get('cargo')
+            apaterno = request.POST.get('a_paterno')
+            correo = request.POST.get('correo')
+            empresa = request.POST.get('empresa')
+            
+            contrasena = make_password(run[:4])
+            contrato = '1'
+        
+
+            salida = agregar_coachee(run,amaterno,nombre,cargo,apaterno,correo,empresa,contrasena,contrato)
+
+            if salida == 1:
+                messages.success(request,"Coachee agregado correctamente")
+                data['coachees'] = listar(p_coachee)
+            else:
+                messages.error(request,"Error no se pudo agregar")
+        
+        return render(request, 'core/administrador/registro_coachee.html', data)
+    except:
+        messages.error(request,"Error no se pudo agregar")
+    return render(request, 'core/administrador/registro_coachee.html', data)
+
+def registro_coach(request):
+    p_coach = 'SP_LISTA_COACH'
+    data ={
+    'coachs' : listar(p_coach)
+    }
+    try:
+        if request.POST:
+            run = request.POST.get('run')
+            nombre = request.POST.get('nombre')
+            ap_paterno = request.POST.get('a_paterno')
+            ap_materno = request.POST.get('a_materno')
+            telefono = request.POST.get('telefono')
+            correo = request.POST.get('correo')
+            
+            contra = make_password(run[:4])
+            
+            contrato = '1'
+            salida = agregar_coach(run,nombre,ap_paterno,ap_materno,telefono,correo,contra,contrato)
+            if salida == 1:
+                messages.success(request,"Coach agregado correctamente")
+                data['coachs'] = listar(p_coach)
+            else:
+                messages.error(request,"Error no se pudo agregar")
+        return render(request, 'core/administrador/registro_coach.html', data)
+
+    except:
+        messages.error(request,"Error no se pudo agregar")
+    return render(request, 'core/administrador/registro_coach.html', data)
 
 def registro_empresa(request):
     p_empresa = 'SP_LISTA_EMPRESA'
@@ -137,11 +338,14 @@ def registro_proceso(request):
             nombre = request.POST.get('nom_proceso')
             modalidad = request.POST.get('modalidad')
             fecha_acordada = request.POST.get('fecha_acordada')
-            fecha = datetime.strptime(fecha_acordada, '%d-%m-%YT%H:%M')
+            fecha = datetime.strptime(fecha_acordada, '%d-%m-%Y')
             run_coach = request.POST.get('coach')
             empresa = request.POST.get('empresa')
+            objetivo = request.POST.get('objetivo')
+            indicador = request.POST.get('indicador')
+            coachee = request.POST.get('coachee')
             status = '1'
-            salida = agregar_proceso(nombre,modalidad,status,fecha,url,run_coach,empresa)
+            salida = agregar_proceso(nombre,modalidad,status,fecha,url,indicador,objetivo,run_coach,empresa,coachee)
             if salida == 1:
                 messages.success(request,"Proceso agregado correctamente")
                 data['procesos'] = listar(p_proceso)
@@ -151,62 +355,6 @@ def registro_proceso(request):
     except:
         messages.error(request,"Error no se pudo agregar")
     return render(request, 'core/administrador/registro_proceso.html', data)
-
-def registro_sesion(request):
-    p_fil_proceso ='SP_FILTRO_EMPRESA'
-    run_coach = '11113'
-    data ={
-         # el ruun tiene que ser de la persona que tenga la sesion iniciada en el sistema
-        'empresas': listar_anidado(p_fil_proceso,request.user.username)
-    }
-    cursor = connection.cursor()
-    fs = FileSystemStorage()
-    try:
-        if request.POST:
-            archivo = request.FILES.getlist('archivo')
-
-            fecha_acordada = request.POST.get('fecha_acordada')
-            print(fecha_acordada)
-            fecha = datetime.strptime(fecha_acordada, '%d-%m-%YT%H:%M')
-            print(fecha)
-            fecha_realizada = None
-            descripcion = request.POST.get('descripcion')
-            asignacion_acuerdos = request.POST.get('asigyacuerd')
-            id_proceso = request.POST.get('proceso')
-            # el ruun tiene que ser de la persona que tenga la sesion iniciada en el sistema 
-            run_coach = '11113'
-            
-            salida = agregar_sesion(fecha,fecha_realizada,descripcion,asignacion_acuerdos,id_proceso,request.user.username)
-            
-            if salida == 1:
-                messages.success(request,"Sesion Agregado correctamente")
-                v_id_sesion = cursor.execute("select id_sesion from sesion where ROWNUM <= 1 order by id_sesion desc")
-
-                for row in cursor:
-                    for f in archivo:
-                        name = fs.save(f.name, f)
-                        url = fs.url(name)
-                        
-                        
-                        agregar_documento(url,int(row[0]))
-            else:
-                messages.error(request,"Error no se pudo agregar")
-        return render(request, 'core/coach/registro_sesion.html',data)
-
-    except:
-        messages.error(request,"Error no se pudo agregar")
-    return render(request, 'core/administrador/registro_sesion.html', data)
-
-def detalle_proceso_coach(request):
-    id_proceso = request.GET.get('proceso')
-    run_coach = '11113'
-    
-    data ={
-        'procesos_coach' : lista_proceso_coach(request.user.username,id_proceso)
-        
-    }
-
-    return render(request, 'core/coach/detalle_proceso_coach.html', data)
 
 def detalle_proceso(request):
     p_detalle = 'SP_DETALLE_PROCESO'
@@ -249,69 +397,14 @@ def deshabilitar_coachee(request):
 
     return render(request, 'core/administrador/deshabilitar_coachee.html', data)
 
-def registro_coach(request):
-    p_coach = 'SP_LISTA_COACH'
-    data ={
-    'coachs' : listar(p_coach)
+#COMBOBOX EMPRESA COACHEE EN EL PROCESO
+def coachee_empresa(request):
+    p_list = 'SP_COACHEE_EMPRESA'
+    empresa = request.GET.get('empresa')
+    data = {
+        'coachees' : listar_anidado(p_list,empresa)
     }
-    try:
-        if request.POST:
-            run = request.POST.get('run')
-            nombre = request.POST.get('nombre')
-            ap_paterno = request.POST.get('a_paterno')
-            ap_materno = request.POST.get('a_materno')
-            telefono = request.POST.get('telefono')
-            correo = request.POST.get('correo')
-            
-            contra = make_password(run[:4])
-            
-            contrato = '1'
-            salida = agregar_coach(run,nombre,ap_paterno,ap_materno,telefono,correo,contra,contrato)
-            if salida == 1:
-                messages.success(request,"Coach agregado correctamente")
-                data['coachs'] = listar(p_coach)
-            else:
-                messages.error(request,"Error no se pudo agregar")
-        return render(request, 'core/administrador/registro_coach.html', data)
-
-    except:
-        messages.error(request,"Error no se pudo agregar")
-    return render(request, 'core/administrador/registro_coach.html', data)
-
-def registro_coachee(request):
-    p_empresa = 'SP_LISTA_EMPRESA'
-    p_coachee = 'SP_LISTA_COACHEE'
-    data= {
-        'empresas': listar(p_empresa),
-        'coachees' : listar(p_coachee)
-    }
-    try:
-        if request.POST:
-            run = request.POST.get('run')
-            amaterno = request.POST.get('a_materno')
-            nombre = request.POST.get('nombre')
-            cargo = request.POST.get('cargo')
-            apaterno = request.POST.get('a_paterno')
-            correo = request.POST.get('correo')
-            empresa = request.POST.get('empresa')
-            
-            contrasena = make_password(run[:4])
-            contrato = '1'
-        
-
-            salida = agregar_coachee(run,amaterno,nombre,cargo,apaterno,correo,empresa,contrasena,contrato)
-
-            if salida == 1:
-                messages.success(request,"Coachee agregado correctamente")
-                data['coachees'] = listar(p_coachee)
-            else:
-                messages.error(request,"Error no se pudo agregar")
-        
-        return render(request, 'core/administrador/registro_coachee.html', data)
-    except:
-        messages.error(request,"Error no se pudo agregar")
-    return render(request, 'core/administrador/registro_coachee.html', data)
-    
+    return render(request, 'core/administrador/coachee_empresa.html', data)
 
 #PROCEDIMIENTOS ALMACENADOS
 def agregar_coach(run,nombre,ap_paterno,ap_materno,telefono,correo,contrasena,contrato):
@@ -341,21 +434,12 @@ def agregar_empresa(rut,direccion,telefono,nombre,correo,contrato,nombre_jefe,co
 
     return salida.getvalue()
 
-def agregar_proceso(nombre,modalidad,status,fecha,clausula,run_coach,empresa):
+def agregar_proceso(nombre,modalidad,status,fecha,clausula,indicador,objetivo,run_coach,empresa,coachee):
     django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
     salida = cursor.var(cx_Oracle.NUMBER)
 
-    cursor.callproc('SP_AGREGAR_PROCESO',[nombre,modalidad,status,fecha,clausula,run_coach,empresa,salida])
-
-    return salida.getvalue()
-
-def agregar_contrato(fecha,clausula,proceso,run_coach,run_coachee):
-    django_cursor = connection.cursor()
-    cursor = django_cursor.connection.cursor()
-    salida = cursor.var(cx_Oracle.NUMBER)
-
-    cursor.callproc('SP_AGREGAR_CONTRATO',[fecha,clausula,proceso,run_coach,run_coachee,salida])
+    cursor.callproc('SP_AGREGAR_PROCESO',[nombre,modalidad,status,fecha,clausula,indicador,objetivo,run_coach,empresa,coachee,salida])
 
     return salida.getvalue()
 
@@ -368,12 +452,12 @@ def agregar_documento(archivo, id_sesion):
 
     return salida.getvalue()
 
-def agregar_sesion(fecha_acordada,fecha_realizada,descripcion,asignacion_acuerdos,id_proceso,run_coach):
+def agregar_sesion(fecha_acordada,fecha_realizada,descripcion,estado,asignacion_acuerdos,id_proceso,run_coach):
     django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
     salida = cursor.var(cx_Oracle.NUMBER)
 
-    cursor.callproc('SP_AGREGAR_SESION',[fecha_acordada,fecha_realizada,descripcion,asignacion_acuerdos,id_proceso,run_coach,salida])
+    cursor.callproc('SP_AGREGAR_SESION',[fecha_acordada,fecha_realizada,descripcion,estado,asignacion_acuerdos,id_proceso,run_coach,salida])
 
     return salida.getvalue()
 
@@ -433,3 +517,21 @@ def deshabilitar(procedimiento, filtro):
     cursor.callproc(procedimiento,[filtro,salida])
 
     return salida.getvalue()
+
+
+#NO SE ESTA UTILIZANDO
+def lista_coach_proceso(request):
+    pass   
+
+def contrato(request):
+    pass
+
+def agregar_contrato(fecha,clausula,proceso,run_coach,run_coachee):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+
+    cursor.callproc('SP_AGREGAR_CONTRATO',[fecha,clausula,proceso,run_coach,run_coachee,salida])
+
+    return salida.getvalue()
+#FIN NO SE ESTA USANDO

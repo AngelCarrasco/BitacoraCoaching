@@ -21,12 +21,12 @@
 {%endblock%} {% block contenido%}
 
 
-<div class="container mt-3">
+<div class="container">
     <div class="row">
         <div class="col">
             <div class="card" style="position: relative; height: 100%; width: 100%;">
                 <div class="card-header">
-                    <h3 class="card-title">Mis Procesos</h3>
+                    <h3 class="card-title">Bordered Table</h3>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
@@ -34,21 +34,29 @@
                         <thead>
                             <tr>
                                 <th style="width: 10px">N°</th>
+                                <th style="width: 40px">id</th>
                                 <th>Nombre proceso</th>
-                                <th>Opcion</th>
-
+                                <th>Progress</th>
+                                <th style="width: 40px">Label</th>
+                                <th style="width: 40px">xd</th>
 
                             </tr>
                         </thead>
                         <tbody>
                             {%for p in procesos%}
                             <tr>
-                                <td>{{ p.0 }}</td>
-                                <td>{{p.1}}</td>
-                                <th><input type="button" class="btnDetalle btn btn-success" value="Detalle"></th>
-
-
-                                {% endfor %}
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{p.0}}</td>
+                                <td >{{p.1}}</td>
+                                <th><input type="button" class="btnDetalle" value="Detalle"></th>
+                                <td>
+                                    <div class="progress progress-xs">
+                                        <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
+                                    </div>
+                                </td>
+                                <td><span class="badge bg-danger">55%</span></td>
+                            </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -85,42 +93,43 @@
                 </div>
 
             </div>
-
+            
 
 
         </div>
 
-    </div>
-    <br>
-    <br>
-    <div class="container mt-3">
-
+        </div>
+        <br>
+        <br>
+        <div class="container">
+       
         <div class="row" id="detalle_proceso_coach"></div>
+        
+        </div>
 
-    </div>
+        {%endblock%}
 
-    {%endblock%}
+        {%block js %}
+        <script>
+            $(".btnDetalle").click(function(){
+              var UserData = {};
+              var id = $(this).closest('tr').find('td');
+              
+              UserData = id.filter(":eq(0)").text();
+          
+              //alert(UserData)
+              let url = '/detalle_proceso_coach/?proceso='+UserData;
+            
 
-    {%block js %}
-    <script>
-        $(".btnDetalle").click(function () {
-            var UserData = {};
-            var id = $(this).closest('tr').find('td');
+              fetch(url)
+              .then(function(result){
+                return result.text();
+              })
+              .then(function(result){
+                document.getElementById("detalle_proceso_coach").innerHTML = result;
+              });
+            });
+          </script>
 
-            UserData = id.filter(":eq(0)").text();
-
-            //alert(UserData)
-            let url = '/detalle_proceso_coach/?proceso=' + UserData;
-
-
-            fetch(url)
-                .then(function (result) {
-                    return result.text();
-                })
-                .then(function (result) {
-                    document.getElementById("detalle_proceso_coach").innerHTML = result;
-                });
-        });
-    </script>
-
-    {% endblock %}
+          {% endblock %}
+          
