@@ -1,28 +1,39 @@
 {% extends 'core/coachee/base.html' %} {% load static %} {%block css %} {%endblock%} {% block contenido%}
 
+<div class="container mt-3" style="width:600px;">
 <div class="card">
     <form action="" method="POST" enctype="multipart/form-data" id="elForm">
-    {% csrf_token %}
-        <div class="card-body">
+        {% csrf_token %}
+        <div class="card-header" style="border-radius: 5px 5px 0px 0px;">
+                    <h4 for="exampleInputFile">Selecionar una sesión
+                    <span style="color:#ff0000">*</span>
+                    </h4>
+                </div>
+        <div class="card-body" style="border-radius: 0px 0px 5px 5px;">
             <div>
                 <div class="form-group">
-                    <label for="exampleInputFile">Selecionar una sesión
-                    <span style="color:#ff0000">*</span>
-                    </label>
-                    <select class="form-control" name="sesion" id="sesion" style="height: 100%;" required="" onchange="sub_procesos()" placeholder="Elegir una empresa">
-                        <option></option>
+                    <br>
+                    <select class="form-control" name="sesion" id="sesion" required="" onchange="sub_procesos()">
+                        <option value="" disabled selected>Elegir una Sesión</option>
                         {% for i in sesiones %}
                         <option value="{{i.1}}">{{i.0}}</option>
                         {% endfor %}
                     </select>
                 </div>
-                <input class="btn btn-primary" type="submit" value="Lista">
-                {% for i in doc %}
-                <h1>Descargar archivo vinculado a su sesión?<a href="{{i.2}}" download> Descargar</a></h1>
-                {% endfor %}
+                <div>
+                    <input class="btn btn-primary" type="submit" value="Lista">
+                </div>
+                <br>
+                <br>
+                <div>
+                    {% for i in doc %}
+                    <h4>¿Desea descargar el archivo vinculado a su sesión?</h4>
+                    <h4><a class="btn btn-primary" href="{{i.2}}" download>Descargar</a></h4>
+                    {% endfor %}
+                </div>
             </div>
         </div>
-    </form>
-            
+    </form>          
+</div>
 </div>
 {%endblock%}
