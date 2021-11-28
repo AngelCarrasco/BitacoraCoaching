@@ -5,8 +5,20 @@
     {% csrf_token %}
         <div class="card-body">
             <div>
-                {% for i in context %}
-                <h1>Descargar archivo vinculado a su sesión?<a href="{{i.archivo}}" download> Descargar</a></h1>
+                <div class="form-group">
+                    <label for="exampleInputFile">Selecionar una sesión
+                    <span style="color:#ff0000">*</span>
+                    </label>
+                    <select class="form-control" name="sesion" id="sesion" style="height: 100%;" required="" onchange="sub_procesos()" placeholder="Elegir una empresa">
+                        <option></option>
+                        {% for i in sesiones %}
+                        <option value="{{i.1}}">{{i.0}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <input class="btn btn-primary" type="submit" value="Lista">
+                {% for i in doc %}
+                <h1>Descargar archivo vinculado a su sesión?<a href="{{i.2}}" download> Descargar</a></h1>
                 {% endfor %}
             </div>
         </div>

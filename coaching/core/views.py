@@ -12,15 +12,18 @@ import cx_Oracle
     
 #Necesario para el descargar
 def descargar(request):
-    if request.method=='POST':
-        fs = FileSystemStorage()
-        archivo = request.FILES.getlist('archivo')
-        for f in archivo:
-            name = fs.save(f.name, f)
-            url = fs.url(name)
-            agregar_documento(url,1)
-    context=Documentacion.objects.all()
-    return render(request,'core/coachee/descargar_archivo.html',{'context':context})
+    
+    
+    data = { 'sesiones': listar_anidado('SP_LISTA_COACHEE_DOCUMENTO', request.user.username)}
+    
+    if request.POST:
+        id_sesion = request.POST.get('sesion')
+        data = {'doc': lista_documento(id_sesion,request.user.username), 
+        'sesiones': listar_anidado('SP_LISTA_COACHEE_DOCUMENTO', request.user.username)}
+        
+            
+        
+    return render(request,'core/coachee/descargar_archivo.html',data)
 #Necesario para el descargar
 
 
@@ -535,3 +538,15 @@ def agregar_contrato(fecha,clausula,proceso,run_coach,run_coachee):
 
     return salida.getvalue()
 #FIN NO SE ESTA USANDO
+
+def lista_documento(id_sesion,rut_coachee):
+
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    out_cur = django_cursor.connection.cursor()
+    cursor.callproc("SP_FILTRO_DOCUMENTO",[out_cur, id_sesion,rut_coachee])
+
+    lista = []
+    for fila in out_cur:
+        lista.append(fila)
+    return lista
