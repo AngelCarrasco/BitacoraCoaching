@@ -4,8 +4,9 @@ from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.hashers import make_password
 from datetime import datetime
 from django.contrib import messages
-import cx_Oracle
+from django.contrib.auth.decorators import permission_required
 
+import cx_Oracle
 
 
 def users(request):
@@ -21,10 +22,12 @@ def users(request):
         return redirect (administrador)
 
 #FUNCIONES COACH
+@permission_required('is_coach')
 def coach(request):
 
     return render(request, 'core/administrador/coach.html')
 
+@permission_required('is_coach')
 def registro_sesion(request):
     p_fil_proceso ='SP_FILTRO_EMPRESA'
     run_coach = '11113'
@@ -54,30 +57,6 @@ def registro_sesion(request):
                 fecha = datetime.strptime(arreglo[0], '%Y-%m-%dT%H:%M')
                 salida = agregar_sesion(fecha, fecha_realizada, arreglo[1], estado, arreglo[2], id_proceso,request.user.username)
               
-                
-            
-                
-
-          
-            
-           
-            
-            
-
-
-            
-            
-            
-          
-                
-
-
-            
-
-           
-                
-
-
 
             
          #   salida = agregar_sesion(fecha,fecha_realizada,descripcion,estado,asignacion_acuerdos,id_proceso,request.user.username)
@@ -100,7 +79,7 @@ def registro_sesion(request):
     #except:
       # messages.error(request,"Error no se pudo agregar")
     return render(request, 'core/coach/registro_sesion.html', data)
-        
+@permission_required('is_coach')        
 def lista_coach_Sesion(request):
     #aqui sera el rut del coach en la sesion, obtner mediante una etiqueta
     p_sesion = 'SP_LISTA_SESION'
@@ -114,7 +93,7 @@ def lista_coach_Sesion(request):
     }
 
     return render(request, 'core/coach/coach_menu.html',data)
-
+@permission_required('is_coach')
 def lista_proceso_por_empresa(request):
     p_fil_empresa ='SP_LISTA_PROCESO_FILT'
     rut_empresa = request.GET.get('empresa')
@@ -125,7 +104,7 @@ def lista_proceso_por_empresa(request):
     }
 
     return render(request, 'core/coach/comboanidado.html',data)
-
+@permission_required('is_coach')
 def empresa_coachee_filt(request):
     p_list = 'SP_COACHEE_EMPRESA'
     empresa = request.GET.get('empresa')
@@ -133,7 +112,7 @@ def empresa_coachee_filt(request):
         'coachees' : listar_anidado(p_list,empresa)
     }
     return render(request, 'core/coach/empresa_coachee.html', data)
-
+@permission_required('is_coach')
 def detalle_proceso_coach(request):
     id_proceso = request.GET.get('proceso')
     run_coach = '11113'
@@ -147,6 +126,7 @@ def detalle_proceso_coach(request):
 
 
 #FUNCIONES COACHEE
+@permission_required('is_coachee')
 def coachee(request):
     data = {}
     p_detalle = 'SP_DETALLE_PROCESO_COACHEE'
@@ -159,6 +139,7 @@ def coachee(request):
 
 
 #FUNCIONES ADMINISTRADOR
+@permission_required('is_admin')
 def administrador(request):
     p_coach = 'SP_LISTA_COACH'
     p_coachee = 'SP_LISTA_COACHEE'
@@ -172,7 +153,7 @@ def administrador(request):
     }
  
     return render(request, 'core/administrador/administrador.html',data)
-
+@permission_required('is_admin')
 def registro_coachee(request):
     p_empresa = 'SP_LISTA_EMPRESA'
     p_coachee = 'SP_LISTA_COACHEE'
@@ -206,7 +187,7 @@ def registro_coachee(request):
     except:
         messages.error(request,"Error no se pudo agregar")
     return render(request, 'core/administrador/registro_coachee.html', data)
-
+@permission_required('is_admin')
 def registro_coach(request):
     p_coach = 'SP_LISTA_COACH'
     data ={
@@ -235,7 +216,7 @@ def registro_coach(request):
     except:
         messages.error(request,"Error no se pudo agregar")
     return render(request, 'core/administrador/registro_coach.html', data)
-
+@permission_required('is_admin')
 def registro_empresa(request):
     p_empresa = 'SP_LISTA_EMPRESA'
     data={
@@ -265,7 +246,7 @@ def registro_empresa(request):
     except:
         messages.error(request,"Error no se pudo agregar")
     return render(request, 'core/administrador/registro_empresa.html', data)
-
+@permission_required('is_admin')
 def registro_proceso(request):
     p_coach = 'SP_LISTA_COACH'
     p_empresa = 'SP_LISTA_EMPRESA'
@@ -301,7 +282,7 @@ def registro_proceso(request):
     except:
         messages.error(request,"Error no se pudo agregar")
     return render(request, 'core/administrador/registro_proceso.html', data)
-
+@permission_required('is_admin')
 def detalle_proceso(request):
     p_detalle = 'SP_DETALLE_PROCESO'
     id_proceso = request.GET.get('proceso')
@@ -311,7 +292,7 @@ def detalle_proceso(request):
     }
 
     return render(request, 'core/administrador/detalle_proceso.html', data)
-
+@permission_required('is_admin')
 def deshabilitar_proceso(request):
 
     p_deshabilitar = 'SP_DESHABILITAR_PROCESO'
@@ -322,7 +303,7 @@ def deshabilitar_proceso(request):
     }
 
     return render(request, 'core/administrador/deshabilitar_proceso.html', data)
-
+@permission_required('is_admin')
 def deshabilitar_coach(request):
     p_deshabilitar_c = 'SP_DESHABILITAR_COACH'
     run_coach = request.GET.get('coach')
@@ -332,7 +313,7 @@ def deshabilitar_coach(request):
     }
 
     return render(request, 'core/administrador/deshabilitar_coach.html', data)
-
+@permission_required('is_admin')
 def deshabilitar_coachee(request):
     p_deshabilitar_ce = 'SP_DESHABILITAR_COACHEE'
     run_coachee = request.GET.get('coachee')
@@ -344,6 +325,7 @@ def deshabilitar_coachee(request):
     return render(request, 'core/administrador/deshabilitar_coachee.html', data)
 
 #COMBOBOX EMPRESA COACHEE EN EL PROCESO
+@permission_required('is_admin')
 def coachee_empresa(request):
     p_list = 'SP_COACHEE_EMPRESA'
     empresa = request.GET.get('empresa')

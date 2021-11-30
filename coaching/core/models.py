@@ -6,7 +6,13 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
+class User(AbstractUser):     
+    is_admin = models.BooleanField('Is Admin', default = False )     
+    is_coach = models.BooleanField('Is Coach', default = False )     
+    is_coachee = models.BooleanField('Is Coachee', default = False )
+#no es necesario dar le class meta    
 
 class Coach(models.Model):
     run_coach = models.CharField(primary_key=True, max_length=13)

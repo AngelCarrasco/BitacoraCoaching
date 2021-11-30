@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'core',
+    'core.apps.CoreConfig',
     'colorfield',
 ]
 
@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'coaching.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': '127.0.0.1:1521/xe',
+        'NAME': '127.0.0.1:1521/orcl',
         'USER': 'c##py_coaching',
         'PASSWORD': 'coaching',
         'TEST': {
@@ -143,3 +143,5 @@ LOGOUT_REDIRECT_URL = 'login'
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL = '/media/clausula/'
+
+AUTH_USER_MODEL = 'core.User'
