@@ -1,0 +1,112 @@
+{% extends 'core/coach/base.html' %} 
+{% load static %}
+
+{%block css %} 
+ 
+{%endblock%} 
+ 
+{% block contenido%}
+
+<div class="container mt-3" style="width:600px;">
+<div class="card">
+    <form action="" method="POST" enctype="multipart/form-data" id="elForm">
+        {% csrf_token %}
+        <div class="card-header" style="border-radius: 5px 5px 0px 0px;">
+            <h3 for="exampleInputFile" class="card-title">Selecionar un Proceso</h3>
+        </div>
+        <div class="card-body" style="border-radius: 0px 0px 5px 5px;">
+            <div >
+                <div class="form-group">
+                    <br>
+                    <label for="exampleInputFile">Seleciona un proceso <span
+                        style="color:#ff0000">*</span></label>
+                    <select class="form-control" name="proces" id="proces" required="" onchange="procesos_coach()">
+                        <option value="" disabled selected>Elegir un Proceso</option>
+                        {% for i in procesos %}
+
+                            <option value="{{i.0}}">{{i.1}}</option>
+                        
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <input class="btn btn-primary" type="submit" value="Mostrar Sesiones">
+                </div>
+                <br>
+            </div>
+        </div>
+    </form>          
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Sesiones</h3>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th style="visibility:hidden;">ID</th>
+                    <th>Fecha acordada</th>
+                    <th>Nombre sesion</th>
+                    <th>Nombre proceso</th>
+                    <th>Opciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in sesiones%}
+                <tr>
+                    
+                        <td style="visibility:hidden;">{{i.0}}</td>
+                        <td>{{i.2}}</td>
+                        <td>{{i.1}}</td>
+                        <td>{{i.3}}</td>
+                        <td><input type="button" class="btnDeshabilitar btn btn-success" value="Finalizar sesion"></td>
+                    
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{%endblock%}
+
+{% block js %}
+<script>
+    $(".btnDeshabilitar").click(function () {
+            var UserData = {};
+            var id = $(this).closest('tr').find('td');
+          
+            UserData = id.filter(":eq(0)").text();
+
+            //alert(UserData)
+
+            var url = '/detalle_sesion/?sesion=' + UserData;
+            fetch(url)
+
+    });
+</script>
+{% if messages %}
+    {% for m in messages %}
+        {% if m.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+        <script>
+            Swal.fire(
+            'Perfecto',
+            '{{m}}',
+            'success'
+            )
+        </script>
+        {% endif %}
+        {% if m.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+        <script>
+            Swal.fire(
+            'Error!!!',
+            '{{m}}',
+            'warning'
+            )
+        </script>
+        {% endif %}
+
+    {% endfor %}
+{%endif%}
+{% endblock %}

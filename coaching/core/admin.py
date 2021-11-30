@@ -4,7 +4,7 @@ from core.views import contrato
 from .models import *
 
 # Register your models here.
-
+admin.site.register(User)
 admin.site.register(Coachee)
 admin.site.register(Empresa)
 admin.site.register(Coach)

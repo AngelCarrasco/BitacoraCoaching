@@ -1,4 +1,8 @@
-{% extends 'core/coach/base.html' %} {% load static %} {%block css %}
+{% extends 'core/coach/base.html' %}
+
+{% load static %} 
+{%block css %}
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var calendarEl = document.getElementById('calendar');
@@ -18,7 +22,8 @@
     });
 </script>
 
-{%endblock%} {% block contenido%}
+{%endblock%} 
+{% block contenido%}
 
 
 <div class="container mt-3">
@@ -36,8 +41,6 @@
                                 <th style="width: 10px">N°</th>
                                 <th>Nombre proceso</th>
                                 <th>Opcion</th>
-
-
                             </tr>
                         </thead>
                         <tbody>
@@ -48,7 +51,7 @@
                                 <th><input type="button" class="btnDetalle btn btn-success" value="Detalle"></th>
 
 
-                                {% endfor %}
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -85,42 +88,95 @@
                 </div>
 
             </div>
-
-
-
         </div>
 
     </div>
-    <br>
-    <br>
     <div class="container mt-3">
-
-        <div class="row" id="detalle_proceso_coach"></div>
-
+        <div class="container">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Detalle proceso</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row" id="detalle_proceso_coach" >
+                         
+                    </div>
+                                       
+                </div>
+            </div>
+        </div>
+        
     </div>
 
-    {%endblock%}
+{% endblock %}
 
-    {%block js %}
-    <script>
-        $(".btnDetalle").click(function () {
+{%block js %}
+<script>
+      
+    $(".btnDetalle").click(function () {
             var UserData = {};
             var id = $(this).closest('tr').find('td');
-
+          
             UserData = id.filter(":eq(0)").text();
 
             //alert(UserData)
-            let url = '/detalle_proceso_coach/?proceso=' + UserData;
-
-
+            var url = '/detalle_proceso_coach/?proceso=' + UserData;
             fetch(url)
-                .then(function (result) {
+               .then(function (result) {
                     return result.text();
                 })
                 .then(function (result) {
-                    document.getElementById("detalle_proceso_coach").innerHTML = result;
+                     document.getElementById("detalle_proceso_coach").innerHTML = result;
                 });
-        });
-    </script>
+            });
 
-    {% endblock %}
+            var url1 = 'grafico/?proceso='+UserData;
+            fetch(url1)
+           
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script>
+    function Grafico(){
+        
+        var sesiones = document.getElementById("cantidadSesiones").value;
+        var realizada = document.getElementById("sesionesRealizada").value;
+        var restante =(sesiones-realizada) 
+        //alert("R:"+realizada + "RES:"+restante);
+    
+        var miCanvas = document.getElementById("Grafica").getContext("2d")
+    
+        var config = {
+        type: "pie",
+        data: {
+            labels: ["Sesiones realizadas", "Sesiones restantes"],
+            datasets: [
+                {
+                    label: "Porcentaje de avance del proceso",
+                    data: [realizada, restante],
+                    backgroundColor: [
+                            "grey", "orange"
+                        ]
+                }
+                    ]
+            },
+            options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins:{
+                        labels:{
+                            render: 'percentage',
+                            fontColor: ['green', 'red'],
+                            precision: 2
+                        }
+                    }
+                }
+            }
+            
+            window.myPie = new Chart(miCanvas, config);
+            
+    } 
+</script>
+
+    
+{% endblock %}

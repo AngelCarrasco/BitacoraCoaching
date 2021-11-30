@@ -18,9 +18,11 @@ urlpatterns = [
     path('coach/', views.coach, name="coach"),
     path('contrato/', views.contrato , name="contrato"),
     path('combox/', views.lista_coach_proceso, name="combox"),
+    path('preguntas/', views.agregar_preguntas, name="preguntas"),
     
     #URLS COACHEE
     path('coachee/', views.coachee, name="coachee"),
+     path('descargar/', views.descargar, name="descargar"),
 
     #URLS COACH
     path('coach_menu/', views.lista_coach_Sesion, name="coach_menu"),
@@ -28,4 +30,7 @@ urlpatterns = [
     path('registro_sesion/', views.registro_sesion, name="registro_sesion"),
     path('detalle_proceso_coach/', views.detalle_proceso_coach, name="detalle_proceso_coach"),
     path('coachee_empresa_filt/', views.empresa_coachee_filt, name="empresa_coachee_filt"),
+    path('subir_archivo/', views.subir_archivo, name="subir_archivo"),
+    path('proceso_sesion/',views.proceso_por_sesion, name="proceso_sesion"),
+    path('detalle_sesion/', views.detalle_sesion, name="detalle_sesion"),
 ]

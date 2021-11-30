@@ -1,5 +1,129 @@
-<div class="form-group">
-    <label for="">Seleciona los archivos para la sesion</label>
-    <h6>Solo se permiten los siguientes formatos: .pdf|.xlsx|.docx|.doc|.pptx|.png</h6>
-    <input class="controls" type="file" name="archivo" id="archivo" multiple="true" onchange="return validarExt()" accept=".xlsx,.pptx,.pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+{% extends 'core/coach/base.html' %} {% load static %} {%block css %} {%endblock%} {% block contenido%}
+
+<div class="container mt-3">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Subir archivo</h3>
+        </div>
+        <form action="" method="POST" enctype="multipart/form-data" id="elForm">
+            {% csrf_token %}
+            <div class="card-body">
+
+                <div class="form-group">
+                    <label for="exampleInputFile">Seleciona una Coachee<span style="color:#ff0000">*</span></label>
+                    <select class="form-control" name="coachee" id="coachee" style="height: 100%;" required=""
+                        onchange="sub_procesos()">
+
+                        <option></option>
+                        {% for i in run_sesion %}
+                        <option value="{{i.1}}">{{i.0}}</option>
+                        {% endfor %}
+
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputFile">Sesion <span style="color:#ff0000">*</span></label>
+                    <select class="form-control" name="sesion" id="sesion" required="">
+                        <option value="">Selecciona</option>
+                    </select>
+                </div>
+
+                <br>
+                <div class="form-group">
+                    <label for="">Seleciona los archivos para la sesion</label>
+                    <h6>Solo se permiten los siguientes formatos: .pdf|.xlsx|.docx|.doc|.pptx|.png</h6>
+                    <input class="controls" required type="file" name="archivo" id="archivo" multiple="true"
+                        onchange="return validarExt()"
+                        accept=".xlsx,.pptx,.pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                </div>
+
+
+                <input class="btn btn-primary" type="submit" value="Agregar">
+
+            </div>
+
+            <!--Combox anidado empresa coachee-->
+
+
+    </div>
+
+    </form>
+    {%for msg in messages%}
+    {{msg}}
+    {% endfor %}
 </div>
+</div>
+
+
+{%endblock%} {% block js %}
+
+<!-- ALERTAS -->
+
+<script type="text/javascript">
+    function validarExt() {
+        var archivo = document.getElementById('archivo');
+        var archivoRuta = archivo.value;
+        var extPermitidas = /(.pdf|.xlsx|.docx|.doc|.pptx|.png)$/i;
+
+        if (!extPermitidas.exec(archivoRuta)) {
+            alert('Ingrese un archivo correspondiente a word, pdf, excel u imagen')
+            archivo.value = '';
+            return false
+        }
+    }
+</script>
+{% if messages %} {% for m in messages %} {% if m.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+<script>
+    Swal.fire(
+        'Perfecto',
+        '{{m}}',
+        'success'
+    )
+</script>
+{% endif %} {% if m.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+<script>
+    Swal.fire(
+        'Error!!!',
+        '{{m}}',
+        'warning'
+    )
+</script>
+{% endif %} {% endfor %} {%endif%}
+<!-- FIN ALERTAS -->
+
+<script>
+    function sub_procesos() {
+        let id_empresa = document.getElementById("coachee").value;
+        /* Aqui se rescata el id del view rut_empresa = request.GET.get('***empresa****')*/
+        let url1 = '/proceso_sesion/?empresa=' + id_empresa;
+        fetch(url1)
+            .then(function (result) {
+                return result.text();
+            })
+            .then(function (result) {
+
+                document.getElementById("sesion").innerHTML = result;
+            });
+    }
+</script>
+
+<script>
+    $.fn.select2.defaults.set('language', 'es');
+
+    $('select').select2();
+
+    $('#empresa').select2({
+        placeholder: "Seleccione Empresa"
+    });
+
+    $('#coachee').select2({
+        //placeholder: "Seleccione coachee"
+    });
+
+    $('#coach').select2({
+        placeholder: "Seleccione coach"
+    });
+</script>
+
+
+{% endblock %}

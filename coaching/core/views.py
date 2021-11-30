@@ -21,13 +21,70 @@ def users(request):
     else :
         return redirect (administrador)
 
+#@permission_required('is_coach')
+
 #FUNCIONES COACH
-@permission_required('is_coach')
+
 def coach(request):
 
     return render(request, 'core/administrador/coach.html')
 
-@permission_required('is_coach')
+def detalle_sesion(request):
+    data ={
+        'procesos': listar_anidado('SP_FILTRO_PROCESOS',request.user.username)
+    }
+
+    proceso = request.POST.get("proces")   
+    sesion = request.GET.get("sesion")
+
+    try:
+
+        if request.POST:
+            data = {
+                'procesos': listar_anidado('SP_FILTRO_PROCESOS',request.user.username),
+                'sesiones': listar_anidado_doble('SP_SESION_PROCESO',request.user.username,proceso)
+            }
+        
+        if request.GET:
+            salida = deshabilitar('SP_DESHABILITAR_SESION',sesion)
+            
+            if salida ==1:
+                messages.success(request,"Sesion finalizada")
+                data = {
+                    'procesos': listar_anidado('SP_FILTRO_PROCESOS',request.user.username),
+                    'sesiones': listar_anidado_doble('SP_SESION_PROCESO',request.user.username,proceso)
+                }
+            else:
+                messages.error(request,"Ups! algo fallo")
+
+        return render(request,'core/coach/detalle_sesion.html',data)
+    except:
+        messages.error(request,"Ups! algo fallo")
+    return render(request,'core/coach/detalle_sesion.html',data)
+
+def detalle_proceso_coach(request):
+    id_proceso = request.GET.get('proceso')
+    run_coach = '11113'
+    
+    data ={
+        'procesos_coach' : lista_proceso_coach(request.user.username,id_proceso),
+        'sesiones': listar_anidado('SP_LISTA_SESION_PROCESO_COACH',id_proceso)
+        
+    }
+
+    return render(request, 'core/coach/detalle_proceso_coach.html', data)
+
+def coach_process(request):
+    proceso = request.GET.get('proceso')
+    data ={
+        'procesos_coach' : lista_proceso_coach(request.user.username,proceso),
+        'sesiones': listar_anidado('SP_LISTA_SESION_PROCESO_COACH',proceso)
+    }
+    return render(request, 'core/coach/detalle_sesion.html',data)
+
+
+
+#@permission_required('is_coach')
 def registro_sesion(request):
     p_fil_proceso ='SP_FILTRO_EMPRESA'
     run_coach = '11113'
@@ -37,49 +94,76 @@ def registro_sesion(request):
     }
     cursor = connection.cursor()
     fs = FileSystemStorage()
-    #try:
-    if request.POST:
-            #archivo = request.FILES.getlist('archivo')
+    try:
+        if request.POST:
 
-            fecha_acordada = request.POST.getlist('fecha_a')
-            
-            fecha_realizada = None
-            descripcion = request.POST.getlist('descripcion')
-            asignacion_acuerdos = request.POST.getlist('asigyacuerd')
-            id_proceso = request.POST.get('proceso')
-            estado = 1
-            v_sesiones = []
-            v_sesiones = fecha_acordada,descripcion,asignacion_acuerdos
-            
-            for col in range(len(v_sesiones[0])): 
-                arreglo = [v_sesiones[0][col], v_sesiones[1][col], v_sesiones[2][col] , id_proceso]  
-                #print(arreglo)
-                fecha = datetime.strptime(arreglo[0], '%Y-%m-%dT%H:%M')
-                salida = agregar_sesion(fecha, fecha_realizada, arreglo[1], estado, arreglo[2], id_proceso,request.user.username)
-              
+                fecha_acordada = request.POST.getlist('fecha_a')
+                
+                fecha_realizada = None
+                descripcion = request.POST.getlist('descripcion')
+                asignacion_acuerdos = request.POST.getlist('asigyacuerd')
+                id_proceso = request.POST.get('proceso')
+                estado = 1
+                v_sesiones = []
+                v_sesiones = fecha_acordada,descripcion,asignacion_acuerdos
+                
+                for col in range(len(v_sesiones[0])): 
+                    arreglo = [v_sesiones[0][col], v_sesiones[1][col], v_sesiones[2][col] , id_proceso]  
+                    fecha = datetime.strptime(arreglo[0], '%Y-%m-%dT%H:%M')
+                    salida = agregar_sesion(fecha, fecha_realizada, arreglo[1], estado, arreglo[2], id_proceso,request.user.username)
+                    
+                
+                if salida == 1:
+                    messages.success(request,"Sesion Agregado correctamente")
+                
+                else:
+                    messages.error(request,"Error no se pudo agregar")
+                return render(request, 'core/coach/registro_sesion.html',data)
 
-            
-         #   salida = agregar_sesion(fecha,fecha_realizada,descripcion,estado,asignacion_acuerdos,id_proceso,request.user.username)
-            
-           # if salida == 1:
-           #     messages.success(request,"Sesion Agregado correctamente")
-             #   v_id_sesion = cursor.execute("select id_sesion from sesion where ROWNUM <= 1 order by id_sesion desc")
-
-              #  for row in cursor:
-                  #  for f in archivo:
-                  #      name = fs.save(f.name, f)
-                   #     url = fs.url(name)
-                        
-                        
-                       # agregar_documento(url,int(row[0]))
-         #   else:
-              #  messages.error(request,"Error no se pudo agregar")
-       # return render(request, 'core/coach/registro_sesion.html',data)
-
-    #except:
-      # messages.error(request,"Error no se pudo agregar")
+    except:
+        messages.error(request,"Error no se pudo agregar")
     return render(request, 'core/coach/registro_sesion.html', data)
-@permission_required('is_coach')        
+
+def subir_archivo(request):
+    run_sesion ='SP_RUN_SESION'
+    
+ 
+    data ={
+         # el ruun tiene que ser de la persona que tenga la sesion iniciada en el sistema
+        'run_sesion': listar_anidado(run_sesion,request.user.username)
+    }
+    fs = FileSystemStorage()  
+    if request.POST:
+             
+            v_sesion = request.POST.get('sesion')
+            archivo = request.FILES.getlist('archivo')
+    
+            for f in archivo:
+                name = fs.save(f.name, f)
+                url = fs.url(name)
+                salida = agregar_documento(url,v_sesion)
+                print(salida)
+
+            if salida == 1:
+                    messages.success(request,"Sesion Agregado correctamente")
+                
+            else:
+                    messages.error(request,"Error no se pudo agregar")
+            return render(request, 'core/coach/registro_sesion.html',data)
+
+    return render(request, 'core/coach/archivo_coach.html', data)
+
+def proceso_por_sesion(request):
+    id_proceso = request.GET.get('empresa')
+    v_filtro = 'SP_FILTRO_SESION'
+    
+    data ={
+        'proceso_sesion' : listar_anidado(v_filtro,id_proceso)
+      
+    }
+
+    return render(request, 'core/coach/anidadoSesion.html',data)
+#@permission_required('is_coach')        
 def lista_coach_Sesion(request):
     #aqui sera el rut del coach en la sesion, obtner mediante una etiqueta
     p_sesion = 'SP_LISTA_SESION'
@@ -93,7 +177,8 @@ def lista_coach_Sesion(request):
     }
 
     return render(request, 'core/coach/coach_menu.html',data)
-@permission_required('is_coach')
+
+#@permission_required('is_coach')
 def lista_proceso_por_empresa(request):
     p_fil_empresa ='SP_LISTA_PROCESO_FILT'
     rut_empresa = request.GET.get('empresa')
@@ -104,7 +189,7 @@ def lista_proceso_por_empresa(request):
     }
 
     return render(request, 'core/coach/comboanidado.html',data)
-@permission_required('is_coach')
+#@permission_required('is_coach')
 def empresa_coachee_filt(request):
     p_list = 'SP_COACHEE_EMPRESA'
     empresa = request.GET.get('empresa')
@@ -112,21 +197,11 @@ def empresa_coachee_filt(request):
         'coachees' : listar_anidado(p_list,empresa)
     }
     return render(request, 'core/coach/empresa_coachee.html', data)
-@permission_required('is_coach')
-def detalle_proceso_coach(request):
-    id_proceso = request.GET.get('proceso')
-    run_coach = '11113'
-    
-    data ={
-        'procesos_coach' : lista_proceso_coach(request.user.username,id_proceso)
-        
-    }
-
-    return render(request, 'core/coach/detalle_proceso_coach.html', data)
+#@permission_required('is_coach')
 
 
 #FUNCIONES COACHEE
-@permission_required('is_coachee')
+#@permission_required('is_coachee')
 def coachee(request):
     data = {}
     p_detalle = 'SP_DETALLE_PROCESO_COACHEE'
@@ -137,9 +212,30 @@ def coachee(request):
     }
     return render(request, 'core/coachee/coachee.html', data)
 
+def descargar(request):
+    
+    
+    data = { 'sesiones': listar_anidado('SP_LISTA_COACHEE_DOCUMENTO', request.user.username)}
+    
+    if request.POST:
+        id_sesion = request.POST.get('sesion')
+        salida = lista_documento(id_sesion,request.user.username)
+        
+        data = {'doc': salida, 
+        'sesiones': listar_anidado('SP_LISTA_COACHEE_DOCUMENTO', request.user.username)}
+        
+        if salida == 1:
+            messages.success(request,"Archivos listados correctamente")
+         
+        else:
+            messages.error(request,"Error no se pudo agregar")
+        return render(request,'core/coachee/descargar_archivo.html',data)
+            
+        
+    return render(request,'core/coachee/descargar_archivo.html',data)
 
 #FUNCIONES ADMINISTRADOR
-@permission_required('is_admin')
+#@permission_required('is_admin')
 def administrador(request):
     p_coach = 'SP_LISTA_COACH'
     p_coachee = 'SP_LISTA_COACHEE'
@@ -153,7 +249,7 @@ def administrador(request):
     }
  
     return render(request, 'core/administrador/administrador.html',data)
-@permission_required('is_admin')
+#@permission_required('is_admin')
 def registro_coachee(request):
     p_empresa = 'SP_LISTA_EMPRESA'
     p_coachee = 'SP_LISTA_COACHEE'
@@ -187,7 +283,7 @@ def registro_coachee(request):
     except:
         messages.error(request,"Error no se pudo agregar")
     return render(request, 'core/administrador/registro_coachee.html', data)
-@permission_required('is_admin')
+#@permission_required('is_admin')
 def registro_coach(request):
     p_coach = 'SP_LISTA_COACH'
     data ={
@@ -216,7 +312,7 @@ def registro_coach(request):
     except:
         messages.error(request,"Error no se pudo agregar")
     return render(request, 'core/administrador/registro_coach.html', data)
-@permission_required('is_admin')
+#@permission_required('is_admin')
 def registro_empresa(request):
     p_empresa = 'SP_LISTA_EMPRESA'
     data={
@@ -246,7 +342,7 @@ def registro_empresa(request):
     except:
         messages.error(request,"Error no se pudo agregar")
     return render(request, 'core/administrador/registro_empresa.html', data)
-@permission_required('is_admin')
+#@permission_required('is_admin')
 def registro_proceso(request):
     p_coach = 'SP_LISTA_COACH'
     p_empresa = 'SP_LISTA_EMPRESA'
@@ -282,7 +378,7 @@ def registro_proceso(request):
     except:
         messages.error(request,"Error no se pudo agregar")
     return render(request, 'core/administrador/registro_proceso.html', data)
-@permission_required('is_admin')
+#@permission_required('is_admin')
 def detalle_proceso(request):
     p_detalle = 'SP_DETALLE_PROCESO'
     id_proceso = request.GET.get('proceso')
@@ -292,7 +388,7 @@ def detalle_proceso(request):
     }
 
     return render(request, 'core/administrador/detalle_proceso.html', data)
-@permission_required('is_admin')
+#@permission_required('is_admin')
 def deshabilitar_proceso(request):
 
     p_deshabilitar = 'SP_DESHABILITAR_PROCESO'
@@ -303,7 +399,7 @@ def deshabilitar_proceso(request):
     }
 
     return render(request, 'core/administrador/deshabilitar_proceso.html', data)
-@permission_required('is_admin')
+#@permission_required('is_admin')
 def deshabilitar_coach(request):
     p_deshabilitar_c = 'SP_DESHABILITAR_COACH'
     run_coach = request.GET.get('coach')
@@ -313,7 +409,7 @@ def deshabilitar_coach(request):
     }
 
     return render(request, 'core/administrador/deshabilitar_coach.html', data)
-@permission_required('is_admin')
+#@permission_required('is_admin')
 def deshabilitar_coachee(request):
     p_deshabilitar_ce = 'SP_DESHABILITAR_COACHEE'
     run_coachee = request.GET.get('coachee')
@@ -325,7 +421,7 @@ def deshabilitar_coachee(request):
     return render(request, 'core/administrador/deshabilitar_coachee.html', data)
 
 #COMBOBOX EMPRESA COACHEE EN EL PROCESO
-@permission_required('is_admin')
+#@permission_required('is_admin')
 def coachee_empresa(request):
     p_list = 'SP_COACHEE_EMPRESA'
     empresa = request.GET.get('empresa')
@@ -390,6 +486,9 @@ def agregar_sesion(fecha_acordada,fecha_realizada,descripcion,estado,asignacion_
     #cursor.executemany('SP_AGREGAR_SESION',[fecha_acordada,fecha_realizada,descripcion,estado,asignacion_acuerdos,id_proceso,run_coach,salida])
     return salida.getvalue()
 
+def agregar_preguntas (request):
+    return render(request, 'core/administrador/pregunta.html')
+
 def listar(procedimiento):
     django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
@@ -408,6 +507,18 @@ def listar_anidado(procedimiento,filtro):
     out_cur = django_cursor.connection.cursor()
 
     cursor.callproc(procedimiento,[out_cur, filtro])
+
+    lista = []
+    for fila in out_cur:
+        lista.append(fila)
+    return lista
+
+def listar_anidado_doble(procedimiento,filtro,filtro2):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    out_cur = django_cursor.connection.cursor()
+
+    cursor.callproc(procedimiento,[out_cur, filtro,filtro2])
 
     lista = []
     for fila in out_cur:
@@ -447,6 +558,17 @@ def deshabilitar(procedimiento, filtro):
 
     return salida.getvalue()
 
+def lista_documento(id_sesion,rut_coachee):
+
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    out_cur = django_cursor.connection.cursor()
+    cursor.callproc("SP_FILTRO_DOCUMENTO",[out_cur, id_sesion,rut_coachee])
+
+    lista = []
+    for fila in out_cur:
+        lista.append(fila)
+    return lista
 
 #NO SE ESTA UTILIZANDO
 def lista_coach_proceso(request):
