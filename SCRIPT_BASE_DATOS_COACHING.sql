@@ -1,7 +1,3 @@
--- Generado por Oracle SQL Developer Data Modeler 20.4.1.406.0906
---   en:        2021-10-28 18:59:21 CLST
---   sitio:      Oracle Database 12c
---   tipo:      Oracle Database 12c
 
 
 
@@ -17,13 +13,11 @@ DROP TABLE encuesta CASCADE CONSTRAINTS;
 
 DROP TABLE evaluacion CASCADE CONSTRAINTS;
 
-DROP TABLE indicador CASCADE CONSTRAINTS;
-
-DROP TABLE objetivo CASCADE CONSTRAINTS;
-
 DROP TABLE plan_accion CASCADE CONSTRAINTS;
 
 DROP TABLE proceso CASCADE CONSTRAINTS;
+
+DROP TABLE resultado CASCADE CONSTRAINTS;
 
 DROP TABLE reunion CASCADE CONSTRAINTS;
 
@@ -86,8 +80,7 @@ ALTER TABLE empresa ADD CONSTRAINT empresa_pk PRIMARY KEY ( rut_empresa );
 
 CREATE TABLE encuesta (
     id_pregunta  NUMBER NOT NULL,
-    pregunta     VARCHAR2(20) NOT NULL,
-    nota         FLOAT
+    pregunta     VARCHAR2(20) NOT NULL
 );
 
 ALTER TABLE encuesta ADD CONSTRAINT encuesta_pk PRIMARY KEY ( id_pregunta );
@@ -96,35 +89,11 @@ CREATE TABLE evaluacion (
     id_encuesta  NUMBER NOT NULL,
     fecha        DATE NOT NULL,
     comentario   VARCHAR2(100),
-    promedio     FLOAT,
-    id_proceso   NUMBER NOT NULL,
-    run_coach    VARCHAR2(13) NOT NULL,
-    id_pregunta  NUMBER NOT NULL
-);
-
-ALTER TABLE evaluacion
-    ADD CONSTRAINT evaluacion_pk PRIMARY KEY ( id_proceso,
-                                               run_coach,
-                                               id_encuesta );
-
-CREATE TABLE indicador (
-    id_incador   NUMBER NOT NULL,
-    nombre       VARCHAR2(50) NOT NULL,
-    valor_meta   NUMBER NOT NULL,
-    descripcion  VARCHAR2(150) NOT NULL,
-    id_objetivo  NUMBER NOT NULL
-);
-
-ALTER TABLE indicador ADD CONSTRAINT indicador_pk PRIMARY KEY ( id_incador );
-
-CREATE TABLE objetivo (
-    id_objetivo  NUMBER NOT NULL,
-    nombre       VARCHAR2(150) NOT NULL,
     id_proceso   NUMBER NOT NULL,
     run_coach    VARCHAR2(13) NOT NULL
 );
 
-ALTER TABLE objetivo ADD CONSTRAINT objetivo_pk PRIMARY KEY ( id_objetivo );
+ALTER TABLE evaluacion ADD CONSTRAINT evaluacion_pk PRIMARY KEY ( id_encuesta );
 
 CREATE TABLE plan_accion (
     id_plan     NUMBER NOT NULL,
@@ -138,18 +107,30 @@ CREATE TABLE plan_accion (
 ALTER TABLE plan_accion ADD CONSTRAINT plan_accion_pk PRIMARY KEY ( id_plan );
 
 CREATE TABLE proceso (
-    id_proceso      NUMBER NOT NULL,
-    nombre          VARCHAR2(50) NOT NULL,
-    modalidad       VARCHAR2(15) NOT NULL,
-    status          VARCHAR2(50) NOT NULL,
-    fecha_contrato  DATE NOT NULL,
-    clausula        CLOB NOT NULL,
-    run_coach       VARCHAR2(13) NOT NULL,
-    rut_empresa     VARCHAR2(13) NOT NULL
+    id_proceso       NUMBER NOT NULL,
+    nombre           VARCHAR2(50) NOT NULL,
+    modalidad        VARCHAR2(15) NOT NULL,
+    status           VARCHAR2(50) NOT NULL,
+    fecha_contrato   DATE NOT NULL,
+    clausula         CLOB NOT NULL,
+    indicador_exito  VARCHAR2(200) NOT NULL,
+    objetivo         VARCHAR2(200) NOT NULL,
+    run_coach        VARCHAR2(13) NOT NULL,
+    rut_empresa      VARCHAR2(13) NOT NULL,
+    run_coachee      VARCHAR2(13) NOT NULL
 );
 
 ALTER TABLE proceso ADD CONSTRAINT proceso_pk PRIMARY KEY ( id_proceso,
                                                             run_coach );
+
+CREATE TABLE resultado (
+    id_resultado  NUMBER NOT NULL,
+    nota          FLOAT NOT NULL,
+    id_pregunta   NUMBER NOT NULL,
+    id_encuesta   NUMBER NOT NULL
+);
+
+ALTER TABLE resultado ADD CONSTRAINT resultado_pk PRIMARY KEY ( id_resultado );
 
 CREATE TABLE reunion (
     id_reunion           NUMBER NOT NULL,
@@ -186,22 +167,8 @@ ALTER TABLE documentacion
         REFERENCES sesion ( id_sesion );
 
 ALTER TABLE evaluacion
-    ADD CONSTRAINT evaluacion_encuesta_fk FOREIGN KEY ( id_pregunta )
-        REFERENCES encuesta ( id_pregunta );
-
-ALTER TABLE evaluacion
-    ADD CONSTRAINT evaluacion_proceso_fk FOREIGN KEY ( id_proceso,
-                                                       run_coach )
-        REFERENCES proceso ( id_proceso,
-                             run_coach );
-
-ALTER TABLE indicador
-    ADD CONSTRAINT indicador_objetivo_fk FOREIGN KEY ( id_objetivo )
-        REFERENCES objetivo ( id_objetivo );
-
-ALTER TABLE objetivo
-    ADD CONSTRAINT objetivo_proceso_fk FOREIGN KEY ( id_proceso,
-                                                     run_coach )
+    ADD CONSTRAINT evaluacionv1_proceso_fk FOREIGN KEY ( id_proceso,
+                                                         run_coach )
         REFERENCES proceso ( id_proceso,
                              run_coach );
 
@@ -216,8 +183,20 @@ ALTER TABLE proceso
         REFERENCES coach ( run_coach );
 
 ALTER TABLE proceso
+    ADD CONSTRAINT proceso_coachee_fk FOREIGN KEY ( run_coachee )
+        REFERENCES coachee ( run_coachee );
+
+ALTER TABLE proceso
     ADD CONSTRAINT proceso_empresa_fk FOREIGN KEY ( rut_empresa )
         REFERENCES empresa ( rut_empresa );
+
+ALTER TABLE resultado
+    ADD CONSTRAINT resultado_encuesta_fk FOREIGN KEY ( id_pregunta )
+        REFERENCES encuesta ( id_pregunta );
+
+ALTER TABLE resultado
+    ADD CONSTRAINT resultado_evaluacion_fk FOREIGN KEY ( id_encuesta )
+        REFERENCES evaluacion ( id_encuesta );
 
 ALTER TABLE reunion
     ADD CONSTRAINT reunion_proceso_fk FOREIGN KEY ( id_proceso,
@@ -264,28 +243,6 @@ BEGIN
 END;
 /
 
-CREATE SEQUENCE indicador_id_incador_seq START WITH 1 NOCACHE ORDER;
-
-CREATE OR REPLACE TRIGGER indicador_id_incador_trg BEFORE
-    INSERT ON indicador
-    FOR EACH ROW
-    WHEN ( new.id_incador IS NULL )
-BEGIN
-    :new.id_incador := indicador_id_incador_seq.nextval;
-END;
-/
-
-CREATE SEQUENCE objetivo_id_objetivo_seq START WITH 1 NOCACHE ORDER;
-
-CREATE OR REPLACE TRIGGER objetivo_id_objetivo_trg BEFORE
-    INSERT ON objetivo
-    FOR EACH ROW
-    WHEN ( new.id_objetivo IS NULL )
-BEGIN
-    :new.id_objetivo := objetivo_id_objetivo_seq.nextval;
-END;
-/
-
 CREATE SEQUENCE plan_accion_id_plan_seq START WITH 1 NOCACHE ORDER;
 
 CREATE OR REPLACE TRIGGER plan_accion_id_plan_trg BEFORE
@@ -305,6 +262,17 @@ CREATE OR REPLACE TRIGGER proceso_id_proceso_trg BEFORE
     WHEN ( new.id_proceso IS NULL )
 BEGIN
     :new.id_proceso := proceso_id_proceso_seq.nextval;
+END;
+/
+
+CREATE SEQUENCE resultado_id_resultado_seq START WITH 1 NOCACHE ORDER;
+
+CREATE OR REPLACE TRIGGER resultado_id_resultado_trg BEFORE
+    INSERT ON resultado
+    FOR EACH ROW
+    WHEN ( new.id_resultado IS NULL )
+BEGIN
+    :new.id_resultado := resultado_id_resultado_seq.nextval;
 END;
 /
 
@@ -334,16 +302,16 @@ END;
 
 -- Informe de Resumen de Oracle SQL Developer Data Modeler: 
 -- 
--- CREATE TABLE                            12
+-- CREATE TABLE                            11
 -- CREATE INDEX                             0
--- ALTER TABLE                             23
+-- ALTER TABLE                             22
 -- CREATE VIEW                              0
 -- ALTER VIEW                               0
 -- CREATE PACKAGE                           0
 -- CREATE PACKAGE BODY                      0
 -- CREATE PROCEDURE                         0
 -- CREATE FUNCTION                          0
--- CREATE TRIGGER                           9
+-- CREATE TRIGGER                           8
 -- ALTER TRIGGER                            0
 -- CREATE COLLECTION TYPE                   0
 -- CREATE STRUCTURED TYPE                   0
@@ -356,7 +324,7 @@ END;
 -- CREATE DISK GROUP                        0
 -- CREATE ROLE                              0
 -- CREATE ROLLBACK SEGMENT                  0
--- CREATE SEQUENCE                          9
+-- CREATE SEQUENCE                          8
 -- CREATE MATERIALIZED VIEW                 0
 -- CREATE MATERIALIZED VIEW LOG             0
 -- CREATE SYNONYM                           0
