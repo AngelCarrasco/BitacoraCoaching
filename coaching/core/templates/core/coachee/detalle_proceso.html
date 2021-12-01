@@ -1,0 +1,35 @@
+{% load static %}
+<script src="{%static 'js/validacion.js' %}"></script>
+{% for i in procesos_coachee %}
+<div class="col-md-6">
+
+    <label for="exampleInputFile">Nombre</label> <input class="form-control" type="text" value="{{i.0}}" readonly>
+    <label for="exampleInputFile">Modalidad</label> <input class="form-control" type="text" value="{{i.1}}" readonly>
+    <label for="exampleInputFile">Run coachee</label> <input class="form-control" type="text" value="{{i.2}}" readonly>
+    <label for="exampleInputFile">Cantidad de sesiones</label> <input class="form-control" type="text" value="{{i.5}}" id="cantidadSesiones" readonly>
+
+    <div class="container mt-3">
+        <input type="button" class="btnGrafico btn btn-success" onclick="Grafico()" value="Ver grafico">
+    </div>
+
+</div>
+<div class="col-md-6">
+    <label for="exampleInputFile">Empresa</label> <input class="form-control" type="text" value="{{i.4}}" readonly>
+    <label for="exampleInputFile">Coachee</label> <input class="form-control" type="text" value="{{i.3}}" readonly> {% for i in sesiones %}
+    <label for="exampleInputFile">Sesiones realizadas</label> <input class="form-control" type="text" value="{{i.0}}" id="sesionesRealizada" readonly> {% endfor %}
+</div>
+<div class="container mt-3" id="Grafico">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Avance proceso</h3>
+        </div>
+        <div class="row">
+            <div class="container" style="width: 75%;">
+                <canvas id="Grafica">
+        
+                </canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}

@@ -28,9 +28,18 @@
                             <tr>
                                 <th>Numero</th>
                                 <th>Pregunta</th>
-                                <th>botones</th>
                             </tr>
                         </thead>
+                        <tbody>
+                            {% for i in preg%}
+                            <tr>
+                                <td>{{i.0}}</td>
+                                <td>{{i.1}} </td>
+
+                            
+                            </tr>
+                            {% endfor %}
+                        </tbody>
                     </table>
                 </div>
                 <div class="card-footer clearfix">
@@ -57,7 +66,6 @@
 
     </div>
     <div class="row">
-        <div class="col"></div>
         <div class="col">
             <div class="container">
                 <div class="card">
@@ -71,7 +79,7 @@
                             <br>
                             <div class="form-group">
                                 <label for="exampleInputFile">Ingrese su pregunta <span style="color:#ff0000">*</span></label>
-                                <input class="form-control" type="text" name="run" id="run" placeholder="Pregunta" oninput="checkRut(this)" maxlength="10" required="">
+                                <input class="form-control" type="text" name="pregunta" id="pregunta" placeholder="Pregunta" required="">
                                 <br>
                                 <input class="btn btn-primary" type="submit" value="Agregar">
                             </div>
@@ -112,32 +120,16 @@
 
         var UserData = {};
         var UserData2 = {};
-        var UserData3 = {};
-        var UserData4 = {};
-        var UserData5 = {};
-        var UserData6 = {};
-        var UserData7 = {};
-        var UserData8 = {};
+
 
         var id = $(this).closest('tr').find('td');
 
         UserData = id.filter(":eq(0)").text();
         UserData2 = id.filter(":eq(1)").text();
-        UserData3 = id.filter(":eq(2)").text();
-        UserData4 = id.filter(":eq(3)").text();
-        UserData5 = id.filter(":eq(4)").text();
-        UserData6 = id.filter(":eq(5)").text();
-        //UserData7 = id.filter(":eq(0)").text();
-        //UserData8 = id.filter(":eq(0)").text();
 
-        $("#run").val(UserData);
-        $("#nombres").val(UserData2);
-        $("#a_paterno").val(UserData3);
-        $("#a_materno").val(UserData4);
-        $("#correos").val(UserData5);
-        $("#telefono").val(UserData6);
-        //solo lectura el run
-        $('#run').attr('readonly', true);
+
+        $("#id_pregunta").val(UserData);
+        $("#pregunta").val(UserData2);
     });
 </script>
 

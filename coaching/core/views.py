@@ -204,7 +204,7 @@ def empresa_coachee_filt(request):
 #@permission_required('is_coachee')
 def coachee(request):
     data = {}
-    p_detalle = 'SP_DETALLE_PROCESO_COACHEE'
+    p_detalle = 'SP_PROCESO_COACHEE'
     p_sesion = 'SP_LISTA_SESION_COACHEE'
     data = {
         'detalles' : listar_anidado(p_detalle,request.user.username),
@@ -234,6 +234,25 @@ def descargar(request):
         
     return render(request,'core/coachee/descargar_archivo.html',data)
 
+def detalle_proceso_coachee(request):
+    proceso = request.GET.get('proceso')
+    data = {
+        'procesos_coachee' : listar_anidado_doble('SP_DETALLE_PROCESO_COACHEE',request.user.username,proceso),
+        'sesiones': listar_anidado('SP_LISTA_SESION_PROCESO_COACH',proceso)
+    }
+    return render (request, 'core/coachee/detalle_proceso.html',data)
+
+def evaluar_proceso_coach(request):
+    data= {
+        'preg': listar('SP_LISTA_ENCUESTA')
+    }
+    return render (request, 'core/coachee/evaluar_proceso.html',data)
+
+
+def procesos_finalizados(request):
+    return render(request,'core/coachee/procesos_finalizados.html')
+
+
 #FUNCIONES ADMINISTRADOR
 #@permission_required('is_admin')
 def administrador(request):
@@ -250,6 +269,23 @@ def administrador(request):
  
     return render(request, 'core/administrador/administrador.html',data)
 #@permission_required('is_admin')
+
+def registro_preguntas (request):
+    data= {
+        'preg': listar('SP_LISTA_ENCUESTA')
+    }
+    if request.POST:
+        v_pregunta = request.POST.get('pregunta')
+        salida = agregar_pregunta(v_pregunta)
+        if salida == 1:
+            messages.success(request,"Coachee agregado correctamente")
+                
+        else:
+            messages.error(request,"Error no se pudo agregar")
+    return render(request, 'core/administrador/pregunta.html',data)
+
+    
+@permission_required('is_admin')
 def registro_coachee(request):
     p_empresa = 'SP_LISTA_EMPRESA'
     p_coachee = 'SP_LISTA_COACHEE'
@@ -486,8 +522,16 @@ def agregar_sesion(fecha_acordada,fecha_realizada,descripcion,estado,asignacion_
     #cursor.executemany('SP_AGREGAR_SESION',[fecha_acordada,fecha_realizada,descripcion,estado,asignacion_acuerdos,id_proceso,run_coach,salida])
     return salida.getvalue()
 
-def agregar_preguntas (request):
-    return render(request, 'core/administrador/pregunta.html')
+def agregar_pregunta(v_pregunta):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+
+    
+    cursor.callproc('SP_AGREGAR_ENCUESTA',[v_pregunta,salida])
+    return salida.getvalue()
+
+
 
 def listar(procedimiento):
     django_cursor = connection.cursor()

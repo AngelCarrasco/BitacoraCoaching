@@ -12,6 +12,7 @@ class User(AbstractUser):
     is_admin = models.BooleanField('Is Admin', default = False )     
     is_coach = models.BooleanField('Is Coach', default = False )     
     is_coachee = models.BooleanField('Is Coachee', default = False )
+    
 #no es necesario dar le class meta    
 
 class Coach(models.Model):

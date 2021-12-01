@@ -1,22 +1,29 @@
-{% extends 'core/coachee/base.html' %} {% load static %} {% block css %}
+{% extends 'core/coachee/base.html' %}
+
+{% load static %}
+
+{% block css %}
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
-            events: [{ %
-                for p in sesiones %
-            } {
+            events: [
+                {% for p in sesiones %} 
+                {
                 title: "{{p.1}}",
                 start: '{{ p.0 | date:"Y-m-d" }}',
 
-            }, { % endfor %
-            }]
+            },
+            {% endfor %}
+        ]
         });
-        calendar.render();
-        calendar.setOption('locales', 'es');
+    calendar.render();
+    calendar.setOption('locales', 'es');
     });
 </script>
-{% endblock %} {% block contenido %}
+{% endblock %}
+
+{% block contenido %}
 <div class="container mt-3">
     <div class="row">
         <div class="col">
@@ -28,14 +35,20 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Proceso</th>
                                 <th>Coach</th>
+                                <th>Opcion</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for i in detalles %}
-                            <td>{{i.0}}</td>
-                            <td>{{i.1}}</td>
+                            <tr>
+                                <td>{{i.0}}</td>
+                                <td>{{i.1}}</td>
+                                <td>{{i.2}}</td>
+                                <th><input type="button" class="btnDetalle btn btn-success" value="Detalle"></th>
+                            </tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -54,6 +67,82 @@
                 </div>
             </div>
         </div>
+        
     </div>
 </div>
+<div class="container mt-3"> 
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Detalle</h3>
+        </div>
+        <div class="card-body">
+            <div class="row" id="detalle_proceso_coachee" >
+                     
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>    
+    $(".btnDetalle").click(function(){
+        var UserData = {};
+        var id = $(this).closest('tr').find('td');
+        UserData = id.filter(":eq(0)").text();
+
+        //alert(UserData)
+        var url = '/detalle_coachee/?proceso=' + UserData;
+        fetch(url)
+            .then(function (result) {
+                return result.text();
+            })
+            .then(function (result) {
+                document.getElementById("detalle_proceso_coachee").innerHTML = result;
+            });
+    });
+              
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script>
+    function Grafico(){
+        
+        var sesiones = document.getElementById("cantidadSesiones").value;
+        var realizada = document.getElementById("sesionesRealizada").value;
+        var restante =(sesiones-realizada) 
+        //alert("R:"+realizada + "RES:"+restante);
+    
+        var miCanvas = document.getElementById("Grafica").getContext("2d")
+    
+        var config = {
+        type: "pie",
+        data: {
+            labels: ["Sesiones realizadas", "Sesiones restantes"],
+            datasets: [
+                {
+                    label: "Porcentaje de avance del proceso",
+                    data: [realizada, restante],
+                    backgroundColor: [
+                            "grey", "orange"
+                        ]
+                }
+                    ]
+            },
+            options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins:{
+                        labels:{
+                            render: 'percentage',
+                            fontColor: ['green', 'red'],
+                            precision: 2
+                        }
+                    }
+                }
+            }
+            
+            window.myPie = new Chart(miCanvas, config);
+            
+    } 
+</script>
 {% endblock %}

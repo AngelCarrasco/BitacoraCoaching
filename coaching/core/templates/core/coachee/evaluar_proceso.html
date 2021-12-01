@@ -1,0 +1,46 @@
+{% extends 'core/coachee/base.html' %} {% load static %} {%block css %} {%endblock%} {% block contenido%}
+
+<style>
+    .required:after {
+        content: " *";
+        color: red;
+    }
+    
+    h6 {
+        font-size: 12px;
+    }
+</style>
+
+
+
+<div class="container mt-3" style="width:40%">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Crear una nueva sesion</h3>
+                </div>
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="card-body">
+                        <h6>Todos los campos marcados con un asterisco son de carácter obligatorio</h6>
+                        <br> {%for i in preg %}
+                        <div class="form-group">
+                            <label for="exampleInputEmail1"> {{i.1}} 
+                                <span style="color:#ff0000">*</span></label>
+                            <input class="form-control" type="number" min="1" max="7" name="nota" id="nota" placeholder="Nota" required="">
+
+                        </div>
+                        {%endfor%}
+                    </div>
+
+                    <input class="btn btn-primary" type="submit" value="Agregar">
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+{%endblock%}
