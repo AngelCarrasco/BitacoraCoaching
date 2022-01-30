@@ -132,6 +132,9 @@ def detalle_proceso_coach(request):
 
     return render(request, 'core/coach/detalle_proceso_coach.html', data)
 
+def preguntas(request):
+    return render(request, 'core/administrador/preguntas.html')
+
 def subir_archivo(request):
     run_sesion ='SP_RUN_SESION'
     

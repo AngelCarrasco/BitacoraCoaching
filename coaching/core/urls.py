@@ -19,6 +19,7 @@ urlpatterns = [
     path('coach/', views.coach, name="coach"),
     path('contrato/', views.contrato , name="contrato"),
     path('combox/', views.lista_coach_proceso, name="combox"),
+     path('preguntas/', views.preguntas, name="preguntas"),
     
     #URLS COACHEE
     path('coachee/', views.coachee, name="coachee"),
